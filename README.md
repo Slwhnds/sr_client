@@ -1,4 +1,4 @@
 sr_client
 =========
 
-Smart room bloggin client and IP-cam control client
+Smart room blogging client and IP-cam control client
