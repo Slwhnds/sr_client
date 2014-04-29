@@ -14,13 +14,16 @@
     <string name="participantPassword">Password</string>
     <string name="portFormatErr">Incorrect port</string>
     <string name="nameIsUsed">Entered name is already in use</string>
-	<string name="registrationFail">Registration failed</string>
-	<string name="connectionFail">Failed to connect Smart Space</string>
-	<string name="guestNameEmpty">Name has to be filled</string>
-	<string name="registrationTitle">Registration</string>
-	<string name="userName">Name:</string>
+    <string name="registrationFail">Registration failed</string>
+    <string name="connectionFail">Failed to connect Smart Space</string>
+    <string name="guestNameEmpty">Name has to be filled</string>
+    <string name="registrationTitle">Registration</string>
+    <string name="userName">Name:</string>
     <string name="userPhone">Phone:</string>
     <string name="userEmail">Email:</string>
     <string name="emptyFields">Name and password have to be filled</string>
+    <string name="title_activity_blog_list">BlogListActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_main">MainActivity</string>
 
 </resources>
