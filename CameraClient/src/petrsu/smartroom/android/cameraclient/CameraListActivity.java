@@ -19,12 +19,15 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.SimpleAdapter;
 
 public class CameraListActivity extends ListActivity {
+	
+	//имена атрибутов для Map
+	final String CAMERA_NAME = "name";
 
 	/** Список камер. */
-	private List<Camera> cameras;
+	private Camera[] cameras;
 	
 	/** KP, отвечающий за получение списка камер. */
-	//private CameraService KP;
+	private Camera_KP KP;
 
 	/** Список камер, полученный от KP. */
 	private String[] cameraCollection;
@@ -51,6 +54,14 @@ public class CameraListActivity extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		//setContentView(R.layout.activity_main);
+		
+		KP.getCameraData(cameraCollection);
+		
+		////////////////////////////////////
+		// добавить инициализацию camera по cameraCollection
+		///////////////////////////////////
+		
+		setUpList();
 		
 		itemListener = new OnItemClickListener() {
 
@@ -87,15 +98,24 @@ public class CameraListActivity extends ListActivity {
 	*/
 	private void setUpList()
     {        
-        List<Map<String, ?>> list = new ArrayList<Map<String, ?>>();
-        ListIterator i = cameras.listIterator();
+        List<Map<String, ?>> list = new ArrayList<Map<String, ?>>(cameras.length);
         
-        while (i.hasNext())
+        for(int i = 0; i < cameras.length; i++)
         {
             Map<String, Camera> map = new HashMap<String, Camera>();
-            //map.put("title", i.next().getIP());
+            map.put(CAMERA_NAME, Camera[i].getName());
             list.add(map);
         }
+        
+        //массив имен атрибутов, из которых будут читаться данные
+        String[] from = {CAMERA_NAME};
+        //массив ID View-компонентов, в которые будут вставляться данные
+        //здесь нужно подставлять id из camera_item.xml
+        int[] to = {R.id.};
+        
+        adapter = new SimpleAdapter(this, list, R.layout.camera_item.xml,
+                from, to);
+        setListAdapter(adapter);
     }
 
 
