@@ -30,6 +30,18 @@
             android:name="petrsu.smartroom.android.blogclient.BlogListActivity"
             android:label="@string/title_activity_main" >
         </activity>
+        <activity
+            android:name="petrsu.smartroom.android.blogclient.ThemeActivity"
+            android:label="@string/title_activity_theme" >
+        </activity>
+        <activity
+            android:name="petrsu.smartroom.android.blogclient.LeavingCommentActivity"
+            android:label="@string/title_activity_leaving_comment" >
+        </activity>
+        <activity
+            android:name="petrsu.smartroom.android.blogclient.CommensListActivity"
+            android:label="@string/title_activity_commens_list" >
+        </activity>
     </application>
 
 </manifest>

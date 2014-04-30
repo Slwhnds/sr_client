@@ -25,5 +25,8 @@
     <string name="title_activity_blog_list">BlogListActivity</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_theme">ThemeActivity</string>
+    <string name="title_activity_leaving_comment">LeavingCommentActivity</string>
+    <string name="title_activity_commens_list">CommensListActivity</string>
 
 </resources>
