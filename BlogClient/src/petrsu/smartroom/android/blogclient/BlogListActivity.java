@@ -1,18 +1,28 @@
 package petrsu.smartroom.android.blogclient;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import petrsu.smartroom.android.cameraclient.R;
+
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.ListActivity;
 import android.content.Intent;
+import android.hardware.Camera;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.SimpleAdapter;
 
-public class BlogListActivity extends Activity {
+public class BlogListActivity extends ListActivity {
+	
+	//имена атрибутов для Map
+	final String THEME_SUBJECT = "name";
 	
 	/** KP, отвечающий за получение списка тем. */
 	private Blog_KP KP;
@@ -38,6 +48,13 @@ public class BlogListActivity extends Activity {
 	/** Слушатель выбора из списка, отвечает за обработку нажатий. */
 	private OnItemClickListener itemListener;
 
+	/** 
+	* Вызывается при создании экземпляра класса и отвечает за его инициализацию. Запрашивает у KP список доступных тем и отображает его.
+	* @param savedInstanceState сохраненное состояние Activity
+	*
+	* Вызывает методы: Blog_KP.getThemes(), setUpList(), Blog.setThemes(String[] items, BlogAdapter adapter),
+	* BlogAdapter.setSRName(String name), BlogAdapter.setLogPass(String log, String pass)
+	*/
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -61,6 +78,11 @@ public class BlogListActivity extends Activity {
 		};
 	}
 
+	/** 
+	* Вызывается при создании меню. Добавляет в меню пункты "Account settings" и "Log out" как пункты, и "Refresh" как иконку.
+	* @param menu объект, представляющий меню
+	* @returns флаг того, что меню можно показывать
+	*/
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -68,6 +90,49 @@ public class BlogListActivity extends Activity {
 		return true;
 	}
 	
-	
+	/** 
+	* Вызывается при выборе пункта меню. 
+	* "Account settings" - Формирует свойство intent (с параметрами blogAdapter, blog.login, blog.pass) и запускает LoginActivity.
+	* "Log out" - Формирует свойство intent и запускает AutorizationActivity.
+	* "Refresh" - обновляет список тем.
+	* @param item объект, представляющий пункт меню
+	* @returns возвращаемое значение не используется
+	*
+	* Вызывает методы: onCreate(Bundle savedInstanceState)
+	*/
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		return false;
+		
+	}
+
+	/** 
+	* Формирует список тем (подготавливает данные из blog для того чтобы поместить их в adapter),
+	* помещает их в adapter).
+	* Calls for: Blog.getThemes()
+	*/
+	private void setUpList() {
+		
+		String[] items = Blog.getThemes();
+		
+		List<Map<String, ?>> list = new ArrayList<Map<String, ?>>(items.length);
+        
+        for(int i = 0; i < items.length; i++)
+        {
+            Map<String, String> map = new HashMap<String, String>();
+            map.put(THEME_SUBJECT, items[i]);
+            list.add(map);
+        }
+        
+        //массив имен атрибутов, из которых будут читаться данные
+        String[] from = { THEME_SUBJECT };
+        //массив ID View-компонентов, в которые будут вставляться данные
+        //здесь нужно подставлять id из theme_item.xml
+        int[] to = { R.id. };
+        
+        adapter = new SimpleAdapter(this, list, R.layout.theme_item.xml,
+                from, to);
+        setListAdapter(adapter);
+	}
 
 }
