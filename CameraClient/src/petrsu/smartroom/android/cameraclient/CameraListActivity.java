@@ -94,7 +94,9 @@ public class CameraListActivity extends ListActivity {
 	
 
 	/** 
-	* ‘ормирует список камер (подготавливает данные из cameras дл€ того чтобы поместить их в adapter). 
+	* ‘ормирует список камер (подготавливает данные из cameras дл€ того 
+	* чтобы поместить их в adapter, помещает в adapter, 
+	* устанавливает adapter дл€ данной listActivity.
 	*/
 	private void setUpList()
     {        
@@ -102,7 +104,7 @@ public class CameraListActivity extends ListActivity {
         
         for(int i = 0; i < cameras.length; i++)
         {
-            Map<String, Camera> map = new HashMap<String, Camera>();
+            Map<String, String> map = new HashMap<String, String>();
             map.put(CAMERA_NAME, Camera[i].getName());
             list.add(map);
         }
