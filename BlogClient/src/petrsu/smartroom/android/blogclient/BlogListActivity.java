@@ -34,13 +34,10 @@ public class BlogListActivity extends ListActivity {
 	String[] themes;
 
 	/** Блог для отображения. */
-	//private Blog blog;
+	private Blog blog;
 
 	/** Блог-адаптер для получения тем из внешнего блог-сервиса. */
-	//private BlogAdapter blogAdapter;
-
-	/** Список тем, подготовленный к помещению в адаптер. */
-	List<Map<String, ?>> list;
+	public static BlogAdapter blogAdapter;
 
 	/** Адаптер блога. */
 	private SimpleAdapter adapter;
@@ -72,7 +69,9 @@ public class BlogListActivity extends ListActivity {
 			*/
 			@Override
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-				
+				intent = new Intent(getBaseContext(), ThemeActivity.class);
+				intent.putExtra("theme", blog.getTheme(position));
+			    startActivity(intent);
 			}
 			
 		};
@@ -102,8 +101,21 @@ public class BlogListActivity extends ListActivity {
 	*/
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		return false;
-		
+		switch (item.getItemId()) {
+		case R.id.account_settings:
+			intent = new Intent(this, LoginActivity.class);
+		    startActivity(intent);
+			break;
+		case R.id.log_out:
+			this.finish();
+			break;
+		case R.id.refresh:
+			this.recreate();
+			break;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+		return true;
 	}
 
 	/** 

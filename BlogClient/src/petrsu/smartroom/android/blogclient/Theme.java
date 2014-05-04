@@ -1,9 +1,10 @@
 package petrsu.smartroom.android.blogclient;
 
+import java.io.Serializable;
 import java.util.Date;
 import petrsu.smartroom.android.blogclient.results.*;
 
-public class Theme {
+public class Theme implements Serializable {
 	
 	/** Идентификатор темы для внешнего блог-сервиса */
 	private int itemid;
@@ -47,7 +48,6 @@ public class Theme {
 		this.time = time;
 	}
 	
-
 	/** 
 	* Возвращает заголовок темы.
 	* @return заголовок темы
