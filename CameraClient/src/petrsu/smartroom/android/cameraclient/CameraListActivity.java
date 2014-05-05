@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
+import petrsu.smartroom.android.blogclient.ThemeActivity;
+
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.app.Activity;
@@ -17,6 +19,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 public class CameraListActivity extends ListActivity {
 	
@@ -24,7 +27,7 @@ public class CameraListActivity extends ListActivity {
 	final String CAMERA_NAME = "name";
 
 	/** Список камер. */
-	private Camera[] cameras;
+	private ArrayList<Camera> cameras;
 	
 	/** KP, отвечающий за получение списка камер. */
 	private Camera_KP KP;
@@ -48,18 +51,23 @@ public class CameraListActivity extends ListActivity {
 	* Вызывается при создании экземпляра класса и отвечает за его инициализацию. Запрашивает у KP список доступных камер и отображает его.
 	* @param savedInstanceState сохраненное состояние Activity
 	*
-	* Вызывает методы: setUpList(), Camera_KP.getCameraData(String[] cameras)
+	* Вызывает методы: setUpList(), Camera_KP.getCameraData(String[] cameras),
+	* Camera()
 	*/
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		//setContentView(R.layout.activity_main);
 		
-		KP.getCameraData(cameraCollection);
-		
-		////////////////////////////////////
-		// добавить инициализацию camera по cameraCollection
-		///////////////////////////////////
+		if (KP.getCameraData(cameraCollection) < 0) {
+			CameraErrDialog.loadCameraErr(getBaseContext());
+			finish();
+		}
+		cameras = new ArrayList<Camera>();
+		for (int i = 0; i < cameraCollection.length; i++) {
+			String[] c = cameraCollection[i].split(" ");
+			cameras.add(new Camera(c));
+		}
 		
 		setUpList();
 		
@@ -74,7 +82,9 @@ public class CameraListActivity extends ListActivity {
 			*/
 			@Override
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-				
+				intent = new Intent(getBaseContext(), CameraActivity.class);
+				intent.putExtra("theme", cameras.get(position));
+			    startActivity(intent);
 			}
 			
 		};
@@ -100,12 +110,12 @@ public class CameraListActivity extends ListActivity {
 	*/
 	private void setUpList()
     {        
-        List<Map<String, ?>> list = new ArrayList<Map<String, ?>>(cameras.length);
+        List<Map<String, ?>> list = new ArrayList<Map<String, ?>>(cameras.size());
         
-        for(int i = 0; i < cameras.length; i++)
+        for(int i = 0; i < cameras.size(); i++)
         {
             Map<String, String> map = new HashMap<String, String>();
-            map.put(CAMERA_NAME, Camera[i].getName());
+            map.put(CAMERA_NAME, cameras.get(i).getName());
             list.add(map);
         }
         
@@ -119,17 +129,4 @@ public class CameraListActivity extends ListActivity {
                 from, to);
         setListAdapter(adapter);
     }
-
-
-	/** 
-	* Вызывается при выборе пункта меню. 
-	* "Log out" - Формирует свойство intent и запускает AutorizationActivity.
-	* @param item объект, представляющий пункт меню
-	* @returns возвращаемое значение не используется
-	*/
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		return false;
-		
-	}
 }

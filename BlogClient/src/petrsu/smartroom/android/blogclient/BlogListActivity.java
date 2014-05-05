@@ -57,6 +57,12 @@ public class BlogListActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 		//setContentView(R.layout.activity_main);
 		
+		if (KP.getThemes(themes) < 0) {
+			
+		}
+		
+		setUpList();
+		
 		itemListener = new OnItemClickListener() {
 
 			/** 
