@@ -12,25 +12,25 @@ public class CameraActivity extends Activity {
 
 	
 	/** Камера для управления и просмотра видео. */
-	//private Camera camera;
-
-	/** Намерение, используемое для перехода к AutorizationActivity */
-	Intent intent;
+	private Camera camera;
 
 	/** Служит для отображения видео. */
 	private VideoView cameraView;
 
 	/** Слайдер поворота. */
 	private SeekBar panBar;
+	
+	private int panMin;
 
 	/** Слайдер наклона. */
 	private SeekBar tiltBar;
+	
+	private int tiltMin;
 
 	/** Слайдер зума. */
 	private SeekBar zoomBar;
-
-	/** Массив для хранения граничных значений pan-tilt-zoom */
-	private int[][] borders;
+	
+	private int zoomMin;
 
 	/** Слушатель событий слайдера, отвечает за обработку изменения значений */
 	private SeekBar.OnSeekBarChangeListener seekBarListener;
@@ -39,12 +39,20 @@ public class CameraActivity extends Activity {
 	* Вызывается при создании экземпляра класса и отвечает за его инициализацию
 	* @param savedInstanceState сохраненное состояние Activity
 	*
-	* Вызывает методы: setSeekBarBorders()
+	* Вызывает методы: setSeekBarBorders(int[][] borders), setSeekBarValues(int[] values)
 	*/
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_camera);
+		
+		camera = getIntent().getExtras().get("camera");
+		
+		setSeekBarBorders(camera.getBorders());
+		setSeekBarValues(camera.getCurrentPTZ());
+		
+		cameraView = new VideoView(getBaseContext());
+		cameraView.setVideoUri(camera.getURI());
 		
 		seekBarListener = 
 			    new SeekBar.OnSeekBarChangeListener() {
@@ -59,7 +67,10 @@ public class CameraActivity extends Activity {
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
-				// TODO Auto-generated method stub
+				int p = panBar.getProgress() + panMin;
+				int t = tiltBar.getProgress() + tiltMin;
+				int z = zoomBar.getProgress() + zoomMin;
+				camera.setPTZ(p, t, z);
 			}
 
 			@Override
@@ -87,33 +98,25 @@ public class CameraActivity extends Activity {
 	}
 
 	/**
-	* Устанавливает максимальные значения для слайдеров, соответствующие значениям в свойстве borders.
+	* Устанавливает максимальные значения для слайдеров, соответствующие значениям в свойстве camera.
 	* @throws NullPointerExeption
-	* Calls for: Camera.getBorders()
 	*/
 	private void setSeekBarBorders(int[][] borders) {
-		
+		panBar.setMax(borders[0][1] - borders[0][0]);
+		panMin = borders[0][0];
+		tiltBar.setMax(borders[1][1] - borders[1][0]);
+		tiltMin = borders[1][0];
+		zoomBar.setMax(borders[2][1] - borders[2][0]);
+		zoomMin = borders[2][0];
 	}
 
 	/**
-	* Устанавливает максимальные значения для слайдеров, соответствующие значениям в свойстве borders.
+	* Устанавливает текущие значения для слайдеров, соответствующие значениям в свойстве camera.
 	* @throws NullPointerExeption
-	* Calls for: Camera.getCurrentPTZ()
 	*/
-	private void setSeekBarValues(int[][] ptz) {
-		
+	private void setSeekBarValues(int[] ptz) {
+		panBar.setProgress(ptz[0]);
+		tiltBar.setProgress(ptz[1]);
+		zoomBar.setProgress(ptz[2]);
 	}
-
-	/** 
-	* Вызывается при выборе пункта меню. 
-	* "Log out" - Формирует свойство intent и запускает AutorizationActivity.
-	* @param item объект, представляющий пункт меню
-	* @returns возвращаемое значение не используется
-	*/
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		return false;
-		
-	}
-
 }

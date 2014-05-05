@@ -83,7 +83,7 @@ public class CameraListActivity extends ListActivity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 				intent = new Intent(getBaseContext(), CameraActivity.class);
-				intent.putExtra("theme", cameras.get(position));
+				intent.putExtra("camera", cameras.get(position));
 			    startActivity(intent);
 			}
 			
