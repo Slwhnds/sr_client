@@ -7,7 +7,7 @@
     <string name="guestBtn">Enter as a guest</string>
     <string name="registrationService">Registration service</string>
     <string name="ssIP">IP address</string>
-    <string name="ssPort">Port of SIB</string>
+    <stri"res/values/strings.xml"ng name="ssPort">Port of SIB</string>
     <string name="participantLogin">Login</string>
     <string name="participantEmail">Email: </string>
     <string name="participantPhone">Phone: </string>
@@ -28,5 +28,7 @@
     <string name="title_activity_theme">ThemeActivity</string>
     <string name="title_activity_leaving_comment">LeavingCommentActivity</string>
     <string name="title_activity_commens_list">CommensListActivity</string>
+    <string name="failed_loading_blog">Failed to load blog themes!</string>
+    <string name="failed_loading_logpass">Failed to load smartroom login and pass!</string>
 
 </resources>

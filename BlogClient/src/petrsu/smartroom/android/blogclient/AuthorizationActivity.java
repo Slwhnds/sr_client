@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -154,7 +155,10 @@ public class AuthorizationActivity extends Activity implements OnTouchListener {
 								Toast.LENGTH_SHORT).show();
 						return;
 					}
-					System.out.println("Registration done");					
+					System.out.println("Registration done");		
+					Intent intent = new Intent(getBaseContext(), BlogListActivity.class);
+					intent.putExtra("SRName", name);
+					startActivity(intent);
 				}
 			}
 		});
@@ -180,7 +184,9 @@ public class AuthorizationActivity extends Activity implements OnTouchListener {
 			Toast.makeText(this, R.string.connectionFail, Toast.LENGTH_SHORT).show();
 			return;
 		}
-		
+		Intent intent = new Intent(getBaseContext(), BlogListActivity.class);
+		intent.putExtra("SRName", name);
+		startActivity(intent);
 		try {
 		    Thread.sleep(400);
 		} catch(InterruptedException ex) {

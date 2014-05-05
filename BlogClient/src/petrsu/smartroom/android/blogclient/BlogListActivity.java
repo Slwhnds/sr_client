@@ -58,7 +58,24 @@ public class BlogListActivity extends ListActivity {
 		//setContentView(R.layout.activity_main);
 		
 		if (KP.getThemes(themes) < 0) {
-			
+			BlogErrDialog.loadCameraErr(getBaseContext());
+			finish();
+		}
+		
+		String login = new String(), pass = new String();
+		if (KP.getLogPass(login, pass) < 0) {
+			BlogErrDialog.loadLogPass(getBaseContext());
+			finish();
+		}
+		
+		blogAdapter.setLogPass(login, pass);
+		blogAdapter.login(login, pass);
+		blogAdapter.setSRName((String) getIntent().getExtras().get("SRName"));
+		
+		for (int i = 0; i < themes.length; i++) {
+			String[] s = themes[i].split(" ");
+			Theme t = new Theme(blogAdapter.getBlogEntry(Integer.parseInt(s[0])));
+			blog.add(t);
 		}
 		
 		setUpList();
