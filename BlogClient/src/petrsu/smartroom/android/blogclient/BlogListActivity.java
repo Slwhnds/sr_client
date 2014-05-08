@@ -22,7 +22,7 @@ import android.widget.SimpleAdapter;
 public class BlogListActivity extends ListActivity {
 	
 	//имена атрибутов для Map
-	final String THEME_SUBJECT = "name";
+	public final String THEME_SUBJECT = "name";
 	
 	/** KP, отвечающий за получение списка тем. */
 	private Blog_KP KP;
@@ -38,6 +38,9 @@ public class BlogListActivity extends ListActivity {
 
 	/** Блог-адаптер для получения тем из внешнего блог-сервиса. */
 	public static BlogAdapter blogAdapter;
+	
+	/** Список тем, подготовленный к поомешению в адаптер. */
+	public List<Map<String, ?>> list;
 
 	/** Адаптер блога. */
 	private SimpleAdapter adapter;
@@ -58,14 +61,14 @@ public class BlogListActivity extends ListActivity {
 		//setContentView(R.layout.activity_main);
 		
 		if (KP.getThemes(themes) < 0) {
-			BlogErrDialog.loadCameraErr(getBaseContext());
-			finish();
+			BlogErrDialog.loadThemesErr(getBaseContext());
+			return;
 		}
 		
 		String login = new String(), pass = new String();
 		if (KP.getLogPass(login, pass) < 0) {
 			BlogErrDialog.loadLogPass(getBaseContext());
-			finish();
+			return;
 		}
 		
 		blogAdapter.setLogPass(login, pass);
@@ -146,11 +149,11 @@ public class BlogListActivity extends ListActivity {
 	* помещает их в adapter).
 	* Calls for: Blog.getThemes()
 	*/
-	private void setUpList() {
+	public void setUpList() {
 		
 		String[] items = Blog.getThemes();
 		
-		List<Map<String, ?>> list = new ArrayList<Map<String, ?>>(items.length);
+		list = new ArrayList<Map<String, ?>>(items.length);
         
         for(int i = 0; i < items.length; i++)
         {
