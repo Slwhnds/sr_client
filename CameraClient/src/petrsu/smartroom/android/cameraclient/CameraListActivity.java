@@ -125,7 +125,7 @@ public class CameraListActivity extends ListActivity {
         //здесь нужно подставлять id из camera_item.xml
         int[] to = {R.id.};
         
-        adapter = new SimpleAdapter(this, list, R.layout.camera_item.xml,
+        adapter = new SimpleAdapter(this, list, R.layout.camera_item,
                 from, to);
         setListAdapter(adapter);
     }

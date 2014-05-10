@@ -32,6 +32,8 @@ public class BlogListActivity extends ListActivity {
 
 	/** Список тем, полученный от KP. */
 	String[] themes;
+	
+	private boolean isChairman = false;
 
 	/** Блог для отображения. */
 	private Blog blog;
@@ -58,7 +60,9 @@ public class BlogListActivity extends ListActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//setContentView(R.layout.activity_main);
+		
+		Intent it = getIntent();
+		isChairman = it.getBooleanExtra("isChairman", false);
 		
 		if (KP.getThemes(themes) < 0) {
 			BlogErrDialog.loadThemesErr(getBaseContext());
@@ -111,7 +115,8 @@ public class BlogListActivity extends ListActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
+		if (isChairman)
+		getMenuInflater().inflate(R.menu.blog_list_menu, menu);
 		return true;
 	}
 	

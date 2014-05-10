@@ -158,6 +158,7 @@ public class AuthorizationActivity extends Activity implements OnTouchListener {
 					System.out.println("Registration done");		
 					Intent intent = new Intent(getBaseContext(), BlogListActivity.class);
 					intent.putExtra("SRName", name);
+					intent.putExtra("isChairman", false);
 					startActivity(intent);
 				}
 			}
@@ -186,6 +187,7 @@ public class AuthorizationActivity extends Activity implements OnTouchListener {
 		}
 		Intent intent = new Intent(getBaseContext(), BlogListActivity.class);
 		intent.putExtra("SRName", name);
+		intent.putExtra("isChairman", isChairman);
 		startActivity(intent);
 		try {
 		    Thread.sleep(400);
