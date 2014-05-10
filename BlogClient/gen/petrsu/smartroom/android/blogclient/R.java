@@ -78,6 +78,8 @@ public final class R {
         public static final int connectBtn=0x7f060002;
         public static final int connectionFail=0x7f06000e;
         public static final int emptyFields=0x7f060014;
+        public static final int failed_loading_blog=0x7f06001b;
+        public static final int failed_loading_logpass=0x7f06001c;
         public static final int guestBtn=0x7f060003;
         public static final int guestNameEmpty=0x7f06000f;
         public static final int hello_world=0x7f060016;

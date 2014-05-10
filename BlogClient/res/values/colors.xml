@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="lightblack">#3D393A</color>
+    <color name="white">#F6FDFC</color>
+	<color name="gray">#65656570</color>
+	<color name="blue">#2c86ff</color>
+	<color name="lightblue">#0093E1</color>
+	<color name="staticTitleBtn">#0093E1</color>
+	<color name="staticTitleSecBtn">#90CDEC</color>
+	<color name="staticBtn">#9C9CAA</color>
+	<color name="staticSecBtn">#CFD4DE</color>
+	<color name="clickedBtn">#907B8B</color>
+	<color name="clickedSecBtn">#B2B0C5</color>
+	<color name="clickedTitleBtn">#90CDEC</color>
+	<color name="clickedTitleSecBtn">#BFD4E9</color>
+</resources>

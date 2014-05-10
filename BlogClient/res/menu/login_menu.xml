@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    
+    <group android:id="@+id/group4" android:visible="true" >
+    	<item
+	        android:id="@+id/action_overflow"
+	        android:title="@string/action_overflow"
+	        android:icon="@drawable/ic_action_core_overflow" 
+        	android:showAsAction="always" >
+            <menu> 
+                <item
+                    android:id="@+id/log_out"
+	        		android:orderInCategory="1"
+                    android:showAsAction="never"
+                    android:title="@string/log_out"/>
+            </menu>
+        </item>
+    </group>
+    
+</menu> 

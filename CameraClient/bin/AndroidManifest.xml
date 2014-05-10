@@ -5,7 +5,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="17"
         android:targetSdkVersion="18" />
 
     <application
@@ -22,10 +22,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
         <activity
             android:name="petrsu.smartroom.android.cameraclient.CameraActivity"
-            android:label="@string/title_activity_camera" >
+            android:label="@string/title_activity_camera"
+            android:screenOrientation="landscape" >
         </activity>
+        
+        <activity
+            android:name="cpetrsu.smartroom.android.cameraclient.CameraListActivity"
+            android:label="@string/title_activity_camera_list" >
+        </activity>
+        
     </application>
 
 </manifest>
