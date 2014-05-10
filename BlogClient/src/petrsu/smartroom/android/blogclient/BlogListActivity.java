@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import petrsu.smartroom.android.cameraclient.R;
-
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.ListActivity;
@@ -171,7 +169,7 @@ public class BlogListActivity extends ListActivity {
         String[] from = { THEME_SUBJECT };
         //массив ID View-компонентов, в которые будут вставляться данные
         //здесь нужно подставлять id из theme_item.xml
-        int[] to = { R.id. };
+        int[] to = { R.id.theme_name };
         
         adapter = new SimpleAdapter(this, list, R.layout.theme_item.xml,
                 from, to);

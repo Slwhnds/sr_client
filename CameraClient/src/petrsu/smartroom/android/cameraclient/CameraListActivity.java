@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
-import petrsu.smartroom.android.blogclient.ThemeActivity;
-
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.app.Activity;
@@ -123,7 +121,7 @@ public class CameraListActivity extends ListActivity {
         String[] from = {CAMERA_NAME};
         //массив ID View-компонентов, в которые будут вставляться данные
         //здесь нужно подставлять id из camera_item.xml
-        int[] to = {R.id.};
+        int[] to = {R.id.camera_name};
         
         adapter = new SimpleAdapter(this, list, R.layout.camera_item,
                 from, to);

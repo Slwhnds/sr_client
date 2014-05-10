@@ -1,6 +1,5 @@
 package petrsu.smartroom.android.blogclient;
 
-import petrsu.smartroom.android.cameraclient.R;
 import android.content.Context;
 import android.widget.Toast;
 
