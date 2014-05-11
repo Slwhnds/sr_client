@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import petrsu.smartroom.android.cameraclient.R;
-
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.ListActivity;
@@ -108,7 +106,7 @@ public class BlogListActivity extends ListActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
+		//getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
 	
@@ -165,7 +163,7 @@ public class BlogListActivity extends ListActivity {
         //здесь нужно подставлять id из theme_item.xml
         int[] to = { R.id. };
         
-        adapter = new SimpleAdapter(this, list, R.layout.theme_item.xml,
+        adapter = new SimpleAdapter(this, list, R.layout.theme_item,
                 from, to);
         setListAdapter(adapter);
 	}

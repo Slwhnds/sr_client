@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
-import petrsu.smartroom.android.blogclient.ThemeActivity;
-
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.app.Activity;
