@@ -60,13 +60,13 @@ public class BlogListActivity extends ListActivity {
 		
 		if (KP.getThemes(themes) < 0) {
 			BlogErrDialog.loadCameraErr(getBaseContext());
-			finish();
+			return;
 		}
 		
 		String login = new String(), pass = new String();
 		if (KP.getLogPass(login, pass) < 0) {
 			BlogErrDialog.loadLogPass(getBaseContext());
-			finish();
+			return;
 		}
 		
 		blogAdapter.setLogPass(login, pass);
