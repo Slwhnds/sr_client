@@ -11,7 +11,8 @@ import android.test.ActivityInstrumentationTestCase2;
 public class BlogListActivityTest extends ActivityInstrumentationTestCase2<BlogListActivity> {
 	
 	BlogListActivity activity;
-	String[] themes = {"theme1", "theme2", "theme3"};
+	String[] correctThemes = {"theme1", "theme2", "theme3"};
+	String[] nullThemes = null;
 
 	public BlogListActivityTest() {
 		super(BlogListActivity.class);
@@ -26,19 +27,31 @@ public class BlogListActivityTest extends ActivityInstrumentationTestCase2<BlogL
 		super.tearDown();
 	}
 	
-	public void testSetUpList() {
-		List<Map<String, ?>> list = new ArrayList<Map<String, ?>>(themes.length);
+	public void testSetUpList20_1() {
+		List<Map<String, ?>> list = new ArrayList<Map<String, ?>>(correctThemes.length);
         
-        for(int i = 0; i < themes.length; i++)
+        for(int i = 0; i < correctThemes.length; i++)
         {
             Map<String, String> map = new HashMap<String, String>();
-            map.put(activity.THEME_SUBJECT, themes[i]);
+            map.put(activity.THEME_SUBJECT, correctThemes[i]);
             list.add(map);
         }
         
+        BlogListActivity.blog.setTestThemes(correctThemes);
 		activity.setUpList();
 		
 		assertEquals(list, activity.list);
+	}
+	
+	public void testSetUpList20_3() {      
+        BlogListActivity.blog.setTestThemes(nullThemes);
+        try {
+        	activity.setUpList();
+        	fail("NullPointerException expected");
+        }
+        catch(Exception exception) {
+        	assertEquals("Чето не тот exception пришел", NullPointerException.class, exception.getClass());
+        }
 	}
 
 	/*public void testOnCreate() {

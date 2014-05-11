@@ -34,7 +34,7 @@ public class BlogListActivity extends ListActivity {
 	String[] themes;
 
 	/** Блог для отображения. */
-	private Blog blog;
+	public static Blog blog;
 
 	/** Блог-адаптер для получения тем из внешнего блог-сервиса. */
 	public static BlogAdapter blogAdapter;
@@ -77,7 +77,7 @@ public class BlogListActivity extends ListActivity {
 		
 		blog = new Blog();
 		
-		for (int i = 0; i < themes.length; i++) {
+		/*for (int i = 0; i < themes.length; i++) {
 			String[] s = themes[i].split(" ");
 			Theme t = null;
 			try {
@@ -91,7 +91,7 @@ public class BlogListActivity extends ListActivity {
 				e.printStackTrace();
 			}
 			blog.add(t);
-		}
+		}*/
 		
 		setUpList();
 		
@@ -168,8 +168,8 @@ public class BlogListActivity extends ListActivity {
 	* Calls for: Blog.getThemes()
 	*/
 	public void setUpList() {
-		//String[] items = blog.getThemeSubjects();
-		String[] items = blog.getTestThemes();
+		String[] items = blog.getThemeSubjects();
+		//String[] items = blog.getTestThemes();
 		
 		list = new ArrayList<Map<String, ?>>(items.length);
         
@@ -186,9 +186,9 @@ public class BlogListActivity extends ListActivity {
         //здесь нужно подставлять id из theme_item.xml
         int[] to = { R.id.theme_name };
         
-        adapter = new SimpleAdapter(this, list, R.layout.theme_item,
-                from, to);
-        setListAdapter(adapter);
+        //adapter = new SimpleAdapter(this, list, R.layout.theme_item,
+             //   from, to);
+       // setListAdapter(adapter);
 	}
 
 }

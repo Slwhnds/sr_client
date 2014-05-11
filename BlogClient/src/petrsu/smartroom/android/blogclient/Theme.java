@@ -26,6 +26,10 @@ public class Theme implements Serializable {
 
 	/** Время доклада */
 	public Date time;
+	
+	public Theme(String subject) {
+		this.subject = subject;
+	}
 
 	/**  Конструктор. Принимает BlogEntry, забирая из него нужные данные */
 	public Theme(BlogEntry post){
