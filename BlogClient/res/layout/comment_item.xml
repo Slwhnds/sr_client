@@ -34,19 +34,16 @@
     	    android:text="@string/comma"
     	    android:layout_toRightOf="@id/comment_author" />
 
-    	<TextClock
+    	<TextView
     	    android:id="@+id/comment_time"
     	    android:layout_width="wrap_content"
     	    android:layout_height="wrap_content"
     	    android:layout_alignBottom="@+id/icon_author"
     	    android:layout_alignParentTop="true"
     	    android:layout_toRightOf="@+id/comma"
-    	    android:format12Hour="MMMM dd yyyy hh:mm"
-    	    android:format24Hour="MMMM dd yyyy hh:mm"
     	    android:paddingLeft="20dp"
     	    android:paddingTop="10sp"
-    	    android:textSize="20sp"
-    	    android:timeZone="Russia/Moscow" />
+    	    android:textSize="20sp" />
     	     
     	<TextView
     	    android:id="@+id/comment_text"

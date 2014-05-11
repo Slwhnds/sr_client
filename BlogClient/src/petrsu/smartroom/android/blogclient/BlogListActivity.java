@@ -30,6 +30,9 @@ public class BlogListActivity extends ListActivity {
 
 	/** Список тем, полученный от KP. */
 	String[] themes;
+	
+	/** Список тем, подготовленный к помещению в адаптер. */
+	List<Map<String, ?>> list;
 
 	/** Блог для отображения. */
 	private Blog blog;
@@ -67,7 +70,7 @@ public class BlogListActivity extends ListActivity {
 		}
 		
 		blogAdapter.setLogPass(login, pass);
-		blogAdapter.login(login, pass);
+		blogAdapter.login();
 		blogAdapter.setSRName((String) getIntent().getExtras().get("SRName"));
 		
 		for (int i = 0; i < themes.length; i++) {
@@ -106,7 +109,10 @@ public class BlogListActivity extends ListActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		//getMenuInflater().inflate(R.menu.main, menu);
+		if (AuthorizationActivity.isChairman)
+			getMenuInflater().inflate(R.menu.blog_list_menu_chairman, menu);
+		else
+			getMenuInflater().inflate(R.menu.blog_list_menu, menu);
 		return true;
 	}
 	
@@ -130,8 +136,11 @@ public class BlogListActivity extends ListActivity {
 		case R.id.log_out:
 			this.finish();
 			break;
-		case R.id.refresh:
+		case R.id.action_refresh:
 			this.recreate();
+			break;
+		case R.id.delete_blog:
+			//add smth
 			break;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -148,7 +157,7 @@ public class BlogListActivity extends ListActivity {
 		
 		String[] items = Blog.getThemes();
 		
-		List<Map<String, ?>> list = new ArrayList<Map<String, ?>>(items.length);
+		list = new ArrayList<Map<String, ?>>(items.length);
         
         for(int i = 0; i < items.length; i++)
         {
@@ -161,7 +170,7 @@ public class BlogListActivity extends ListActivity {
         String[] from = { THEME_SUBJECT };
         //массив ID View-компонентов, в которые будут вставляться данные
         //здесь нужно подставлять id из theme_item.xml
-        int[] to = { R.id. };
+        int[] to = { R.id.theme_name };
         
         adapter = new SimpleAdapter(this, list, R.layout.theme_item,
                 from, to);

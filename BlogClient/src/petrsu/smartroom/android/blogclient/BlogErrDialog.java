@@ -21,4 +21,16 @@ public class BlogErrDialog {
 				Toast.LENGTH_SHORT);
 		toast.show();
 	}
+	
+	public static void fillLogPass(Context context) {
+		Toast toast = Toast.makeText(context, R.string.emptyFields,
+				Toast.LENGTH_SHORT);
+		toast.show();
+	}
+
+	public static void emptyComment(Context context) {
+		Toast toast = Toast.makeText(context, R.string.emptyComment,
+				Toast.LENGTH_SHORT);
+		toast.show();
+	}
 }
