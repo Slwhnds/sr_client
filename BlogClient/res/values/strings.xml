@@ -22,6 +22,7 @@
     <string name="userPhone">Phone:</string>
     <string name="userEmail">Email:</string>
     <string name="emptyFields">Name and password have to be filled</string>
+    <string name="emptyComment">Comment text has to be filled</string>
     <string name="title_activity_blog_list">Conversation</string>
     <string name="title_activity_main">Conversation: Themes of reports</string>
     <string name="title_activity_theme">Conversation</string>
@@ -65,7 +66,8 @@
     <string name="comm_author"></string>
     <string name="comma">,</string>
     
-    
+    <string name="test1">test1???</string>
+    <string name="test3">test3???</string>
     
     
 

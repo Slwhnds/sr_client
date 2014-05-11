@@ -15,9 +15,6 @@ public class LoginActivity extends Activity {
 	/** Намерение, используемое для перехода к AutorizationActivity */
 	Intent intent;
 
-	/** Блог-адапрер для того, чтобы залогиниться на внешнем блог-сервисе. */
-	//private BlogAdapter blogAdapter;
-
 	/** Введенный логин. */
 	private String login;
 
@@ -34,10 +31,12 @@ public class LoginActivity extends Activity {
 	private EditText passwdEditText;
 
 	/** Метка для отображения текущего логина. */
-	private TextView curLoginTextView;
+	private EditText curLoginEditText;
 
 	/** Кнопка "Login". */
 	private Button loginButton;
+	
+	private boolean after = false;
 
 	/** 
 	* Вызывается при создании экземпляра класса и отвечает за его инициализацию. Берет из BlogAdapter текущий логин и отображает его.
@@ -49,6 +48,9 @@ public class LoginActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
+		curLogin = BlogListActivity.blogAdapter.getCurLogin();
+		curLoginEditText = (EditText) findViewById(R.id.logged_as_edit);
+		curLoginEditText.setText(curLogin);
 	}
 
 	/** 
@@ -59,7 +61,10 @@ public class LoginActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.blog_list, menu);
+		if (after)
+			getMenuInflater().inflate(R.menu.login_menu_after, menu);
+		else
+			getMenuInflater().inflate(R.menu.login_menu, menu);
 		return true;
 	}
 
@@ -74,8 +79,17 @@ public class LoginActivity extends Activity {
 	*/
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		return false;
-		
+		switch (item.getItemId()) {
+		case R.id.back_to_sr_account:
+			BlogListActivity.blogAdapter.login();
+			break;
+		case R.id.log_out:
+			this.finish();
+			break;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+		return true;
 	}
 	
 	/** Срабатывает при нажатии на кнопку "Login". Передает логин и пароль объекту BlogAdapter для попытки авторизации во внешнем блог-сервисе.
@@ -84,6 +98,13 @@ public class LoginActivity extends Activity {
 	* Вызывает функции: BlogAdapter.login(String login, String password)
 	*/
 	public void onLogin(View v) {
-		
+		loginEditText = (EditText) findViewById(R.id.login_edit);
+		passwdEditText = (EditText) findViewById(R.id.password_edit);
+		login = loginEditText.getText().toString();
+		pass = passwdEditText.getText().toString();
+		if ((login == "") || (pass == ""))
+			BlogErrDialog.fillLogPass(getBaseContext());
+		BlogListActivity.blogAdapter.login(login, pass);
+		recreate();
 	}
 }

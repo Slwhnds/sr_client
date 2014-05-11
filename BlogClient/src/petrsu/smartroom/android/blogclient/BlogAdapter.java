@@ -51,6 +51,14 @@ public class BlogAdapter {
 	public UserData login(String login, String password){
 		return client.login(login, password, timeout);
 	}
+	
+	/** Ћогинитс€ под общими логином и паролем от SR.
+	* @throws LJRuntimeException в случае, если возникли проблемы с сетью на стороне клиента или сервера
+	* ¬ызывает метод login() в ConvenientClient.
+	*/
+	public UserData login(){
+		return client.login(login, pass, timeout);
+	}
 
 	/**  ¬озвращает запрошенный у внешнего блог-сервиса пост 
 	* @param itemid - идентификатор поста

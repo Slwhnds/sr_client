@@ -1,7 +1,14 @@
 package petrsu.smartroom.android.blogclient;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.ListActivity;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -9,22 +16,24 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.SimpleAdapter;
 
-public class CommensListActivity extends Activity {
+public class CommensListActivity extends ListActivity {
+	
+	//имена атрибутов для Map
+	final String COMMENT_AUTHOR = "author";
+	final String COMMENT_TIME = "time";
+	final String COMMENT_TEXT = "text";
 	
 	/** Намерение, используемое для перехода к другим Activity. */
 	Intent intent;
 
-	/** Блог-адаптер для получения списка комментариев. */
-	//BlogAdapter blogAdapter;
-
 	/** Тема, комментарии к которой отображаются. */
-	//private Theme theme;
+	private Theme theme;
 	 
 	/** Адаптер списка комментариев. */
 	private SimpleAdapter adapter;
-
-	/** Кнопка "Leave a comment". */
-	private Button leaveCommentButton;
+	
+	/** Список комментариев, подготовленный к помещению в адаптер. */
+	List<Map<String, ?>> list;
 
 	/** 
 	* Вызывается при создании экземпляра класса и отвечает за его инициализацию. Отображает список комментариев, соответствующий теме, переданной в намерении, которое запустило CommentsListActivity.
@@ -35,7 +44,9 @@ public class CommensListActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_commens_list);
+		
+		theme = (Theme) getIntent().getExtras().get("theme");
+		setUpList();
 	}
 
 	/** 
@@ -46,7 +57,7 @@ public class CommensListActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.commens_list, menu);
+		getMenuInflater().inflate(R.menu.comments_list_menu, menu);
 		return true;
 	}
 	
@@ -57,14 +68,27 @@ public class CommensListActivity extends Activity {
 	* Calls for: BlogAdapter.getComments(Theme theme)
 	*/
 	private void setUpList() {
+		Comment[] items = BlogListActivity.blogAdapter.getComments(theme);
 		
-	}
-
-	/** Срабатывает при нажатии на кнопку "Leave a comment". Формирует свойство intent и запускает  LeavingCommentActivity.
-	* @param v нажатая кнопка
-	*/
-	public void onLeaveComment(View v) {
-		
+		list = new ArrayList<Map<String, ?>>(items.length);
+        
+        for(int i = 0; i < items.length; i++)
+        {
+            Map<String, String> map = new HashMap<String, String>();
+            map.put(COMMENT_AUTHOR, items[i].getAuthor());
+            map.put(COMMENT_TIME, new SimpleDateFormat("hh:mm").format(items[i].getTime()));
+            map.put(COMMENT_TEXT, items[i].getText());
+            list.add(map);
+        }
+        
+        //массив имен атрибутов, из которых будут читаться данные
+        String[] from = { COMMENT_AUTHOR, COMMENT_TIME, COMMENT_TEXT };
+        //массив ID View-компонентов, в которые будут вставляться данные
+        int[] to = { R.id.comment_author, R.id.comment_time, R.id.comment_text };
+        
+        adapter = new SimpleAdapter(this, list, R.layout.comment_item,
+                from, to);
+        setListAdapter(adapter);
 	}
 
 	/** 
@@ -79,7 +103,18 @@ public class CommensListActivity extends Activity {
 	*/
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		return false;
-		
+		switch (item.getItemId()) {
+		case R.id.leave_comment:
+			intent = new Intent(getBaseContext(), LeavingCommentActivity.class);
+			intent.putExtra("theme", theme);
+		    startActivity(intent);
+			break;
+		case R.id.log_out:
+			this.finish();
+			break;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+		return true;
 	}
 }

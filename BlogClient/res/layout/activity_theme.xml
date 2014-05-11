@@ -27,19 +27,16 @@
         android:text="@string/title_speech_time"
         android:textSize="20sp" />
 
-    <TextClock
+    <TextView
         android:id="@+id/speech_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/title_speech_time"
         android:layout_marginTop="20sp"
         android:layout_toRightOf="@+id/title_speech_time"
-        android:format12Hour="MMMM dd yyyy hh:mm"
-        android:format24Hour="MMMM dd yyyy hh:mm"
         android:paddingLeft="20dp"
         android:paddingTop="10sp"
-        android:textSize="20sp"
-        android:timeZone="Russia/Moscow" />
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/title_reporter"

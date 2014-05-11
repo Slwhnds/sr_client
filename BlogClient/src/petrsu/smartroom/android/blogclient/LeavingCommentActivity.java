@@ -14,17 +14,11 @@ public class LeavingCommentActivity extends Activity {
 	/** Намерение, используемое для перехода к AutorizationActivity */
 	Intent intent;
 
-	/** Блог-адаптер для публикации комментария. */
-	//BlogAdapter blogAdapter;
-
 	/** Тема, к которой публикуется комментарий. */
-	//private Theme theme;
+	private Theme theme;
 
 	/** Введенный текст комментария. */
 	private String commentText;
-
-	/** Кнопка "Publish". */
-	private Button publishButton;
 
 	/** Поле для ввода текста комментария. */
 	private EditText commentEditText;
@@ -37,6 +31,8 @@ public class LeavingCommentActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_leaving_comment);
+		
+		theme = (Theme) getIntent().getExtras().get("theme");
 	}
 
 
@@ -48,7 +44,7 @@ public class LeavingCommentActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.leaving_comment, menu);
+		getMenuInflater().inflate(R.menu.leaving_comment_menu, menu);
 		return true;
 	}
 
@@ -58,7 +54,11 @@ public class LeavingCommentActivity extends Activity {
 	* Вызывает функции: BlogAdapter.postComment(String body, Theme theme) 
 	*/
 	public void onPublish(View v) {
-		
+		commentEditText = (EditText) findViewById(R.id.editTextLeaveComment);
+		commentText = commentEditText.getText().toString();
+		if (commentText == "")
+			BlogErrDialog.emptyComment(getBaseContext());
+		BlogListActivity.blogAdapter.postComment(theme, commentText);
 	}
 
 	/** 
@@ -69,8 +69,14 @@ public class LeavingCommentActivity extends Activity {
 	*/
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		return false;
-		
+		switch (item.getItemId()) {
+		case R.id.log_out:
+			this.finish();
+			break;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+		return true;
 	}
 
 }

@@ -1,5 +1,7 @@
 package petrsu.smartroom.android.blogclient;
 
+import java.text.SimpleDateFormat;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -15,16 +17,19 @@ public class ThemeActivity extends Activity {
 	Intent intent;
 
 	/** Тема для отображения. */
-	//private Theme theme;
-
-	/** Текущий блог. */
-	//private Blog blog;
+	private Theme theme;
 
 	/** Метка для отображения заголовка темы. */
 	private TextView themeNameTextView;
 
 	/** Метка для отображения текста темы. */
 	private TextView themeTextTextView;
+	
+	/** Метка для отображения времени выступления. */
+	private TextView speechTimeTextView;
+	
+	/** Метка для отображения имени докладчика. */
+	private TextView reporterNameTextView;
 
 	/** Кнопка "View comments". */
 	private Button viewCommentsButton;
@@ -40,6 +45,21 @@ public class ThemeActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_theme);
+		
+		theme = (Theme) getIntent().getExtras().get("theme");
+		
+		themeNameTextView = (TextView) findViewById(R.id.title_theme_name);
+		themeNameTextView.setText(theme.getSubject());
+		
+		themeTextTextView = (TextView) findViewById(R.id.theme_text);
+		themeTextTextView.setText(theme.getText());
+		
+		speechTimeTextView = (TextView) findViewById(R.id.speech_time);
+		SimpleDateFormat sm = new SimpleDateFormat("hh:mm");
+		speechTimeTextView.setText(sm.format(theme.getTime()));
+		
+		reporterNameTextView = (TextView) findViewById(R.id.reporter_name);
+		reporterNameTextView.setText(theme.getRepoter());
 	}
 
 	/** 
@@ -50,7 +70,7 @@ public class ThemeActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.theme, menu);
+		getMenuInflater().inflate(R.menu.theme_menu, menu);
 		return true;
 	}
 	
@@ -59,14 +79,18 @@ public class ThemeActivity extends Activity {
 	* @param v нажатая кнопка
 	*/
 	public void onViewComments(View v) {
-		
+		intent = new Intent(getBaseContext(), CommensListActivity.class);
+		intent.putExtra("theme", theme);
+	    startActivity(intent);
 	}
 
 	/** Срабатывает при нажатии на кнопку "Leave a comment". Формирует свойство intent и запускает  LeavingCommentActivity.
 	* @param v нажатая кнопка
 	*/
 	public void onLeaveComment(View v) {
-		
+		intent = new Intent(getBaseContext(), LeavingCommentActivity.class);
+		intent.putExtra("theme", theme);
+	    startActivity(intent);
 	}
 
 	/** 
@@ -77,8 +101,14 @@ public class ThemeActivity extends Activity {
 	*/
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		return false;
-		
+		switch (item.getItemId()) {
+		case R.id.log_out:
+			this.finish();
+			break;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+		return true;
 	}
 
 }
