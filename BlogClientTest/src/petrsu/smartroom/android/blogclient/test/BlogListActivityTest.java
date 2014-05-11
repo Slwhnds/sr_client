@@ -8,7 +8,7 @@ import java.util.Map;
 import petrsu.smartroom.android.blogclient.BlogListActivity;
 import android.test.ActivityInstrumentationTestCase2;
 
-public class BlogListActivityTest extends ActivityInstrumentationTestCase2 {
+public class BlogListActivityTest extends ActivityInstrumentationTestCase2<BlogListActivity> {
 	
 	BlogListActivity activity;
 	String[] themes = {"theme1", "theme2", "theme3"};
