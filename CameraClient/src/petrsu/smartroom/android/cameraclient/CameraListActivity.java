@@ -54,8 +54,7 @@ public class CameraListActivity extends ListActivity {
 	*/
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		//setContentView(R.layout.activity_main);
+		super.onCreate(savedInstanceState)
 		
 		if (KP.getCameraData(cameraCollection) < 0) {
 			CameraErrDialog.loadCameraErr(getBaseContext());
@@ -96,7 +95,7 @@ public class CameraListActivity extends ListActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
+		getMenuInflater().inflate(R.menu.camera_list_menu, menu);
 		return true;
 	}
 	
@@ -118,12 +117,11 @@ public class CameraListActivity extends ListActivity {
         }
         
         //массив имен атрибутов, из которых будут читаться данные
-        String[] from = {CAMERA_NAME};
+        String[] from = {CAMERA_NAME };
         //массив ID View-компонентов, в которые будут вставляться данные
-        //здесь нужно подставлять id из camera_item.xml
-        int[] to = {R.id.};
+        int[] to = {R.id.camera_name};
         
-        adapter = new SimpleAdapter(this, list, R.layout.camera_item.xml,
+        adapter = new SimpleAdapter(this, list, R.layout.camera_item,
                 from, to);
         setListAdapter(adapter);
     }

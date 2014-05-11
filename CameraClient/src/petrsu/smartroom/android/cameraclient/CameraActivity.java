@@ -86,14 +86,14 @@ public class CameraActivity extends Activity {
 	}
 
 	/** 
-	* Вызывается при создании меню. Добавляет в меню "Log out" как пункт.
+	* Вызывается при создании меню. 
 	* @param menu объект, представляющий меню
 	* @returns возвращаемое значение не используется
 	*/
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.camera, menu);
+		getMenuInflater().inflate(R.menu.camera_menu, menu);
 		return true;
 	}
 
@@ -102,12 +102,39 @@ public class CameraActivity extends Activity {
 	* @throws NullPointerExeption
 	*/
 	private void setSeekBarBorders(int[][] borders) {
-		panBar.setMax(borders[0][1] - borders[0][0]);
-		panMin = borders[0][0];
-		tiltBar.setMax(borders[1][1] - borders[1][0]);
-		tiltMin = borders[1][0];
-		zoomBar.setMax(borders[2][1] - borders[2][0]);
-		zoomMin = borders[2][0];
+		if (borders == null) {
+			panBar.setFocusable(false);
+			tiltBar.setFocusable(false);
+			zoomBar.setFocusable(false);
+			return;
+		}
+		
+		if ((borders[0][1] < 0) ||
+				(borders[0][0] < 0) ||
+				(borders[0][1] < borders[0][0]))
+			panBar.setFocusable(false);
+		else {
+			panBar.setMax(borders[0][1] - borders[0][0]);
+			panMin = borders[0][0];
+		}
+		
+		if ((borders[1][1] < 0) ||
+				(borders[1][0] < 0) ||
+				(borders[1][1] < borders[1][0]))
+			tiltBar.setFocusable(false);
+		else {
+			tiltBar.setMax(borders[1][1] - borders[1][0]);
+			tiltMin = borders[1][0];
+		}
+		
+		if ((borders[2][1] < 0) ||
+				(borders[2][0] < 0) ||
+				(borders[2][1] < borders[2][0]))
+			tiltBar.setFocusable(false);
+		else {
+			zoomBar.setMax(borders[2][1] - borders[2][0]);
+			zoomMin = borders[2][0];
+		}
 	}
 
 	/**
@@ -115,8 +142,29 @@ public class CameraActivity extends Activity {
 	* @throws NullPointerExeption
 	*/
 	private void setSeekBarValues(int[] ptz) {
-		panBar.setProgress(ptz[0]);
-		tiltBar.setProgress(ptz[1]);
-		zoomBar.setProgress(ptz[2]);
+		if (ptz == null) {
+			panBar.setFocusable(false);
+			tiltBar.setFocusable(false);
+			zoomBar.setFocusable(false);
+			return;
+		}
+		
+		if ((ptz[0] < panMin) ||
+				(ptz[0] > panBar.getMax()))
+			panBar.setFocusable(false);
+		else
+			panBar.setProgress(ptz[0] - panMin);
+		
+		if ((ptz[1] < tiltMin) ||
+				(ptz[1] > tiltBar.getMax()))
+			tiltBar.setFocusable(false);
+		else
+			tiltBar.setProgress(ptz[1] - tiltMin);
+		
+		if ((ptz[2] < zoomMin) ||
+				(ptz[2] > zoomBar.getMax()))
+			zoomBar.setFocusable(false);
+		else
+			zoomBar.setProgress(ptz[2] - zoomMin);
 	}
 }
