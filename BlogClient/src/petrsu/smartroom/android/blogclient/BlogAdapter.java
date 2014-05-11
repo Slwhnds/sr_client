@@ -76,8 +76,13 @@ public class BlogAdapter {
 	* @throws LJRuntimeException в случае, если возникли проблемы с сетью на стороне клиента или сервера
 	* Calls for: ConvenientClient.getComments(), Theme.getID().
 	*/
-	public Comment[] getComments(Theme theme){
-		return client.getComments(theme.getID(), theme.getAnum(), timeout);
+	public ThemeComment[] getComments(Theme theme){
+		Comment[] c = client.getComments(theme.getID(), theme.getAnum(), timeout);
+		ThemeComment[] c1 = new ThemeComment[c.length];
+		for (int i = 0; i < c.length; i++)
+			c1[i] = new ThemeComment(c[i]);
+		//return client.getComments(theme.getID(), theme.getAnum(), timeout);
+		return c1;
 	}
 
 	/**  Публикует комментарий к посту в блог-сервисе

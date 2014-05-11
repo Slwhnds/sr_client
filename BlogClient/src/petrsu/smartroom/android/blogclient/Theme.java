@@ -22,7 +22,7 @@ public class Theme implements Serializable {
 	public String subject;
 
 	/** Комментарии к теме */
-	private Comment[] comments; 
+	private ThemeComment[] comments; 
 
 	/** Время доклада */
 	public Date time;
@@ -47,6 +47,38 @@ public class Theme implements Serializable {
 		this.status = status;
 		this.time = time;
 	}
+	
+
+	/**  Конструктор. Заполняет поля. 
+	 * 
+	 * TBD
+	 */
+	public Theme(int itemid, String status, Date time, BlogEntry post){
+		this.itemid = itemid;
+		this.status = status;
+		this.time = time;
+		
+		this.anum = post.getAnum();
+		this.body = post.getBody();
+		this.subject = post.getSubject();
+		this.time = post.getDate();
+	}
+	
+	/**  Конструктор. Заполняет поля
+	 * 
+	 * TBD
+	 */
+	public Theme(int itemid, String status, BlogEntry post){
+		this.itemid = itemid;
+		this.status = status;
+		this.time = time;
+		
+		this.anum = post.getAnum();
+		this.body = post.getBody();
+		this.subject = post.getSubject();
+		this.time = post.getDate();
+	}
+	
 	
 	/** 
 	* Возвращает заголовок темы.

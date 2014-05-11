@@ -1,5 +1,6 @@
 package petrsu.smartroom.android.blogclient;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,13 +31,6 @@ public class BlogListActivity extends ListActivity {
 
 	/** Список тем, полученный от KP. */
 	String[] themes;
-	
-<<<<<<< HEAD
-	private boolean isChairman = false;
-=======
-	/** Список тем, подготовленный к помещению в адаптер. */
-	List<Map<String, ?>> list;
->>>>>>> branch 'master' of ssh://git@github.com/Slwhnds/sr_client.git
 
 	/** Блог для отображения. */
 	private Blog blog;
@@ -64,9 +58,6 @@ public class BlogListActivity extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		Intent it = getIntent();
-		isChairman = it.getBooleanExtra("isChairman", false);
-		
 		if (KP.getThemes(themes) < 0) {
 			BlogErrDialog.loadThemesErr(getBaseContext());
 			return;
@@ -84,7 +75,8 @@ public class BlogListActivity extends ListActivity {
 		
 		for (int i = 0; i < themes.length; i++) {
 			String[] s = themes[i].split(" ");
-			Theme t = new Theme(blogAdapter.getBlogEntry(Integer.parseInt(s[0])));
+			Theme t = new Theme(Integer.parseInt(s[0]), s[1], new SimpleDateFormat().parse(s[2]), 
+					blogAdapter.getBlogEntry(Integer.parseInt(s[0])));
 			blog.add(t);
 		}
 		
@@ -118,15 +110,10 @@ public class BlogListActivity extends ListActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-<<<<<<< HEAD
-		if (isChairman)
-		getMenuInflater().inflate(R.menu.blog_list_menu, menu);
-=======
 		if (AuthorizationActivity.isChairman)
 			getMenuInflater().inflate(R.menu.blog_list_menu_chairman, menu);
 		else
 			getMenuInflater().inflate(R.menu.blog_list_menu, menu);
->>>>>>> branch 'master' of ssh://git@github.com/Slwhnds/sr_client.git
 		return true;
 	}
 	

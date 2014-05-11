@@ -68,14 +68,14 @@ public class CommensListActivity extends ListActivity {
 	* Calls for: BlogAdapter.getComments(Theme theme)
 	*/
 	private void setUpList() {
-		Comment[] items = BlogListActivity.blogAdapter.getComments(theme);
+		ThemeComment[] items = BlogListActivity.blogAdapter.getComments(theme);
 		
 		list = new ArrayList<Map<String, ?>>(items.length);
         
         for(int i = 0; i < items.length; i++)
         {
             Map<String, String> map = new HashMap<String, String>();
-            map.put(COMMENT_AUTHOR, items[i].getAuthor());
+            map.put(COMMENT_AUTHOR, items[i].getPosterName());
             map.put(COMMENT_TIME, new SimpleDateFormat("hh:mm").format(items[i].getTime()));
             map.put(COMMENT_TEXT, items[i].getText());
             list.add(map);
