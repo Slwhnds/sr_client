@@ -53,7 +53,7 @@ public class ThemeActivity extends Activity {
 		speechTimeTextView.setText(sm.format(theme.getTime()));
 		
 		reporterNameTextView = (TextView) findViewById(R.id.reporter_name);
-		reporterNameTextView.setText(theme.getRepoter());
+		//reporterNameTextView.setText(theme.getRepoter());
 	}
 
 	/** 

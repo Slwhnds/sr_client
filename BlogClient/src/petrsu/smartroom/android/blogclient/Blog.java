@@ -11,6 +11,11 @@ public class Blog {
 		
 	/** Список тем */
 	private ArrayList<Theme> themes;
+	
+	public String[] getTestThemes() {
+		String[] t = {"theme1", "theme2", "theme3"};
+		return t;
+	}
 	 
 	/**  Возвращает список заголовков тем.
 	* @throws NullPointerException в случае, если какой-либо элемент themes == null

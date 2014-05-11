@@ -1,5 +1,6 @@
 package petrsu.smartroom.android.blogclient;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,25 +59,36 @@ public class BlogListActivity extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		if (KP.getThemes(themes) < 0) {
+		/*if (KP.getThemes(themes) < 0) {
 			BlogErrDialog.loadThemesErr(getBaseContext());
 			return;
-		}
+		}*/
 		
 		String login = new String(), pass = new String();
-		if (KP.getLogPass(login, pass) < 0) {
+		/*if (KP.getLogPass(login, pass) < 0) {
 			BlogErrDialog.loadLogPass(getBaseContext());
 			return;
-		}
+		}*/
 		
 		blogAdapter.setLogPass(login, pass);
 		blogAdapter.login();
 		blogAdapter.setSRName((String) getIntent().getExtras().get("SRName"));
 		
+		blog = new Blog();
+		
 		for (int i = 0; i < themes.length; i++) {
 			String[] s = themes[i].split(" ");
-			Theme t = new Theme(Integer.parseInt(s[0]), s[1], new SimpleDateFormat().parse(s[2]), 
-					blogAdapter.getBlogEntry(Integer.parseInt(s[0])));
+			Theme t = null;
+			try {
+				t = new Theme(Integer.parseInt(s[0]), s[1], new SimpleDateFormat().parse(s[2]), 
+						blogAdapter.getBlogEntry(Integer.parseInt(s[0])));
+			} catch (NumberFormatException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			blog.add(t);
 		}
 		
@@ -155,8 +167,8 @@ public class BlogListActivity extends ListActivity {
 	* Calls for: Blog.getThemes()
 	*/
 	public void setUpList() {
-		
-		String[] items = Blog.getThemes();
+		//String[] items = blog.getThemeSubjects();
+		String[] items = blog.getTestThemes();
 		
 		list = new ArrayList<Map<String, ?>>(items.length);
         
