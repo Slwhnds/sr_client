@@ -58,32 +58,22 @@ public class BlogListActivity extends ListActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-<<<<<<< HEAD
-		if (KP.getThemes(themes) < 0) {
-			BlogErrDialog.loadCameraErr(getBaseContext());
-			return;
-		}
-=======
+
 		/*if (KP.getThemes(themes) < 0) {
 			BlogErrDialog.loadThemesErr(getBaseContext());
 			return;
 		}*/
->>>>>>> branch 'master' of ssh://git@github.com/Slwhnds/sr_client.git
 		
 		String login = new String(), pass = new String();
 		/*if (KP.getLogPass(login, pass) < 0) {
 			BlogErrDialog.loadLogPass(getBaseContext());
 			return;
-<<<<<<< HEAD
 		}
-=======
 		}*/
->>>>>>> branch 'master' of ssh://git@github.com/Slwhnds/sr_client.git
 		
-		blogAdapter.setLogPass(login, pass);
-		blogAdapter.login();
-		blogAdapter.setSRName((String) getIntent().getExtras().get("SRName"));
+		//blogAdapter.setLogPass(login, pass);
+		//blogAdapter.login();
+		//blogAdapter.setSRName((String) getIntent().getExtras().get("SRName"));
 		
 		blog = new Blog();
 		

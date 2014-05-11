@@ -119,10 +119,6 @@ public class CameraListActivity extends ListActivity {
         //массив имен атрибутов, из которых будут читаться данные
         String[] from = {CAMERA_NAME };
         //массив ID View-компонентов, в которые будут вставляться данные
-<<<<<<< HEAD
-=======
-        //здесь нужно подставлять id из camera_item.xml
->>>>>>> branch 'master' of ssh://git@github.com/Slwhnds/sr_client.git
         int[] to = {R.id.camera_name};
         
         adapter = new SimpleAdapter(this, list, R.layout.camera_item,
