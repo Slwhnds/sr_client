@@ -9,7 +9,7 @@ public class BlogErrDialog {
 		// TODO Auto-generated constructor stub
 	}
 
-	public static void loadCameraErr(Context context) {
+	public static void loadThemesErr(Context context) {
 		Toast toast = Toast.makeText(context, R.string.failed_loading_blog,
 				Toast.LENGTH_SHORT);
 		toast.show();

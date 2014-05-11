@@ -31,12 +31,6 @@ public class ThemeActivity extends Activity {
 	/** Метка для отображения имени докладчика. */
 	private TextView reporterNameTextView;
 
-	/** Кнопка "View comments". */
-	private Button viewCommentsButton;
-
-	/** Кнопка "Leave a comment". */
-	private Button leaveCommentButton ;
-
 	/** 
 	* Вызывается при создании экземпляра класса и отвечает за его инициализацию. Получает в запустившем Activity намерении текущий блог и тему, отображает ее.
 	* @param savedInstanceState сохраненное состояние Activity
@@ -59,7 +53,7 @@ public class ThemeActivity extends Activity {
 		speechTimeTextView.setText(sm.format(theme.getTime()));
 		
 		reporterNameTextView = (TextView) findViewById(R.id.reporter_name);
-		reporterNameTextView.setText(theme.getRepoter());
+		//reporterNameTextView.setText(theme.getRepoter());
 	}
 
 	/** 

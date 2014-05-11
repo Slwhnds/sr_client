@@ -58,7 +58,7 @@ public class LeavingCommentActivity extends Activity {
 		commentText = commentEditText.getText().toString();
 		if (commentText == "")
 			BlogErrDialog.emptyComment(getBaseContext());
-		BlogListActivity.blogAdapter.postComment(theme, commentText);
+		BlogListActivity.blogAdapter.postComment(commentText, theme);
 	}
 
 	/** 

@@ -1,5 +1,7 @@
 package petrsu.smartroom.android.blogclient;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +22,7 @@ import android.widget.SimpleAdapter;
 public class BlogListActivity extends ListActivity {
 	
 	//имена атрибутов для Map
-	final String THEME_SUBJECT = "name";
+	public final String THEME_SUBJECT = "name";
 	
 	/** KP, отвечающий за получение списка тем. */
 	private Blog_KP KP;
@@ -30,15 +32,15 @@ public class BlogListActivity extends ListActivity {
 
 	/** Список тем, полученный от KP. */
 	String[] themes;
-	
-	/** Список тем, подготовленный к помещению в адаптер. */
-	List<Map<String, ?>> list;
 
 	/** Блог для отображения. */
 	private Blog blog;
 
 	/** Блог-адаптер для получения тем из внешнего блог-сервиса. */
 	public static BlogAdapter blogAdapter;
+	
+	/** Список тем, подготовленный к поомешению в адаптер. */
+	public List<Map<String, ?>> list;
 
 	/** Адаптер блога. */
 	private SimpleAdapter adapter;
@@ -56,26 +58,48 @@ public class BlogListActivity extends ListActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//setContentView(R.layout.activity_main);
 		
+<<<<<<< HEAD
 		if (KP.getThemes(themes) < 0) {
 			BlogErrDialog.loadCameraErr(getBaseContext());
 			return;
 		}
+=======
+		/*if (KP.getThemes(themes) < 0) {
+			BlogErrDialog.loadThemesErr(getBaseContext());
+			return;
+		}*/
+>>>>>>> branch 'master' of ssh://git@github.com/Slwhnds/sr_client.git
 		
 		String login = new String(), pass = new String();
-		if (KP.getLogPass(login, pass) < 0) {
+		/*if (KP.getLogPass(login, pass) < 0) {
 			BlogErrDialog.loadLogPass(getBaseContext());
 			return;
+<<<<<<< HEAD
 		}
+=======
+		}*/
+>>>>>>> branch 'master' of ssh://git@github.com/Slwhnds/sr_client.git
 		
 		blogAdapter.setLogPass(login, pass);
 		blogAdapter.login();
 		blogAdapter.setSRName((String) getIntent().getExtras().get("SRName"));
 		
+		blog = new Blog();
+		
 		for (int i = 0; i < themes.length; i++) {
 			String[] s = themes[i].split(" ");
-			Theme t = new Theme(blogAdapter.getBlogEntry(Integer.parseInt(s[0])));
+			Theme t = null;
+			try {
+				t = new Theme(Integer.parseInt(s[0]), s[1], new SimpleDateFormat().parse(s[2]), 
+						blogAdapter.getBlogEntry(Integer.parseInt(s[0])));
+			} catch (NumberFormatException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			blog.add(t);
 		}
 		
@@ -153,9 +177,9 @@ public class BlogListActivity extends ListActivity {
 	* помещает их в adapter).
 	* Calls for: Blog.getThemes()
 	*/
-	private void setUpList() {
-		
-		String[] items = Blog.getThemes();
+	public void setUpList() {
+		//String[] items = blog.getThemeSubjects();
+		String[] items = blog.getTestThemes();
 		
 		list = new ArrayList<Map<String, ?>>(items.length);
         
