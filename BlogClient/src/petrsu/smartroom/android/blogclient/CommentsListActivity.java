@@ -16,12 +16,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.SimpleAdapter;
 
-public class CommensListActivity extends ListActivity {
+public class CommentsListActivity extends ListActivity {
 	
 	//имена атрибутов для Map
-	final String COMMENT_AUTHOR = "author";
-	final String COMMENT_TIME = "time";
-	final String COMMENT_TEXT = "text";
+	public final String COMMENT_AUTHOR = "author";
+	public String COMMENT_TIME = "time";
+	public String COMMENT_TEXT = "text";
 	
 	/** Намерение, используемое для перехода к другим Activity. */
 	Intent intent;
@@ -33,7 +33,39 @@ public class CommensListActivity extends ListActivity {
 	private SimpleAdapter adapter;
 	
 	/** Список комментариев, подготовленный к помещению в адаптер. */
-	List<Map<String, ?>> list;
+	public List<Map<String, ?>> list;
+	
+	//for test
+		private ArrayList<ThemeComment> comms = new ArrayList<ThemeComment>();
+	
+	//for test
+		public void addTestComment(String[] t) {
+			if (comms == null)
+				comms = new ArrayList<ThemeComment>();
+			ThemeComment tm = null;
+			if (t == null)
+				tm = null;
+			else
+				tm = new ThemeComment(t[0], t[1], t[2]);
+			comms.add(tm);
+		}
+		
+		//for test
+		public void setNullTestComments() {
+			comms = null;
+		}
+
+	//for test
+	public ThemeComment[] getTestComments(){
+		/*if (comms == null)
+			return null;
+		ThemeComment[] c1 = new ThemeComment[comms.size()];
+		for (int i = 0; i < c1.length; i++)
+			c1[i] = comms.get(i);*/
+		if (comms == null)
+			System.out.println("********null!");
+		return (ThemeComment[]) comms.toArray();
+	}
 
 	/** 
 	* Вызывается при создании экземпляра класса и отвечает за его инициализацию. Отображает список комментариев, соответствующий теме, переданной в намерении, которое запустило CommentsListActivity.
@@ -45,7 +77,7 @@ public class CommensListActivity extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		theme = (Theme) getIntent().getExtras().get("theme");
+		//theme = (Theme) getIntent().getExtras().get("theme");
 		setUpList();
 	}
 
@@ -67,8 +99,12 @@ public class CommensListActivity extends ListActivity {
 	* помещает их в adapter).
 	* Calls for: BlogAdapter.getComments(Theme theme)
 	*/
-	private void setUpList() {
-		ThemeComment[] items = BlogListActivity.blogAdapter.getComments(theme);
+	public void setUpList() {
+		//ThemeComment[] items = BlogListActivity.blogAdapter.getComments(theme);
+		ThemeComment[] items = getTestComments();
+		
+		if (items == null)
+			System.out.println("");
 		
 		list = new ArrayList<Map<String, ?>>(items.length);
         
@@ -86,9 +122,9 @@ public class CommensListActivity extends ListActivity {
         //массив ID View-компонентов, в которые будут вставляться данные
         int[] to = { R.id.comment_author, R.id.comment_time, R.id.comment_text };
         
-        adapter = new SimpleAdapter(this, list, R.layout.comment_item,
-                from, to);
-        setListAdapter(adapter);
+        //adapter = new SimpleAdapter(this, list, R.layout.comment_item,
+                //from, to);
+        //setListAdapter(adapter);
 	}
 
 	/** 

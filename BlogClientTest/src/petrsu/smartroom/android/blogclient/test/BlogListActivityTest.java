@@ -7,12 +7,14 @@ import java.util.Map;
 
 import petrsu.smartroom.android.blogclient.BlogListActivity;
 import android.test.ActivityInstrumentationTestCase2;
+import android.test.ViewAsserts;
 
 public class BlogListActivityTest extends ActivityInstrumentationTestCase2<BlogListActivity> {
 	
 	BlogListActivity activity;
 	String[] correctThemes = {"theme1", "theme2", "theme3"};
 	String[] nullThemes = null;
+	String[] nullElementsThemes = {"theme1", null, "theme3"};
 
 	public BlogListActivityTest() {
 		super(BlogListActivity.class);
@@ -50,15 +52,24 @@ public class BlogListActivityTest extends ActivityInstrumentationTestCase2<BlogL
         	fail("NullPointerException expected");
         }
         catch(Exception exception) {
-        	assertEquals("Чето не тот exception пришел", NullPointerException.class, exception.getClass());
+        	assertEquals("Other exception expected", NullPointerException.class, exception.getClass());
+        }
+	}
+	
+	public void testSetUpList20_4() {      
+        BlogListActivity.blog.setTestThemes(nullElementsThemes);
+        try {
+        	activity.setUpList();
+        	fail("NullPointerException expected");
+        }
+        catch(Exception exception) {
+        	assertEquals("Other exception expected", NullPointerException.class, exception.getClass());
         }
 	}
 
-	/*public void testOnCreate() {
+	public void testOnCreate21_1() {
 		assertNotNull(activity);
-	    assertNotNull(...);
-	    
-	    ViewAsserts.assertOnScreen(origin, view);
-	}*/
+	   // ViewAsserts.assertOnScreen(origin, view);
+	}
 
 }

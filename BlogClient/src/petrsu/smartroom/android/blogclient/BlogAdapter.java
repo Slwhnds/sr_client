@@ -1,5 +1,7 @@
 package petrsu.smartroom.android.blogclient;
 
+import java.util.ArrayList;
+
 import petrsu.smartroom.android.blogclient.xmlrpcclient.*;
 import petrsu.smartroom.android.blogclient.arguments.*;
 import petrsu.smartroom.android.blogclient.results.*;

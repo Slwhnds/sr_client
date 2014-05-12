@@ -73,7 +73,7 @@ public class ThemeActivity extends Activity {
 	* @param v нажатая кнопка
 	*/
 	public void onViewComments(View v) {
-		intent = new Intent(getBaseContext(), CommensListActivity.class);
+		intent = new Intent(getBaseContext(), CommentsListActivity.class);
 		intent.putExtra("theme", theme);
 	    startActivity(intent);
 	}

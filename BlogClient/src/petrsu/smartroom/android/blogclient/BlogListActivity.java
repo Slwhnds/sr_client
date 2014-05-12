@@ -183,7 +183,6 @@ public class BlogListActivity extends ListActivity {
         //массив имен атрибутов, из которых будут читаться данные
         String[] from = { THEME_SUBJECT };
         //массив ID View-компонентов, в которые будут вставляться данные
-        //здесь нужно подставлять id из theme_item.xml
         int[] to = { R.id.theme_name };
         
         //adapter = new SimpleAdapter(this, list, R.layout.theme_item,

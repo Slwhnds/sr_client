@@ -1,5 +1,7 @@
 package petrsu.smartroom.android.blogclient;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import petrsu.smartroom.android.blogclient.results.Comment;
@@ -55,6 +57,18 @@ public class ThemeComment {
 		this.posterName = comment.getPostername();
 		this.time = comment.getDate();
 		this.dtalkid = comment.getDtalkid();
+	}
+	
+	//for test
+	public ThemeComment(String body, String name, String date){
+		this.body = body;
+		this.posterName = name;
+		try {
+			this.time =new SimpleDateFormat("hh:mm").parse(date);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 }
