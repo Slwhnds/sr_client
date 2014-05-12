@@ -1,6 +1,12 @@
 package petrsu.smartroom.android.cameraclient;
 
 import java.lang.String;
+import org.apache.commons.httpclient.*;
+import org.apache.commons.httpclient.methods.*;
+import org.apache.commons.httpclient.params.HttpMethodParams;
+import org.apache.commons.httpclient.UsernamePasswordCredentials;
+import org.apache.commons.httpclient.auth.AuthScope;
+import java.io.*;
 
 public class Camera {
 
@@ -28,7 +34,7 @@ public class Camera {
 	/** ћассив строк-шаблонов URI, требуемых дл€ формировани€ GET HTTP запросов (см. обмен данными с камерой).  остыль. ѕол€ будут заполнены изначально и ничем не измен€ютс€. 
 	*  ажда€ строка содержит название API и строки дл€ основных команд: получение текущей позиции, изменение позиции, получение крайних значений.
 	*/
-	private String stringAPI[] = {"Ankit","Bohra","Xyz",""};
+	private String stringAPI[] = {"/config/ptz_info.cgi","/config/ptz_pos.cgi","/config/ptz_move_rel.cgi?p=value1&t=value2&z=value3"};
 	
 	/**
 	*  онструктор класса. —войства IP, port, API, login, pass инициализируютс€ соответствующими значени€ми.
@@ -55,7 +61,34 @@ public class Camera {
 	* @throws IOException ќшибка транспортировки или протокола.
 	*/
 	private void currentPTZ()
-	{};
+	{
+		private String url = "http://"+IP+":"+port+stringAPI[1];
+		
+		public BasicAuthenticationExample() {
+			super();
+	    }
+		// Create an instance of HttpClient.
+		HttpClient client = new HttpClient();
+		client.getState().setCredentials(
+            new UsernamePasswordCredentials(login, pass)
+        );
+		// Create a method instance.
+		GetMethod method = new GetMethod(url);
+    
+		// Provide custom retry handler is necessary
+		method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, 
+    	new DefaultHttpMethodRetryHandler(3, false));
+
+		// Execute the method.
+		client.executeMethod(method);
+
+		// Read the response body.
+		byte[] responseBody = method.getResponseBody();
+		// Release the connection.
+		method.releaseConnection();
+		
+  
+	};
 
 	/** 
 	* ¬ызывает методы из внешней библиотеки Apache HttpClient 4.3.3 дл€ отправки запроса на камеру и получени€ ответа от нее. 
@@ -63,7 +96,32 @@ public class Camera {
 	* @throws IOException ќшибка транспортировки или протокола.
 	*/
 	private void borders()
-	{};
+	{
+	private String url = "http://"+IP+":"+port+stringAPI[1];
+		
+		public BasicAuthenticationExample() {
+			super();
+	    }
+		// Create an instance of HttpClient.
+		HttpClient client = new HttpClient();
+		client.getState().setCredentials(
+            new UsernamePasswordCredentials(login, pass)
+        );
+		// Create a method instance.
+		GetMethod method = new GetMethod(url);
+    
+		// Provide custom retry handler is necessary
+		method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, 
+    	new DefaultHttpMethodRetryHandler(3, false));
+
+		// Execute the method.
+		client.executeMethod(method);
+
+		// Read the response body.
+		byte[] responseBody = method.getResponseBody();
+		// Release the connection.
+		method.releaseConnection();
+	};
 
 	/** 
 	* ¬ызывает методы из внешней библиотеки Apache HttpClient 4.3.3 дл€ отправки запроса на изменение координат наклона, поворота, зума абсолютно на значени€ P, T, Z соответственно, получает ответ. 
@@ -74,16 +132,41 @@ public class Camera {
 	* @throws IOException ќшибка транспортировки или протокола.
 	*/
 	public void setPTZ(int P, int T, int Z)
-	{};
+	{
+	
+	private String url = "http://"+IP+":"+port+stringAPI[1];
+		
+		public BasicAuthenticationExample() {
+			super();
+	    }
+		// Create an instance of HttpClient.
+		HttpClient client = new HttpClient();
+		client.getState().setCredentials(
+            new UsernamePasswordCredentials(login, pass)
+        );
+		// Create a method instance.
+		GetMethod method = new GetMethod(url);
+    
+		// Provide custom retry handler is necessary
+		method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, 
+    	new DefaultHttpMethodRetryHandler(3, false));
+
+		// Execute the method.
+		client.executeMethod(method);
+
+		// Read the response body.
+		byte[] responseBody = method.getResponseBody();
+		// Release the connection.
+		method.releaseConnection();};
 
 	/** 
 	* ¬ызываетс€ после метода currentPTZ(). 
 	*
 	* @return массив текущих координат поворота, наклона, зума в формате P-T-Z (см. внутренние структуры данных).
 	*/
-	public int getCurrentPTZ()
+	public int[] getCurrentPTZ()
 	{ 
-		return 0;
+		return PTZ;
 	};
 
 	/**
@@ -91,8 +174,8 @@ public class Camera {
 	*  
 	* @return массив граничных значений координат поворота, наклона, зума в формате borders (см. внутренние структуры данных).
 	*/
-	public int getBorders()
+	public int[][] getBorders()
 	{
-		return 1;
+		return borders;
 	};
 }
