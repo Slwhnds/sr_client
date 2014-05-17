@@ -10,6 +10,7 @@ public class AllTests {
 		//$JUnit-BEGIN$
 		suite.addTestSuite(BlogListActivityTest.class);
 		suite.addTestSuite(CommentsListActivityTest.class);
+		suite.addTestSuite(LoginActivityTest.class);
 		//$JUnit-END$
 		return suite;
 	}

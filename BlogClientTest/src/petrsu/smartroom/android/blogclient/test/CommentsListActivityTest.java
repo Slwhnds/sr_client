@@ -1,12 +1,10 @@
 package petrsu.smartroom.android.blogclient.test;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import petrsu.smartroom.android.blogclient.BlogListActivity;
 import petrsu.smartroom.android.blogclient.CommentsListActivity;
 import android.test.ActivityInstrumentationTestCase2;
 
@@ -40,9 +38,9 @@ public class CommentsListActivityTest extends ActivityInstrumentationTestCase2<C
         for(int i = 0; i < correctComments.length; i++)
         {
             Map<String, String> map = new HashMap<String, String>();
-            map.put(activity.COMMENT_AUTHOR, correctComments[i][0]);
-            map.put(activity.COMMENT_TIME, new SimpleDateFormat("hh:mm").format(correctComments[i][2]));
-            map.put(activity.COMMENT_TEXT, correctComments[i][1]);
+            map.put(activity.COMMENT_AUTHOR, correctComments[i][1]);
+            map.put(activity.COMMENT_TIME, correctComments[i][2]);
+            map.put(activity.COMMENT_TEXT, correctComments[i][0]);
             list.add(map);
         }
         
@@ -75,6 +73,11 @@ public class CommentsListActivityTest extends ActivityInstrumentationTestCase2<C
         catch(Exception exception) {
         	assertEquals("Other exception expected", NullPointerException.class, exception.getClass());
         }
+	}
+	
+	public void testOnCreate25_1() {
+		assertNotNull(activity);
+	   // ViewAsserts.assertOnScreen(origin, view);
 	}
 
 	protected void tearDown() throws Exception {

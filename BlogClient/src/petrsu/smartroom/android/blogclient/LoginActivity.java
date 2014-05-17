@@ -12,51 +12,51 @@ import android.widget.TextView;
 
 public class LoginActivity extends Activity {
 	
-	/** Намерение, используемое для перехода к AutorizationActivity */
+	/** пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ AutorizationActivity */
 	Intent intent;
 
-	/** Введенный логин. */
+	/** пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ. */
 	private String login;
 
-	/** Текущий логин. */
+	/** пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ. */
 	private String curLogin;
 
-	/** Пароль. */
+	/** пїЅпїЅпїЅпїЅпїЅпїЅ. */
 	private String pass;
 
-	/** Поле для ввода логина. */
+	/** пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. */
 	private EditText loginEditText;
 
-	/** Поле для ввода пароля. */
+	/** пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. */
 	private EditText passwdEditText;
 
-	/** Метка для отображения текущего логина. */
+	/** пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. */
 	private EditText curLoginEditText;
 
-	/** Кнопка "Login". */
+	/** пїЅпїЅпїЅпїЅпїЅпїЅ "Login". */
 	private Button loginButton;
 	
 	private boolean after = false;
 
 	/** 
-	* Вызывается при создании экземпляра класса и отвечает за его инициализацию. Берет из BlogAdapter текущий логин и отображает его.
-	* @param savedInstanceState сохраненное состояние Activity
+	* пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ BlogAdapter пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ.
+	* @param savedInstanceState пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ Activity
 	*
-	* Вызывает функции: BlogAdapter.getLogin(String login, String password) (???)
+	* пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ: BlogAdapter.getLogin(String login, String password) (???)
 	*/
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		curLogin = BlogListActivity.blogAdapter.getCurLogin();
+		//curLogin = BlogListActivity.blogAdapter.getCurLogin();
 		curLoginEditText = (EditText) findViewById(R.id.logged_as_edit);
-		curLoginEditText.setText(curLogin);
+		//curLoginEditText.setText(curLogin);
 	}
 
 	/** 
-	* Вызывается при создании меню. Добавляет в меню "Log out" и "Back to SmartRoom account" как пункты.
-	* @param menu объект, представляющий меню
-	* @returns возвращаемое значение не используется
+	* пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ "Log out" пїЅ "Back to SmartRoom account" пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.
+	* @param menu пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
+	* @returns пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	*/
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -69,11 +69,11 @@ public class LoginActivity extends Activity {
 	}
 
 	/** 
-	* Вызывается при выборе пункта меню. 
-	* "Log out" - Формирует свойство intent и запускает AutorizationActivity.
-	* "Back to SmartRoom account" - устанавливает в BlogAdapter как текущие общие логин и пароль.
-	* @param item объект, представляющий пункт меню
-	* @returns возвращаемое значение не используется
+	* пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ. 
+	* "Log out" - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ intent пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ AutorizationActivity.
+	* "Back to SmartRoom account" - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ BlogAdapter пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.
+	* @param item пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
+	* @returns пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	*
 	* Calls for: BlogAdapter.login(String login, String password)
 	*/
@@ -92,10 +92,10 @@ public class LoginActivity extends Activity {
 		return true;
 	}
 	
-	/** Срабатывает при нажатии на кнопку "Login". Передает логин и пароль объекту BlogAdapter для попытки авторизации во внешнем блог-сервисе.
-	* @param v нажатая кнопка
+	/** пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ "Login". пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ BlogAdapter пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ-пїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
+	* @param v пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 	*
-	* Вызывает функции: BlogAdapter.login(String login, String password)
+	* пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ: BlogAdapter.login(String login, String password)
 	*/
 	public void onLogin(View v) {
 		loginEditText = (EditText) findViewById(R.id.login_edit);

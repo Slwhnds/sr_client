@@ -5,7 +5,7 @@
  * should not be modified by hand.
  */
 
-package petrsu.smartroom.android.blogclient.test;
+package petrsu.smartroom.android.cameraclient.test;
 
 public final class R {
     public static final class attr {

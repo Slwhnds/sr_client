@@ -18,21 +18,21 @@ import android.widget.SimpleAdapter;
 
 public class CommentsListActivity extends ListActivity {
 	
-	//имена атрибутов для Map
+	//пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ Map
 	public final String COMMENT_AUTHOR = "author";
 	public String COMMENT_TIME = "time";
 	public String COMMENT_TEXT = "text";
 	
-	/** Намерение, используемое для перехода к другим Activity. */
+	/** пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ Activity. */
 	Intent intent;
 
-	/** Тема, комментарии к которой отображаются. */
+	/** пїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. */
 	private Theme theme;
 	 
-	/** Адаптер списка комментариев. */
+	/** пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. */
 	private SimpleAdapter adapter;
 	
-	/** Список комментариев, подготовленный к помещению в адаптер. */
+	/** пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ. */
 	public List<Map<String, ?>> list;
 	
 	//for test
@@ -57,21 +57,20 @@ public class CommentsListActivity extends ListActivity {
 
 	//for test
 	public ThemeComment[] getTestComments(){
-		/*if (comms == null)
+		if (comms == null)
 			return null;
 		ThemeComment[] c1 = new ThemeComment[comms.size()];
 		for (int i = 0; i < c1.length; i++)
-			c1[i] = comms.get(i);*/
-		if (comms == null)
-			System.out.println("********null!");
-		return (ThemeComment[]) comms.toArray();
+			c1[i] = comms.get(i);
+		
+		return c1;
 	}
 
 	/** 
-	* Вызывается при создании экземпляра класса и отвечает за его инициализацию. Отображает список комментариев, соответствующий теме, переданной в намерении, которое запустило CommentsListActivity.
-	* @param savedInstanceState сохраненное состояние Activity
+	* пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ CommentsListActivity.
+	* @param savedInstanceState пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ Activity
 	* 
-	* Вызывает функции: setUpList()
+	* пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ: setUpList()
 	*/
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -82,9 +81,9 @@ public class CommentsListActivity extends ListActivity {
 	}
 
 	/** 
-	* Вызывается при создании меню. Добавляет в меню "Log out" и "Leave a comment" как пункты и "Refresh" как иконку.
-	* @param menu объект, представляющий меню
-	* @returns возвращаемое значение не используется
+	* пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ "Log out" пїЅ "Leave a comment" пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ "Refresh" пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.
+	* @param menu пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
+	* @returns пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	*/
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -95,8 +94,8 @@ public class CommentsListActivity extends ListActivity {
 	
 
 	/** 
-	* Формирует список комментариев (подготавливает данные из theme для того чтобы поместить их в adapter).,
-	* помещает их в adapter).
+	* пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ theme пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅ adapter).,
+	* пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅ adapter).
 	* Calls for: BlogAdapter.getComments(Theme theme)
 	*/
 	public void setUpList() {
@@ -112,14 +111,14 @@ public class CommentsListActivity extends ListActivity {
         {
             Map<String, String> map = new HashMap<String, String>();
             map.put(COMMENT_AUTHOR, items[i].getPosterName());
-            map.put(COMMENT_TIME, new SimpleDateFormat("hh:mm").format(items[i].getTime()));
+            map.put(COMMENT_TIME, new SimpleDateFormat("HH:mm").format(items[i].getTime()));
             map.put(COMMENT_TEXT, items[i].getText());
             list.add(map);
         }
         
-        //массив имен атрибутов, из которых будут читаться данные
+        //пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
         String[] from = { COMMENT_AUTHOR, COMMENT_TIME, COMMENT_TEXT };
-        //массив ID View-компонентов, в которые будут вставляться данные
+        //пїЅпїЅпїЅпїЅпїЅпїЅ ID View-пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
         int[] to = { R.id.comment_author, R.id.comment_time, R.id.comment_text };
         
         //adapter = new SimpleAdapter(this, list, R.layout.comment_item,
@@ -128,14 +127,14 @@ public class CommentsListActivity extends ListActivity {
 	}
 
 	/** 
-	* Вызывается при выборе пункта меню. 
-	* "Leave a comment" - Формирует свойство intent и запускает LeavingCommentActivity.
-	* "Log out" - Формирует свойство intent и запускает AuthorizationActivity.
-	* "Refresh" - обновляет список тем.
-	* @param item объект, представляющий пункт меню
-	* @returns возвращаемое значение не используется
+	* пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ. 
+	* "Leave a comment" - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ intent пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ LeavingCommentActivity.
+	* "Log out" - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ intent пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ AuthorizationActivity.
+	* "Refresh" - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ.
+	* @param item пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
+	* @returns пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	* 
-	* Вызывает функции: onCreate(Bundle savedInstanceState)
+	* пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ: onCreate(Bundle savedInstanceState)
 	*/
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
