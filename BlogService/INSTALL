@@ -1,0 +1,6 @@
+1. install openjdk-7 (Java development kit)
+
+2. install and run Microphone
+	-- run `make`
+	-- run `make install`
+	-- run `java -cp bin/jspeex.jar:. MicServer`

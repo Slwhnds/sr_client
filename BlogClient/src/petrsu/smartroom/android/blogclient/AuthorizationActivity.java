@@ -37,7 +37,7 @@ public class AuthorizationActivity extends Activity implements OnTouchListener {
 	
 	public static String ip;
 	
-	private Blog_KP KP;
+	private KP KP;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +57,7 @@ public class AuthorizationActivity extends Activity implements OnTouchListener {
         isChairman = false;
         isRegistered = false;
         
-        KP = new Blog_KP();
+        KP = new KP();
 	}
 	
 	
@@ -66,8 +66,6 @@ public class AuthorizationActivity extends Activity implements OnTouchListener {
 		final String name = editName.getText().toString();
 		final String password = editPassword.getText().toString();
 		int port = 10011;
-		ip = editIP.getText().toString();
-		
 		switch(view.getId()) {
 			case R.id.connectBtn:
 				
@@ -136,15 +134,15 @@ public class AuthorizationActivity extends Activity implements OnTouchListener {
 					Toast.makeText(getApplicationContext(), R.string.guestNameEmpty, 
 							Toast.LENGTH_SHORT).show();
 				else {
-					if(Blog_KP.connectSmartSpace("X", ip, port) != 0) {
+					if(petrsu.smartroom.android.blogclient.KP.connectSmartSpace("X", ip, port) != 0) {
 						Toast.makeText(getApplicationContext(), R.string.connectionFail, 
 								Toast.LENGTH_SHORT).show();
 						return;
 					}
 					System.out.println("Connection done");
-					Blog_KP.connectionState = 1;
+					petrsu.smartroom.android.blogclient.KP.connectionState = 1;
 					
-					ret_value = Blog_KP.registerGuest(name, phone, email);
+					ret_value = petrsu.smartroom.android.blogclient.KP.registerGuest(name, phone, email);
 					
 					if(ret_value == -1) {
 						Toast.makeText(getApplicationContext(), R.string.registrationFail, 
@@ -198,19 +196,19 @@ public class AuthorizationActivity extends Activity implements OnTouchListener {
 	
 	public int establishConnection(String name, String password, int port) {
 		
-		if(Blog_KP.connectionState != 1) {
-			if(Blog_KP.connectSmartSpace("X", ip, port) != 0) {
+		if(petrsu.smartroom.android.blogclient.KP.connectionState != 1) {
+			if(petrsu.smartroom.android.blogclient.KP.connectSmartSpace("X", ip, port) != 0) {
 				Toast.makeText(this, R.string.connectionFail, Toast.LENGTH_SHORT).show();
 				return -1;
 			}
 			
-			Blog_KP.connectionState = 1;
+			petrsu.smartroom.android.blogclient.KP.connectionState = 1;
 			Log.i("Connection", "DONE");
 		}
 
 		if(!isRegistered) {
 				
-				if(Blog_KP.userRegistration(name, password) == 0) {
+				if(petrsu.smartroom.android.blogclient.KP.userRegistration(name, password) == 0) {
 					Log.i("Java KP", "Registration successful");
 
 					if(password.equals("chairman"))
@@ -219,8 +217,8 @@ public class AuthorizationActivity extends Activity implements OnTouchListener {
 				} else {
 					Toast.makeText(this, R.string.registrationFail, 
 							Toast.LENGTH_SHORT).show();
-					Blog_KP.disconnectSmartSpace();
-					Blog_KP.connectionState = -1;
+					petrsu.smartroom.android.blogclient.KP.disconnectSmartSpace();
+					petrsu.smartroom.android.blogclient.KP.connectionState = -1;
 					return -1;
 				}
 			Log.i("Registration", "DONE");
