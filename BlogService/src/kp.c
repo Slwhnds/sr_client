@@ -156,7 +156,7 @@ JNIEXPORT jint JNICALL Java_BlogService_publishStartData
     const char *login_ = (*env) -> GetStringUTFChars(env, login, NULL);
     const char *pass_ = (*env) -> GetStringUTFChars(env, pass, NULL);
     
-    individual_t *individual = sslog_new_individual(CLASS_BLOG);
+   /* individual_t *individual = sslog_new_individual(CLASS_BLOG);
     if(individual == NULL)
 	return -1;
 
@@ -173,7 +173,7 @@ JNIEXPORT jint JNICALL Java_BlogService_publishStartData
 	return -1;
 
     if(sslog_ss_insert_individual(individual) != 0)
-	return -1;
+	return -1;*/
 
     return 0;
 }
@@ -184,7 +184,7 @@ JNIEXPORT jint JNICALL Java_BlogService_publishData
     const char *status_ = (*env) -> GetStringUTFChars(env, status, NULL);
     const char *id_ = (*env) -> GetStringUTFChars(env, id, NULL);
 
-    individual_t *individual = sslog_new_individual(CLASS_THEME);
+    /*individual_t *individual = sslog_new_individual(CLASS_THEME);
     if(individual == NULL)
 	return -1;
 
@@ -201,7 +201,7 @@ JNIEXPORT jint JNICALL Java_BlogService_publishData
 	return -1;
 
     if(sslog_ss_insert_individual(individual) != 0)
-	return -1;
+	return -1;*/
 
     return 0;
 }

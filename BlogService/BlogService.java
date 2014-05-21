@@ -8,6 +8,13 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Properties;
 import java.lang.Thread;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Date;
+
+import petrsu.smartroom.android.blogclient.results.BlogEntry;
+
+import petrsu.smartroom.android.blogclient.xmlrpcclient.ConvenientClient;
 
 public class BlogService {
 	private static String SS_IP;
@@ -18,7 +25,14 @@ public class BlogService {
 	
 	int connectionState = 0;
 	
-	String[] cameras;
+	/** Масив строк, представляющий список тем (в формате "заголовок статус время докладчик"). */
+	private String[] themesFromSS;
+	
+	private List<int> themeIds;
+	private List<String> themeStatuses;
+	private String login;
+	private String password;
+	private Date today;
 	
 	// Native methods
 	public static native int connectSmartSpace(
@@ -68,6 +82,14 @@ public class BlogService {
 		    System.exit(-1);
 		}
 		
+		//initializing api client
+		client = new ConvenientClient();
+		// account for tests
+		login = "SmartRoomUser";
+		password = "Ochen_slojnii_parol";
+		client.login(login, password, timeout);
+		today = new Date();
+		
 		BlogService h = new BlogService();
 		String[] g = h.getThemesFromSS();
 		
@@ -76,6 +98,92 @@ public class BlogService {
 		    System.exit(-1);
 		}
 	}
+	
+	/** Публикует темы во внешний блог-сервис
+	* @param themes Масив строк, представляющий список тем (в формате "заголовок статус время докладчик").
+	*/
+	
+	// blue comments encoding is broken mb //Roman
+	public void publishThemes(String[] themes) {
+		//assuming themes contains at 0 person name, at 1 report name, and so on...
+		String themeName;
+		String personName;
+		String themeText;
+		String themeTitle;
+		int res; // result of posting theme
+		/*int count = themes.length;
+		if(count % 2 != 0){
+				System.out.println("Themes length isnt even, continuing anyway...");
+		}*/
+		for(int i = 0; i < list.size(); i++){
+			/*if(themes[i+1] == null){ // report name exists
+					i++; // next person
+					continue;
+			}*/
+			personName = list.get(i).getAuthor();
+			themeName = list.get(i).getText();
+			themeTitle = generateThemeTitle(personName, themeName);
+			themeText = generateThemeText(personName, themeName;)
+			if((res = publishTheme(themeTitle, themeText)) != -1){
+				themeIds.add(res);
+				themeStatuses.add("planed");
+			}else{
+				System.out.println("Failed to post a theme" + [i] + ", continuing...");
+			}
+		}
+
+	}
+
+// version working with timeslots
+/*public void publishThemes() {
+//assuming themes contains at 0 person name, at 1 report name, and so on...
+String themeName;
+String personName;
+String themeText;
+String themeTitle;
+int res; // result of posting theme
+int count = list.size();
+for(int i =0; i < count; i++){
+personName = list.get(i).NAME;
+themeName = list.get(i).TITLE;
+themeTitle = generateThemeTitle(personName, themeName);
+themeText = generateThemeText(personName, themeName;)
+if((res = publishTheme(themeTitle, themeText)) != -1){
+themeIds.add(res);
+themeStatuses.add("planed");
+}else{
+System.out.println("Failed to post a theme" + [i] + ", continuing...");
+}
+}
+
+}*/
+
+
+//It would be good to receive this text template from some sort of Config // Roman
+public String generateThemeText(String personName, String themeName){
+String text;
+text = "Today at IT-part PetrSU " +
+personName + " will speak on theme: " + themeName +
+"\nAuthors: " + personName + "\nFeel free to comment and ask questions!"+
+"\n\n This text if generated :)";	
+return text;
+}
+
+//It would be good to receive this text template from some sort of Config // Roman
+public String generateThemeTitle(String personName, String themeName){
+String themeTitle;
+themeTitle = themeName + " by " + personName;
+return themeTitle;
+}
+
+public int publishTheme(String themeTitle, String themeText){
+BlogEntry result = client.addBlogEntry(today, themeText, themeTitle, timeout);
+if(BlogEntry != null)
+return BlogEntry.getItemid();
+else
+return -1;
+
+}
 	
 public static boolean loadConfiguration() {
 	    
@@ -97,13 +205,6 @@ public static boolean loadConfiguration() {
 	    }
 	    
 	    return true;
-	}
-
-	/**  Публикует темы во внешний блог-сервис 
-	* @param themes Масив строк, представляющий список тем (в формате "заголовок статус время докладчик").
-	*/
-	public void publishThemes(String[] themes) {
-		
 	}
 	
 	public void setThemesInSS(String[] themes) {
