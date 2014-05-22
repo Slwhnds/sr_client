@@ -61,16 +61,16 @@ SRCS =  ./SmartSlog/classes.c \
 	./src/kp.c
 
 OBJS = $(SRCS:.c=.o)
-TARGET = BlogService
+TARGET = src/service/BlogService
 LIB_SSLOG = libsslog
-CONFIG = Config
+CONFIG = src/service/Config
 
 .SUFFIXES: .java .class
 
 all: $(TARGET).class $(CONFIG).class
 
 $(TARGET).class: $(TARGET).java $(LIB_SSLOG).so
-	$(JC) -cp bin/jspeex.jar:. $(TARGET).java
+	$(JC) $(TARGET).java
 	
 $(CONFIG).class: $(CONFIG).java
 	$(JC) $(CONFIG).java

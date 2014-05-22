@@ -163,13 +163,13 @@ JNIEXPORT jint JNICALL Java_BlogService_publishStartData
     sslog_set_individual_uuid(individual, 
 			      "http://www.cs.karelia.ru/smartroom#blog");
     
-    sslog_ss_remove_property_all(individual, PROPERTY_BLOGLOGIN);
-    sslog_ss_remove_property_all(individual, PROPERTY_BLOGPASSWORD);
+    sslog_ss_remove_property_all(individual, PROPERTY_SRLOGIN);
+    sslog_ss_remove_property_all(individual, PROPERTY_SRPASSWORD);
     
-    if(sslog_ss_add_property(individual, PROPERTY_BLOGLOGIN, (void *)login_) != 0 )
+    if(sslog_ss_add_property(individual, PROPERTY_SRLOGIN, (void *)login_) != 0 )
 	return -1;
     
-    if(sslog_ss_add_property(individual, PROPERTY_BLOGPASSWORD, (void *)pass_) != 0 )
+    if(sslog_ss_add_property(individual, PROPERTY_SRPASSWORD, (void *)pass_) != 0 )
 	return -1;
 
     if(sslog_ss_insert_individual(individual) != 0)

@@ -1,3 +1,5 @@
+package service;
+
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -11,9 +13,14 @@ import java.lang.Thread;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Date;
-import arguments.*;
+
+import xmlrpcclient.XMLRPCClientImpl;
+//import arguments.*;
+//import results.*;
+//import xmlrpcclient.*;
 
 import results.BlogEntry;
+import results.PostResult;
 
 import xmlrpcclient.ConvenientClient;
 
@@ -22,6 +29,8 @@ public class BlogService {
 	private static String SS_NAME;
 	private static int SS_PORT;
 	
+	private ConvenientClient client;
+	
 	ArrayList<ThemeInfo> list;
 	
 	int connectionState = 0;
@@ -29,11 +38,12 @@ public class BlogService {
 	/** Масив строк, представляющий список тем (в формате "заголовок статус время докладчик"). */
 	private String[] themesFromSS;
 	
-	private List<int> themeIds;
+	private List<Integer> themeIds;
 	private List<String> themeStatuses;
 	private String login;
 	private String password;
 	private Date today;
+	private int timeout = 0;
 	
 	// Native methods
 	public static native int connectSmartSpace(
@@ -83,16 +93,16 @@ public class BlogService {
 		    System.exit(-1);
 		}
 		
-		//initializing api client
-		client = new ConvenientClient();
-		// account for tests
-		login = "SmartRoomUser";
-		password = "Ochen_slojnii_parol";
-		client.login(login, password, timeout);
-		today = new Date();
-		
 		BlogService h = new BlogService();
 		String[] g = h.getThemesFromSS();
+		
+		//initializing api client
+		h.client = new ConvenientClient(new XMLRPCClientImpl());
+		// account for tests
+		h.login = "SmartRoomUser";
+		h.password = "Ochen_slojnii_parol";
+		h.client.login(h.login, h.password, h.timeout);
+		h.today = new Date();
 		
 		if (h.publishStartData("login", "pass") != 0) {
 			System.out.println("Faild to publish start data.");
@@ -178,9 +188,9 @@ return themeTitle;
 }
 
 public int publishTheme(String themeTitle, String themeText){
-BlogEntry result = client.addBlogEntry(today, themeText, themeTitle, timeout);
-if(BlogEntry != null)
-return BlogEntry.getItemid();
+	PostResult result = client.addBlogEntry(today, themeText, themeTitle, timeout);
+if(result != null)
+return result.getItemid();
 else
 return -1;
 
