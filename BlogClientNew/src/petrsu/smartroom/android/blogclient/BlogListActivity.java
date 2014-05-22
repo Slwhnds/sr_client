@@ -71,7 +71,7 @@ public class BlogListActivity extends ListActivity {
 		
 		blog = new Blog();
 		
-		for (int i = 0; i < themes.length; i++) {
+		/*for (int i = 0; i < themes.length; i++) {
 			String[] s = themes[i].split(" ");
 			Theme t = null;
 			try {
@@ -85,9 +85,9 @@ public class BlogListActivity extends ListActivity {
 				e.printStackTrace();
 			}
 			blog.add(t);
-		}
+		}*/
 		
-		setUpList();
+		//setUpList();
 		
 		itemListener = new OnItemClickListener() {
 
