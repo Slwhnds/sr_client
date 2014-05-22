@@ -1221,3 +1221,127 @@ JNIEXPORT jstring JNICALL Java_petrsu_smartroom_android_srclient_KP_getPersonUui
 
 	return (*env)->NewStringUTF(env, (char *)person->uuid);
 }
+
+/**
+* @fn Java_petrsu_smartroom_android_srclient_KP_getThemes(JNIEnv *env, jobject obj)
+*
+* @brief Gets themes data from SS.
+*
+* @param env - pointer to JNI environment
+* @param obj - Blog class object
+*
+* @return themes list
+*/
+JNIEXPORT jobjectArray JNICALL Java_petrsu_smartroom_android_blogclient_KP_getThemes(JNIEnv *env, jobject *obj)
+{
+	/*list_t *themelist = sslog_ss_get_individual_by_class_all(CLASS_THEME);
+	individual_t *individual;
+	const jint maxTheme = 255;
+    jclass stringObject = (*env)->FindClass(env, "java/lang/String");
+    jobjectArray ThemeArray = (*env)->NewObjectArray(env, maxTheme,
+			stringObject, (*env)->NewStringUTF(env, NULL));
+
+
+	if(themelist != NULL) {
+		list_head_t* pos = NULL;
+		int index = 0;
+		list_for_each(pos, &themelist->links) {
+			list_t* node = list_entry(pos, list_t, links);
+			individual = (individual_t*)(node->data);
+			prop_val_t *id_value = sslog_ss_get_property(individual, PROPERTY_ID);
+			prop_val_t *status_value = sslog_ss_get_property(individual, PROPERTY_STATUS);
+
+			if(index >= maxTheme)
+				break;
+
+			if ((id_value == NULL) || (status_value == NULL))
+					return NULL;
+
+			char *res = (char *) malloc (sizeof(char) * 255);
+			strcat(res, (char *) id_value->prop_value); strcat(res, " ");
+			strcat(res, (char *) status_value->prop_value);
+
+
+
+			(*env)->SetObjectArrayElement(env, ThemeArray, index,
+					(*env)->NewStringUTF(env, res));
+
+			++index;
+		}
+	} else
+		return NULL;
+
+
+	return ThemeArray;*/
+}
+
+
+
+/**
+* @fn Java_petrsu_smartroom_android_srclient_KP_getLog()
+*
+* @brief Извлекает из SS общий логин на внешнем блог-сервисе.
+*
+* @param env - pointer to JNI environment
+* @param obj - Blog class object
+*
+* @return общий логин
+*/
+JNIEXPORT jstring JNICALL Java_petrsu_smartroom_android_blogclient_KP_getLog(JNIEnv *env, jobject *obj)
+{
+	/*list_t *list = sslog_ss_get_individual_by_class_all(CLASS_BLOG);
+	individual_t *individual;
+
+	if(list != NULL) {
+		list_head_t* pos = NULL;
+		list_for_each(pos, &list->links) {
+			list_t* node = list_entry(pos, list_t, links);
+			individual = (individual_t*)(node->data);
+			sslog_ss_populate_individual(individual);
+		}
+	} else
+		return NULL;
+
+	prop_val_t *login_value = sslog_ss_get_property(individual, PROPERTY_SRLOGIN);
+
+	if(ip_value == NULL)
+		return NULL;
+
+	return (*env)->NewStringUTF(env, (char *)login_value->prop_value);*/
+}
+
+/**
+* @fn Java_petrsu_smartroom_android_srclient_KP_getPass()
+*
+* @brief Извлекает из SS общий пароль на внешнем блог-сервисе.
+*
+* @param env - pointer to JNI environment
+* @param obj - Blog class object
+*
+* @return общий пароль
+*/
+JNIEXPORT jstring JNICALL Java_petrsu_smartroom_android_blogclient_KP_getPass(JNIEnv *env, jobject *obj)
+{
+	/*list_t *list = sslog_ss_get_individual_by_class_all(CLASS_BLOG);
+	individual_t *individual;
+
+	if(list != NULL) {
+		list_head_t* pos = NULL;
+		list_for_each(pos, &list->links) {
+			list_t* node = list_entry(pos, list_t, links);
+			individual = (individual_t*)(node->data);
+			sslog_ss_populate_individual(individual);
+		}
+	} else
+		return NULL;
+
+	prop_val_t *password_value = sslog_ss_get_property(individual, PROPERTY_SRPASSWORD);
+
+	if(ip_value == NULL)
+		return NULL;
+
+	return (*env)->NewStringUTF(env, (char *)password_value->prop_value);*/
+
+
+}
+

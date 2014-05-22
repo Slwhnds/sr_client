@@ -257,6 +257,42 @@ JNIEXPORT jint JNICALL Java_petrsu_smartroom_android_srclient_KP_saveProfileChan
 JNIEXPORT jstring JNICALL Java_petrsu_smartroom_android_srclient_KP_getPersonUuid
   (JNIEnv *, jclass);
 
+/**
+* @fn Java_petrsu_smartroom_android_srclient_KP_getThemes(JNIEnv *env, jobject obj)
+*
+* @brief Gets themes data from SS.
+*
+* @param env - pointer to JNI environment
+* @param obj - Blog class object
+*
+* @return themes list
+*/
+JNIEXPORT jobjectArray JNICALL Java_petrsu_smartroom_android_blogclient_KP_getThemes(JNIEnv *env, jobject *obj);
+
+/**
+* @fn Java_petrsu_smartroom_android_srclient_KP_getLog()
+*
+* @brief Извлекает из SS общий логин на внешнем блог-сервисе.
+*
+* @param env - pointer to JNI environment
+* @param obj - Blog class object
+*
+* @return общий логин
+*/
+JNIEXPORT jstring JNICALL Java_petrsu_smartroom_android_blogclient_KP_getLog(JNIEnv *env, jobject *obj);
+
+/**
+* @fn Java_petrsu_smartroom_android_srclient_KP_getPass()
+*
+* @brief Извлекает из SS общий пароль на внешнем блог-сервисе.
+*
+* @param env - pointer to JNI environment
+* @param obj - Blog class object
+*
+* @return общий пароль
+*/
+JNIEXPORT jstring JNICALL Java_petrsu_smartroom_android_blogclient_KP_getPass(JNIEnv *env, jobject *obj);
+
 #ifdef __cplusplus
 }
 #endif
