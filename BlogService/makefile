@@ -70,7 +70,7 @@ CONFIG = Config
 all: $(TARGET).class $(CONFIG).class
 
 $(TARGET).class: $(TARGET).java $(LIB_SSLOG).so
-	$(JC) -sourcepath ./src $(TARGET).java
+	$(JC) -cp "libs/LJtools.jar:." $(TARGET).java
 	
 $(CONFIG).class: $(CONFIG).java
 	$(JC) $(CONFIG).java

@@ -14,15 +14,9 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Date;
 
-import xmlrpcclient.XMLRPCClientImpl;
-//import arguments.*;
-//import results.*;
-//import xmlrpcclient.*;
-
-import results.BlogEntry;
-import results.PostResult;
-
-import xmlrpcclient.ConvenientClient;
+import arguments.*;
+import results.*;
+import xmlrpcclient.*;
 
 public class BlogService {
 	private static String SS_IP;

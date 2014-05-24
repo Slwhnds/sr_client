@@ -196,8 +196,11 @@ public class AuthorizationActivity extends Activity implements OnTouchListener {
 	
 	public int establishConnection(String name, String password, int port) {
 		
+		Log.i("Connection********", ip);
+		Log.i("Connection********", Integer.toString(port));
+		
 		if(KP.connectionState != 1) {
-			if(KP.connectSmartSpace("X", ip, port) != 0) {
+			if(KP.connectSmartSpace("X", "194.85.173.9", 10011) != 0) {
 
 				Toast.makeText(this, R.string.connectionFail, Toast.LENGTH_SHORT).show();
 				return -1;

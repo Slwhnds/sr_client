@@ -1,4 +1,3 @@
-
 //Set path to SmartSlog KP Library
 #include <generic.h>
 

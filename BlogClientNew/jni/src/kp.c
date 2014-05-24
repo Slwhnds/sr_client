@@ -20,21 +20,17 @@ JNIEXPORT jint JNICALL Java_petrsu_smartroom_android_blogclient_KP_connectSmartS
   (JNIEnv *env, jobject obj, jstring hostname, jstring ip, jint port) {
 
 	const char *hostname_ = (*env) -> GetStringUTFChars(env, hostname, NULL);
-	const char *ip_ = (*env) -> GetStringUTFChars(env, ip, NULL);
-	char *uuid = generateUuid("KP");
+		const char *ip_ = (*env) -> GetStringUTFChars(env, ip, NULL);
 
-	if(sslog_ss_init_session_with_parameters(hostname_, ip_, (int)port) != 0)
-		return -1;
+		if(sslog_ss_init_session_with_parameters(hostname_, ip_, (int)port) != 0)
+			return -1;
 
-	register_ontology();
+		register_ontology();
 
-	if (ss_join(sslog_get_ss_info(), uuid) == -1) {
-		__android_log_print(ANDROID_LOG_ERROR, "connectionSmartSpace():", "Connection error");
-		return -1;
-	}
-
-	if((*env)->GetJavaVM(env, &JVM) != 0)
-		__android_log_print(ANDROID_LOG_ERROR, "class KP", "Get java VM failed");
+		if (ss_join(sslog_get_ss_info(), "BlogClientKP") == -1) {
+			__android_log_print(ANDROID_LOG_ERROR, "connectionSmartSpace():", "Connection error**********");
+			return -1;
+		}
 
 	return 0;
 }

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">CameraClient</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="failed_loading_cameras">Failed to load cameras!</string>
+    <string name="title_activity_camera">Video recording</string>
+    <string name="title_activity_camera_list">Video recording</string>
+    
+    <string name="noCamerasText">No cameras available</string>
+    <string name="up"></string>
+    <string name="down"></string>
+    <string name="left"></string>
+    <string name="right"></string>
+    <string name="zoom_in"></string>
+    <string name="zoom_out"></string>
+    
+</resources>

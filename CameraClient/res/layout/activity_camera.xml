@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_marginBottom="30dp"
+    android:layout_marginLeft="150dp"
+    android:layout_marginRight="150dp"
+    android:layout_marginTop="30dp"
+    android:orientation="horizontal"
+    android:baselineAligned="false" >
+
+    <TableRow>
+        
+	    <RelativeLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:paddingRight="30dp"
+	        android:layout_weight="10"
+	        android:orientation="vertical" >
+
+	        <SeekBar
+	            android:id="@+id/SeekBarUpDown"
+	            android:layout_width="wrap_content"
+	            android:layout_height="260dp"
+	            android:layout_alignLeft="@+id/img_up"
+	            android:layout_alignParentRight="true"
+	            android:layout_centerVertical="true"
+	            android:paddingBottom="40dp"
+	            android:paddingTop="40dp"
+	            android:rotation="270" />
+
+	        <ImageView
+	            android:id="@+id/img_down"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentBottom="true"
+	            android:layout_alignParentRight="true"
+	            android:contentDescription="@string/down"
+	            android:scaleType="center"
+	            android:src="@drawable/ic_action_navigation_down" />
+
+	        <ImageView
+	            android:id="@+id/img_up"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentRight="true"
+	            android:layout_alignParentTop="true"
+	            android:contentDescription="@string/up"
+	            android:scaleType="center"
+	            android:src="@drawable/ic_action_navigation_up" />
+	        
+	    </RelativeLayout>
+	
+	    <RelativeLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="350dp"
+	        android:layout_weight="60"
+	        android:gravity="center_horizontal"
+	        android:orientation="vertical" >
+	
+	        <VideoView
+	            android:id="@+id/videoView"
+	            android:layout_width="550dp"
+	            android:layout_height="350dp" />
+	        
+	    </RelativeLayout>
+	
+	    <RelativeLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:paddingLeft="30dp"
+	        android:layout_weight="10"
+	        android:orientation="vertical" >
+
+	        <SeekBar
+	            android:id="@+id/seekBarZoomInOut"
+	            android:layout_width="wrap_content"
+	            android:layout_height="260dp"
+	            android:layout_alignParentLeft="true"
+	            android:layout_alignRight="@+id/img_zoom_in"
+	            android:layout_centerVertical="true"
+	            android:rotation="270" />
+
+	        <ImageView
+	            android:id="@+id/img_zoom_in"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentLeft="true"
+	            android:layout_alignParentTop="true"
+	            android:contentDescription="@string/zoom_in"
+	            android:scaleType="center"
+	            android:src="@drawable/ic_action_zoom_in" />
+
+	        <ImageView
+	            android:id="@+id/img_zoom_out"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentBottom="true"
+	            android:layout_alignParentLeft="true"
+	            android:contentDescription="@string/zoom_out"
+	            android:scaleType="center"
+	            android:src="@drawable/ic_action_zoom_out" />
+	        
+	    </RelativeLayout>
+	    
+	</TableRow>
+	
+    <TableRow>
+        
+         <Space
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:layout_marginRight="30dp"
+	        android:layout_weight="10"
+	        android:orientation="vertical" />
+	     
+         <RelativeLayout
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+	         android:paddingTop="30dp"
+             android:layout_weight="60"
+             android:orientation="vertical" >
+	
+	        <SeekBar
+	            android:id="@+id/seekBarLeftRight"
+	            android:layout_width="490dp"
+	            android:layout_height="match_parent"
+	            android:layout_centerHorizontal="true" />
+
+	        <ImageView
+	            android:id="@+id/img_left"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentLeft="true"
+	            android:layout_alignParentTop="true"
+	            android:contentDescription="@string/left"
+	            android:scaleType="center"
+	            android:src="@drawable/ic_action_navigation_left" />
+
+	        <ImageView
+	            android:id="@+id/img_right"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentRight="true"
+	            android:layout_alignParentTop="true"
+	            android:contentDescription="@string/right"
+	            android:scaleType="center"
+	            android:src="@drawable/ic_action_navigation_right" />
+	        
+	    </RelativeLayout>
+        
+         <Space
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:layout_weight="10"
+             android:orientation="vertical" />
+        
+    </TableRow>
+    
+    
+</TableLayout>
