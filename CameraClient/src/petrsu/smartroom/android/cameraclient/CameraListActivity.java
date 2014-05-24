@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.SimpleAdapter;
 
@@ -23,7 +24,7 @@ public class CameraListActivity extends ListActivity {
 	private ArrayList<Camera> cameras;
 	
 	/** KP, ���������� �� ��������� ������ �����. */
-	private Camera_KP KP;
+	private KP KP;
 
 	/** ������ �����, ���������� �� KP. */
 	private String[] cameraCollection;
@@ -51,17 +52,30 @@ public class CameraListActivity extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		if (KP.getCameraData(cameraCollection) < 0) {
-			CameraErrDialog.loadCameraErr(getBaseContext());
-			finish();
+		KP = new KP();
+		if (KP.connectSmartSpace("X", "194.85.173.9", (int) 10010) != 0) {
+			CameraErrDialog.connectionErr(getBaseContext());
+			return;
 		}
-		cameras = new ArrayList<Camera>();
+		
+		String[] f;
+		if ((f = KP.getCameraData()) == null) {
+			CameraErrDialog.loadCameraErr(getBaseContext());
+			return;
+		}
+		else {
+			Toast toast = Toast.makeText(getBaseContext(), f[0],
+					Toast.LENGTH_SHORT);
+			toast.show();
+		}
+			
+		/*cameras = new ArrayList<Camera>();
 		for (int i = 0; i < cameraCollection.length; i++) {
 			String[] c = cameraCollection[i].split(" ");
 			cameras.add(new Camera(c[0], c[1], c[2], c[3], c[4], c[5], c[6]));
 		}
 		
-		setUpList();
+		setUpList();*/
 		
 		itemListener = new OnItemClickListener() {
 

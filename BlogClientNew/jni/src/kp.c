@@ -27,8 +27,9 @@ JNIEXPORT jint JNICALL Java_petrsu_smartroom_android_blogclient_KP_connectSmartS
 
 		register_ontology();
 
-		if (ss_join(sslog_get_ss_info(), "BlogClientKP") == -1) {
+		if (ss_join(sslog_get_ss_info(), generateUuid("BlogClientKP")) == -1) {
 			__android_log_print(ANDROID_LOG_ERROR, "connectionSmartSpace():", "Connection error**********");
+			//__android_log_print(ANDROID_LOG_ERROR, "connectionSmartSpace():", get_error_text());
 			return -1;
 		}
 

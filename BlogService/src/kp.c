@@ -38,12 +38,28 @@ JNIEXPORT jint JNICALL Java_BlogService_loadTimeslotList
 	// TODO:
 	// when there will be more than one section, it's enough only to
 	// initialize chosen `section`
-	int counter = 0, attempts = 3;
+	int counter = 0, attempts = 1000;
+	//printf("100\n");
 
 	if(obj != NULL)
 		blogServiceClassObject = (jobject *)(*env)->NewGlobalRef(env, obj);
 	else
 		return -1;
+
+	/* Get section */
+		list_t *sectionList = sslog_ss_get_individual_by_class_all(CLASS_SECTION);
+
+		if(sectionList != NULL) {
+			printf("sectionList != NULL\n");
+			list_head_t* pos = NULL;
+			list_for_each(pos, &sectionList->links) {
+				list_t* node = list_entry(pos, list_t, links);
+				section = (individual_t *)(node->data);
+				sslog_ss_populate_individual(section);
+				break;
+			}
+		}/* Get section */
+
 
 	prop_val_t *propTimeslot = sslog_ss_get_property(section, PROPERTY_FIRSTTIMESLOT);
 
@@ -55,6 +71,8 @@ JNIEXPORT jint JNICALL Java_BlogService_loadTimeslotList
 	}
 
 	while(propTimeslot != NULL) {
+		printf("propTimeslot != NULL\n");
+
 		individual_t *pTimeslot = (individual_t *) propTimeslot->prop_value;
 
 		addTimeslotToJavaList(env, pTimeslot, obj);
@@ -81,6 +99,8 @@ JNIEXPORT jint JNICALL Java_BlogService_loadTimeslotList
  */
 void addTimeslotToJavaList(JNIEnv *env, individual_t *timeslot, jobject obj) {
 
+	printf("addTimeslotToJavaList\n");
+
 	jmethodID methodId = (*env)->GetMethodID(env, classBlogService, "addTimeslotItemToList",
 			"(Ljava/lang/String;Ljava/lang/String;)V");
 
@@ -100,37 +120,11 @@ void addTimeslotToJavaList(JNIEnv *env, individual_t *timeslot, jobject obj) {
 			break;
 	}
 
-
-	/* Gets person link property */
-	char *imgLink = (char *) malloc (sizeof(char) * 200);
-
-	strcpy(imgLink, "absentImage");
-
-	prop_val_t *p_val_person_link = sslog_ss_get_property (timeslot, PROPERTY_PERSONLINK);
-	if(p_val_person_link != NULL) {
-
-		char *status = "";
-		individual_t *person = (individual_t *)p_val_person_link->prop_value;
-
-		prop_val_t *p_val_status = sslog_ss_get_property (person, PROPERTY_STATUS);
-		if(p_val_status != NULL)
-			status = (char *) p_val_status->prop_value;
-
-		prop_val_t *p_val_img = sslog_ss_get_property (person, PROPERTY_IMG);
-
-		if(p_val_img != NULL) {
-			strcpy(imgLink, (char *)p_val_img->prop_value);
-		} else if(strcmp(status, "online"))
-			strcpy(imgLink, "noImage");
-	}
-
 	/* Calling Agenda's addTimeslotItemToList Java method */
 	if(obj != NULL)
 		(*env)->CallVoidMethod(env, obj, methodId,
 				(*env)->NewStringUTF(env, (char *)(p_val_name->prop_value)),
 				(*env)->NewStringUTF(env, (char *)(p_val_pres_title->prop_value)));
-
-	free(imgLink);
 }
 
 

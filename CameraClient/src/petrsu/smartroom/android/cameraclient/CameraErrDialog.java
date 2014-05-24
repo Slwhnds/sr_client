@@ -14,4 +14,11 @@ public class CameraErrDialog {
 				Toast.LENGTH_SHORT);
 		toast.show();
 	}
+	
+
+	public static void connectionErr(Context context) {
+		Toast toast = Toast.makeText(context, R.string.failed_connecton,
+				Toast.LENGTH_SHORT);
+		toast.show();
+	}
 }

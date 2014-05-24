@@ -63,16 +63,16 @@ public class CameraService {
 		
 		CameraService c = new CameraService();
 		
-		/*if(!c.loadCameraData()) {
+		if(!c.loadCameraData()) {
 			System.out.println("Faild to read camera data");
 		    System.exit(-1);
-		}*/
+		}
 		
-		/*if (publishData(test) == -1) {
+		if (publishData(c.cameras) == -1) {
 			deletePublishedData();
 			System.out.println("Faild to publish camera data in SS");
 		    System.exit(-1);
-		}*/
+		}
 	}
 
 	public static boolean loadConfiguration() {
@@ -135,12 +135,6 @@ public class CameraService {
 			    try {
 				if(reader.readLine().equals("q") ||
 				    reader.readLine().equals("Q")) {
-					
-					String[] test = { "c c c c c c c" };
-					
-					if (publishData(test) == -1) {
-						System.out.println("-1");
-					}
 					
 				    deletePublishedData();
 

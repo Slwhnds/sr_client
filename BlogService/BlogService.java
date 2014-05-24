@@ -1,5 +1,3 @@
-package service;
-
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -91,7 +89,7 @@ public class BlogService {
 		String[] g = h.getThemesFromSS();
 		
 		//initializing api client
-		h.client = new ConvenientClient(new XMLRPCClientImpl());
+		/*h.client = new ConvenientClient(new XMLRPCClientImpl());
 		// account for tests
 		h.login = "SmartRoomUser";
 		h.password = "Ochen_slojnii_parol";
@@ -101,6 +99,11 @@ public class BlogService {
 		if (h.publishStartData("login", "pass") != 0) {
 			System.out.println("Faild to publish start data.");
 		    System.exit(-1);
+		}*/
+		
+		System.out.println (g.length);
+		for (int i = 0; i < g.length; i++) {
+			System.out.println (g[i]);
 		}
 	}
 	
@@ -225,7 +228,8 @@ public static boolean loadConfiguration() {
 	
 	public String[] getThemesFromSS() {
 		list = new ArrayList<ThemeInfo>();
-		loadTimeslotList(this);
+		if (loadTimeslotList(this) != 0)
+			System.out.println("error");
 		String[] s = new String[list.size()];
 		for (int i = 0; i < s.length; i++) {
 			s[i] = list.get(i).getAuthor() + " " + list.get(i).getText();
