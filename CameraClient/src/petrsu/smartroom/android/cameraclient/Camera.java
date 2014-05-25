@@ -14,9 +14,11 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Base64;
 
-public class Camera implements Serializable {
+public class Camera implements Parcelable {
 
 	/** IP àäðåñ êàìåðû â ôîðìàòå IP (ñì. âíóòðåííèå ñòðóêòóðû äàííûõ), óñòàíàâëèâàåòñÿ êîíñòðóêòîðîì.*/
 	private String ip;
@@ -260,5 +262,37 @@ public class Camera implements Serializable {
 
 	public Uri getURI() {
 		return uri;
+	}
+
+	@Override
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		// TODO Auto-generated method stub
+		dest.writeString(name); 
+		dest.writeString(ip); 
+		dest.writeString(port); 
+		dest.writeString(uri.toString()); 
+		dest.writeString(API); 
+		dest.writeString(login); 
+		dest.writeString(pass); 
 	};
+	
+	public static final Parcelable.Creator<Camera> CREATOR = new Creator<Camera>() { 
+
+			@Override
+			public Camera createFromParcel(Parcel source) {
+				return new Camera(source.readString(), source.readString(), source.readString(),
+						source.readString(), source.readString(), source.readString(), source.readString());
+			}
+
+			@Override
+			public Camera[] newArray(int size) {
+				return new Camera[size];
+			}
+		};
 }

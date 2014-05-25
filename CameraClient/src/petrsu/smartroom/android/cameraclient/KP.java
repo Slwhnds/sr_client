@@ -18,7 +18,7 @@ public class KP {
 	* @return Cameras info (properties devided with ' ')
 	* @throws NullPointerExeption
 	*/
-	public native String[] getCameraData();
+	public static native int getCameraData(CameraListActivity obj);
 
 	public KP() {
 		// TODO Auto-generated constructor stub

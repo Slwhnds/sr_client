@@ -16,12 +16,12 @@ JNIEXPORT jint JNICALL Java_petrsu_smartroom_android_cameraclient_KP_connectSmar
   (JNIEnv *, jclass, jstring, jstring, jint);
 
 /*
- * Class:     CameraService
- * Method:    publishData
- * Signature: ()I
+ * Class:     BlogService
+ * Method:    loadTimeslotList
+ * Signature: (Lpetrsu/smartroom/android/srclient/Agenda;)I
  */
-JNIEXPORT jobjectArray JNICALL Java_petrsu_smartroom_android_cameraclient_KP_getCameraData
-  (JNIEnv *, jclass);
+JNIEXPORT jint JNICALL Java_petrsu_smartroom_android_cameraclient_KP_getCameraData
+  (JNIEnv *, jclass, jobject);
 
 #ifdef __cplusplus
 }

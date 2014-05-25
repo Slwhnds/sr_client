@@ -48,7 +48,12 @@ public class CameraActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_camera);
 		
-		camera = (Camera) getIntent().getExtras().get("camera");
+		panBar = (SeekBar) findViewById(R.id.seekBarLeftRight);
+		tiltBar = (SeekBar) findViewById(R.id.SeekBarUpDown);
+		zoomBar = (SeekBar) findViewById(R.id.seekBarZoomInOut);
+		
+		camera = (Camera) getIntent().getParcelableExtra(CameraListActivity.SER_KEY);  
+		//camera = (Camera) getIntent().getExtras().get("camera");
 		
 		setSeekBarBorders(camera.getBorders());
 		setSeekBarValues(camera.getCurrentPTZ());

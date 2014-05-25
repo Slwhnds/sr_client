@@ -17,6 +17,8 @@ import android.widget.SimpleAdapter;
 
 public class CameraListActivity extends ListActivity {
 	
+	protected static final String SER_KEY = "camera";
+
 	//����� ��������� ��� Map
 	final String CAMERA_NAME = "name";
 
@@ -58,24 +60,14 @@ public class CameraListActivity extends ListActivity {
 			return;
 		}
 		
-		String[] f;
-		if ((f = KP.getCameraData()) == null) {
+		cameras = new ArrayList<Camera>();
+
+		if (KP.getCameraData(this) != 0) {
 			CameraErrDialog.loadCameraErr(getBaseContext());
 			return;
 		}
-		else {
-			Toast toast = Toast.makeText(getBaseContext(), f[0],
-					Toast.LENGTH_SHORT);
-			toast.show();
-		}
-			
-		/*cameras = new ArrayList<Camera>();
-		for (int i = 0; i < cameraCollection.length; i++) {
-			String[] c = cameraCollection[i].split(" ");
-			cameras.add(new Camera(c[0], c[1], c[2], c[3], c[4], c[5], c[6]));
-		}
 		
-		setUpList();*/
+		setUpList();
 		
 		itemListener = new OnItemClickListener() {
 
@@ -89,11 +81,16 @@ public class CameraListActivity extends ListActivity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 				intent = new Intent(getBaseContext(), CameraActivity.class);
-				intent.putExtra("camera", cameras.get(position));
+				Bundle mBundle = new Bundle(); 
+				mBundle.putParcelable(SER_KEY, cameras.get(position)); 
+				intent.putExtras(mBundle);
+				//intent.putExtra("camera", cameras.get(position));
 			    startActivity(intent);
 			}
 			
 		};
+		
+		getListView().setOnItemClickListener(itemListener);
 	}
 
 	/** 
@@ -134,4 +131,15 @@ public class CameraListActivity extends ListActivity {
                 from, to);
         setListAdapter(adapter);
     }
+	
+	public void addCameraItemToList(String name, String ip, String port, String uri, 
+			String api, String login, String pass) {
+		try {
+			cameras.add(new Camera(name, ip, port, uri, 
+				api, login, pass));
+		}
+		catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		}
+	}
 }

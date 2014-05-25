@@ -8,6 +8,9 @@
 #include <string.h>
 #include <stdio.h>
 
+jclass *classCameraListActivity;
+
 char* generateUuid(char*);
+int addCameraToJavaList(JNIEnv *, individual_t *, jobject);
 
 #endif
