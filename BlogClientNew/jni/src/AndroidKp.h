@@ -267,7 +267,7 @@ JNIEXPORT jstring JNICALL Java_petrsu_smartroom_android_srclient_KP_getPersonUui
 *
 * @return themes list
 */
-JNIEXPORT jobjectArray JNICALL Java_petrsu_smartroom_android_blogclient_KP_getThemes(JNIEnv *env, jobject *obj);
+JNIEXPORT jint JNICALL Java_petrsu_smartroom_android_blogclient_KP_getThemes(JNIEnv *env, jobject *obj);
 
 /**
 * @fn Java_petrsu_smartroom_android_srclient_KP_getLog()

@@ -13,36 +13,36 @@ import android.widget.TextView;
 
 public class ThemeActivity extends Activity {
 	
-	/** Намерение, используемое для перехода к другим Activity */
+	/** пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ Activity */
 	Intent intent;
 
-	/** Тема для отображения. */
+	/** пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. */
 	private Theme theme;
 
-	/** Метка для отображения заголовка темы. */
+	/** пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ. */
 	private TextView themeNameTextView;
 
-	/** Метка для отображения текста темы. */
+	/** пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ. */
 	private TextView themeTextTextView;
 	
-	/** Метка для отображения времени выступления. */
+	/** пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. */
 	private TextView speechTimeTextView;
 	
-	/** Метка для отображения имени докладчика. */
+	/** пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. */
 	private TextView reporterNameTextView;
 
 	/** 
-	* Вызывается при создании экземпляра класса и отвечает за его инициализацию. Получает в запустившем Activity намерении текущий блог и тему, отображает ее.
-	* @param savedInstanceState сохраненное состояние Activity
+	* пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ Activity пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ.
+	* @param savedInstanceState пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ Activity
 	*/
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_theme);
 		
-		theme = (Theme) getIntent().getExtras().get("theme");
+		//theme = (Theme) getIntent().getExtras().get("theme");
 		
-		themeNameTextView = (TextView) findViewById(R.id.title_theme_name);
+		/*themeNameTextView = (TextView) findViewById(R.id.title_theme_name);
 		themeNameTextView.setText(theme.getSubject());
 		
 		themeTextTextView = (TextView) findViewById(R.id.theme_text);
@@ -53,13 +53,13 @@ public class ThemeActivity extends Activity {
 		speechTimeTextView.setText(sm.format(theme.getTime()));
 		
 		reporterNameTextView = (TextView) findViewById(R.id.reporter_name);
-		//reporterNameTextView.setText(theme.getRepoter());
+		//reporterNameTextView.setText(theme.getRepoter());*/
 	}
 
 	/** 
-	* Вызывается при создании меню. Добавляет в меню "Log out" как пункт.
-	* @param menu объект, представляющий меню
-	* @returns возвращаемое значение не используется
+	* пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ "Log out" пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ.
+	* @param menu пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
+	* @returns пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	*/
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -69,8 +69,8 @@ public class ThemeActivity extends Activity {
 	}
 	
 
-	/** Срабатывает при нажатии на кнопку "View comments". Формирует свойство intent и запускает CommentsListActivity для темы theme.
-	* @param v нажатая кнопка
+	/** пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ "View comments". пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ intent пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ CommentsListActivity пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ theme.
+	* @param v пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 	*/
 	public void onViewComments(View v) {
 		intent = new Intent(getBaseContext(), CommentsListActivity.class);
@@ -78,8 +78,8 @@ public class ThemeActivity extends Activity {
 	    startActivity(intent);
 	}
 
-	/** Срабатывает при нажатии на кнопку "Leave a comment". Формирует свойство intent и запускает  LeavingCommentActivity.
-	* @param v нажатая кнопка
+	/** пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ "Leave a comment". пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ intent пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ  LeavingCommentActivity.
+	* @param v пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 	*/
 	public void onLeaveComment(View v) {
 		intent = new Intent(getBaseContext(), LeavingCommentActivity.class);
@@ -88,10 +88,10 @@ public class ThemeActivity extends Activity {
 	}
 
 	/** 
-	* Вызывается при выборе пункта меню. 
-	* "Log out" - Формирует свойство intent и запускает AutorizationActivity.
-	* @param item объект, представляющий пункт меню
-	* @returns возвращаемое значение не используется
+	* пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ. 
+	* "Log out" - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ intent пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ AutorizationActivity.
+	* @param item пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
+	* @returns пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	*/
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {

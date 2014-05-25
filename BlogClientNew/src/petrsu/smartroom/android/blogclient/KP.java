@@ -37,7 +37,7 @@ public class KP {
 	
 	public static native int registerGuest(String name, String phone, String email);
 	
-	public static native String[] getThemes();
+	public static native int getThemes();
 	
 	public static native String getLogin();
 	
