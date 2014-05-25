@@ -82,7 +82,12 @@ public class CommentsListActivity extends ListActivity {
 		super.onCreate(savedInstanceState);			
 		theme = (Theme) getIntent().getExtras().get("theme");
 		
-		new getCommentsTask().execute();
+		try {
+			new getCommentsTask().execute();
+		}
+		catch (Exception e) {
+			BlogErrDialog.errLoadComments(getBaseContext());
+		}
 		//setUpList();
 	}
 
@@ -154,7 +159,8 @@ public class CommentsListActivity extends ListActivity {
 		    startActivity(intent);
 			break;
 		case R.id.log_out:
-			this.finish();
+			intent = new Intent(getBaseContext(), AuthorizationActivity.class);
+			this.startActivity(intent);
 			break;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -166,7 +172,7 @@ public class CommentsListActivity extends ListActivity {
 
 		@Override
 		protected Object doInBackground(Object... arg0) {
-			items = BlogListActivity.blogAdapter.getComments(theme);
+				items = KP.blogAdapter.getComments(theme);
 			if(items == null){
 				Log.e("getComments returned null","getComments returned null");
 			}

@@ -4,6 +4,9 @@
     <string name="app_name">Blog Client</string>
     <string name="action_settings">Settings</string>
     <string name="connectBtn">Join Smart Space</string>
+    <string name="errLogin">Failed to login. Try again.</string>
+    <string name="errComment">Failed to post a comment. Try Later.</string>
+    <string name="errLoadComments">Failed to load comments. Try Later.</string>
     <string name="guestBtn">Enter as a guest</string>
     <string name="registrationService">Registration service</string>
     <string name="ssIP">IP address</string>

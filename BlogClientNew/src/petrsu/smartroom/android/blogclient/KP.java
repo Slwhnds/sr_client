@@ -4,8 +4,11 @@ public class KP {
 	
 	/** The connection state. */
 	static int connectionState;
+	
+	public static BlogAdapter blogAdapter;
 
 	public KP() {
+		blogAdapter = new BlogAdapter();
 	}
 
 	/*

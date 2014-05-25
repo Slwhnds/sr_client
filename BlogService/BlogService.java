@@ -298,14 +298,18 @@ public boolean loadConfiguration() {
 			final BufferedReader reader = new BufferedReader(
 				new InputStreamReader(System.in));
 			System.out.println("Press 'q' to exit program.\n");
+			System.out.println("Press 'd' to delete blog.\n");
 			while(true) {
 			    try {
 				if(reader.readLine().equals("q") ||
 				    reader.readLine().equals("Q")) {
-				    //deletePublishedData();
-
 				    System.exit(0);
 				}
+				if(reader.readLine().equals("d") ||
+					    reader.readLine().equals("D")) {
+					    deletePublishedData();
+					    System.exit(0);
+					}
 			    } catch (IOException e) {
 				e.printStackTrace();
 			    }

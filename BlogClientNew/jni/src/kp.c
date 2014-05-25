@@ -669,6 +669,7 @@ JNIEXPORT jint JNICALL Java_petrsu_smartroom_android_blogclient_KP_getThemes
 		individual_t *individual;
 
 		if(themelist != NULL) {
+			__android_log_print(ANDROID_LOG_ERROR, "getThemes():", "not null*********");
 			list_head_t* pos = NULL;
 			list_for_each(pos, &themelist->links) {
 				list_t* node = list_entry(pos, list_t, links);
@@ -677,6 +678,9 @@ JNIEXPORT jint JNICALL Java_petrsu_smartroom_android_blogclient_KP_getThemes
 				if (addThemeToJavaList(env, individual, obj) != 0 )
 								return -1;
 			}
+		}
+		else {
+			__android_log_print(ANDROID_LOG_ERROR, "getThemes():", "NULL!*********");
 		}
 
 		return 0;

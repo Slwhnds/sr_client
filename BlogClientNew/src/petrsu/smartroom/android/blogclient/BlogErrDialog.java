@@ -33,4 +33,22 @@ public class BlogErrDialog {
 				Toast.LENGTH_SHORT);
 		toast.show();
 	}
+
+	public static void errComment(Context context) {
+		Toast toast = Toast.makeText(context, R.string.errComment,
+				Toast.LENGTH_SHORT);
+		toast.show();
+	}
+	
+	public static void errLoadComments(Context context) {
+		Toast toast = Toast.makeText(context, R.string.errLoadComments,
+				Toast.LENGTH_SHORT);
+		toast.show();
+	}
+	
+	public static void loginErr(Context context) {
+		Toast toast = Toast.makeText(context, R.string.errLogin,
+				Toast.LENGTH_SHORT);
+		toast.show();
+	}
 }

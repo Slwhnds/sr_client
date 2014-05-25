@@ -60,7 +60,8 @@
         android:text="@string/but_login"
         android:textColor="@color/white"
         android:textSize="20sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:onClick="onLogin" />
 
     <EditText
         android:id="@+id/password_edit"

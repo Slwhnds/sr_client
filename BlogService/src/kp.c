@@ -241,7 +241,9 @@ JNIEXPORT jint JNICALL Java_BlogService_publishData
 			return -1;
 
 		sslog_set_individual_uuid(individual,
-    				generateUuid(str));
+    				generateUuid("http://www.cs.karelia.ru/smartroom#theme"));
+
+		sslog_ss_populate_individual(individual);
 
 		sslog_ss_remove_property_all(individual, PROPERTY_THEMEID);
 		sslog_ss_remove_property_all(individual, PROPERTY_THEMESTATUS);
