@@ -7,56 +7,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#undef petrsu_smartroom_android_srclient_KP_MODE_PRIVATE
-#define petrsu_smartroom_android_srclient_KP_MODE_PRIVATE 0L
-#undef petrsu_smartroom_android_srclient_KP_MODE_WORLD_READABLE
-#define petrsu_smartroom_android_srclient_KP_MODE_WORLD_READABLE 1L
-#undef petrsu_smartroom_android_srclient_KP_MODE_WORLD_WRITEABLE
-#define petrsu_smartroom_android_srclient_KP_MODE_WORLD_WRITEABLE 2L
-#undef petrsu_smartroom_android_srclient_KP_MODE_APPEND
-#define petrsu_smartroom_android_srclient_KP_MODE_APPEND 32768L
-#undef petrsu_smartroom_android_srclient_KP_MODE_MULTI_PROCESS
-#define petrsu_smartroom_android_srclient_KP_MODE_MULTI_PROCESS 4L
-#undef petrsu_smartroom_android_srclient_KP_MODE_ENABLE_WRITE_AHEAD_LOGGING
-#define petrsu_smartroom_android_srclient_KP_MODE_ENABLE_WRITE_AHEAD_LOGGING 8L
-#undef petrsu_smartroom_android_srclient_KP_BIND_AUTO_CREATE
-#define petrsu_smartroom_android_srclient_KP_BIND_AUTO_CREATE 1L
-#undef petrsu_smartroom_android_srclient_KP_BIND_DEBUG_UNBIND
-#define petrsu_smartroom_android_srclient_KP_BIND_DEBUG_UNBIND 2L
-#undef petrsu_smartroom_android_srclient_KP_BIND_NOT_FOREGROUND
-#define petrsu_smartroom_android_srclient_KP_BIND_NOT_FOREGROUND 4L
-#undef petrsu_smartroom_android_srclient_KP_BIND_ABOVE_CLIENT
-#define petrsu_smartroom_android_srclient_KP_BIND_ABOVE_CLIENT 8L
-#undef petrsu_smartroom_android_srclient_KP_BIND_ALLOW_OOM_MANAGEMENT
-#define petrsu_smartroom_android_srclient_KP_BIND_ALLOW_OOM_MANAGEMENT 16L
-#undef petrsu_smartroom_android_srclient_KP_BIND_WAIVE_PRIORITY
-#define petrsu_smartroom_android_srclient_KP_BIND_WAIVE_PRIORITY 32L
-#undef petrsu_smartroom_android_srclient_KP_BIND_IMPORTANT
-#define petrsu_smartroom_android_srclient_KP_BIND_IMPORTANT 64L
-#undef petrsu_smartroom_android_srclient_KP_BIND_ADJUST_WITH_ACTIVITY
-#define petrsu_smartroom_android_srclient_KP_BIND_ADJUST_WITH_ACTIVITY 128L
-#undef petrsu_smartroom_android_srclient_KP_CONTEXT_INCLUDE_CODE
-#define petrsu_smartroom_android_srclient_KP_CONTEXT_INCLUDE_CODE 1L
-#undef petrsu_smartroom_android_srclient_KP_CONTEXT_IGNORE_SECURITY
-#define petrsu_smartroom_android_srclient_KP_CONTEXT_IGNORE_SECURITY 2L
-#undef petrsu_smartroom_android_srclient_KP_CONTEXT_RESTRICTED
-#define petrsu_smartroom_android_srclient_KP_CONTEXT_RESTRICTED 4L
-#undef petrsu_smartroom_android_srclient_KP_RESULT_CANCELED
-#define petrsu_smartroom_android_srclient_KP_RESULT_CANCELED 0L
-#undef petrsu_smartroom_android_srclient_KP_RESULT_OK
-#define petrsu_smartroom_android_srclient_KP_RESULT_OK -1L
-#undef petrsu_smartroom_android_srclient_KP_RESULT_FIRST_USER
-#define petrsu_smartroom_android_srclient_KP_RESULT_FIRST_USER 1L
-#undef petrsu_smartroom_android_srclient_KP_DEFAULT_KEYS_DISABLE
-#define petrsu_smartroom_android_srclient_KP_DEFAULT_KEYS_DISABLE 0L
-#undef petrsu_smartroom_android_srclient_KP_DEFAULT_KEYS_DIALER
-#define petrsu_smartroom_android_srclient_KP_DEFAULT_KEYS_DIALER 1L
-#undef petrsu_smartroom_android_srclient_KP_DEFAULT_KEYS_SHORTCUT
-#define petrsu_smartroom_android_srclient_KP_DEFAULT_KEYS_SHORTCUT 2L
-#undef petrsu_smartroom_android_srclient_KP_DEFAULT_KEYS_SEARCH_LOCAL
-#define petrsu_smartroom_android_srclient_KP_DEFAULT_KEYS_SEARCH_LOCAL 3L
-#undef petrsu_smartroom_android_srclient_KP_DEFAULT_KEYS_SEARCH_GLOBAL
-#define petrsu_smartroom_android_srclient_KP_DEFAULT_KEYS_SEARCH_GLOBAL 4L
+
 /*
  * Class:     petrsu_smartroom_android_srclient_KP
  * Method:    connectSmartSpace
@@ -227,30 +178,6 @@ JNIEXPORT jint JNICALL Java_petrsu_smartroom_android_blogclient_KP_registerGuest
 
 /*
  * Class:     petrsu_smartroom_android_srclient_KP
- * Method:    startConferenceFrom
- * Signature: (I)I
- */
-JNIEXPORT jint JNICALL Java_petrsu_smartroom_android_srclient_KP_startConferenceFrom
-  (JNIEnv *, jclass, jint);
-
-/*
- * Class:     petrsu_smartroom_android_srclient_KP
- * Method:    loadProfile
- * Signature: (Lpetrsu/smartroom/android/srclient/Profile;I)Ljava/lang/String;
- */
-JNIEXPORT jstring JNICALL Java_petrsu_smartroom_android_srclient_KP_loadProfile
-  (JNIEnv *, jclass, jobject, jint);
-
-/*
- * Class:     petrsu_smartroom_android_srclient_KP
- * Method:    saveProfileChanges
- * Signature: (Ljava/lang/String;Ljava/lang/String;)I
- */
-JNIEXPORT jint JNICALL Java_petrsu_smartroom_android_srclient_KP_saveProfileChanges
-  (JNIEnv *, jclass, jstring, jstring);
-
-/*
- * Class:     petrsu_smartroom_android_srclient_KP
  * Method:    getPersonUuid
  * Signature: ()Ljava/lang/String;
  */
@@ -267,7 +194,7 @@ JNIEXPORT jstring JNICALL Java_petrsu_smartroom_android_srclient_KP_getPersonUui
 *
 * @return themes list
 */
-JNIEXPORT jint JNICALL Java_petrsu_smartroom_android_blogclient_KP_getThemes(JNIEnv *env, jobject *obj);
+JNIEXPORT jint JNICALL Java_petrsu_smartroom_android_blogclient_KP_getThemes(JNIEnv *, jclass, jobject);
 
 /**
 * @fn Java_petrsu_smartroom_android_srclient_KP_getLog()

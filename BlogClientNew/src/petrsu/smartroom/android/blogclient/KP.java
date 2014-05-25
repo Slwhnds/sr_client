@@ -37,9 +37,9 @@ public class KP {
 	
 	public static native int registerGuest(String name, String phone, String email);
 	
-	public static native int getThemes();
+	public static native int getThemes(BlogListActivity obj);
 	
-	public static native String getLogin();
+	public static native String getLog();
 	
 	public static native String getPass();
 	

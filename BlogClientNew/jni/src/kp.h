@@ -12,20 +12,16 @@
 
 
 JavaVM* JVM;
-
-individual_t *firstTimeslot;
-individual_t *section;
 individual_t *personProfile;
-
-int currentTimeslotIndex;
-
+individual_t *currentSection;
 jclass *classAgenda;
 jclass *classProjector;
 jclass *classKP;
 jobject *agendaClassObject;
 jobject *presentationClassObject;
-jobject *kpClassObject;
-
+int currentTimeslotIndex;
+subscription_t *conferenceSubscriptionContainer;
+subscription_t *presentationSubscriptionContainer;
 
 void addTimeslotToJavaList(JNIEnv *, individual_t *, jobject);
 prop_val_t* initNullProperty();
@@ -37,12 +33,20 @@ int activatePerson(individual_t *);
 void subscriptionHandler(subscription_t *);
 void projectorNotificationHandler(subscription_t *);
 void agendaNotificationHandler(subscription_t *);
+void conferenceNotificationHandler(subscription_t *);
 individual_t* createProfile(individual_t *);
 individual_t* createPerson(const char *, const char *, const char*);
 void logout();
 int calculateTimeslotIndex(prop_val_t *);
 bool personExists(const char *);
 individual_t* getTimeslot(int);
+int subscribeConferenceService();
+int subscribePresentationService();
+individual_t* getCurrentSection();
+individual_t* getFirstTimeslot();
+individual_t* getContentService();
 
+int addThemeToJavaList(JNIEnv *, individual_t *, jobject);
+jclass *classBlogListActivity;
 
 #endif

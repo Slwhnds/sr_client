@@ -27,15 +27,13 @@
 							<tool id="cdt.managedbuild.tool.gnu.archiver.base.853814022" name="GCC Archiver" superClass="cdt.managedbuild.tool.gnu.archiver.base"/>
 							<tool id="com.android.tool.compiler.g++.138555597" name="Android G++" superClass="com.android.tool.compiler.g++">
 								<option id="gnu.cpp.compiler.option.include.paths.1780436588" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="/home/orifanne/android-ndk-r4/build/platforms/android-8/arch-x86"/>
 									<listOptionValue builtIn="false" value="/home/orifanne/android-ndk-r4/build/platforms/android-8/arch-x86/usr/include"/>
-									<listOptionValue builtIn="false" value="/home/orifanne/android-ndk-r4/build/platforms/android-8"/>
 								</option>
 								<inputType id="com.android.tool.compiler.g++.input.1779692062" superClass="com.android.tool.compiler.g++.input"/>
 							</tool>
 							<tool id="com.android.tool.compiler.c.1686347194" name="Android GCC" superClass="com.android.tool.compiler.c">
-								<option id="gnu.c.compiler.option.include.paths.490998656" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
-									<listOptionValue builtIn="false" value="/home/orifanne/android-ndk-r4/build/platforms/android-8"/>
-								</option>
+								<option id="gnu.c.compiler.option.include.paths.490998656" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath"/>
 								<inputType id="com.android.tool.compiler.c.input.48428009" superClass="com.android.tool.compiler.c.input"/>
 							</tool>
 							<tool id="cdt.managedbuild.tool.gnu.c.linker.base.2036909867" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.base"/>

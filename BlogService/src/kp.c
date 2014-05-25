@@ -226,35 +226,35 @@ JNIEXPORT jint JNICALL Java_BlogService_publishData
 
 	//printf("This is what C gets from Java\n");
 	len = (*env)->GetArrayLength(env, themes);
-	printf("The length of the array is : %d%\n", len);
+	//printf("The length of the array is : %d%\n", len);
 
-	printf("Elements in the array:\n");
+	//printf("Elements in the array:\n");
 	for(i = 0; i < len; i++) {
 
 		myobj = (*env)->GetObjectArrayElement(env, themes, i);
 		if (myobj == NULL)
 			return -1;
-    		str = (*env)->GetStringUTFChars(env, myobj, 0);
+		str = (*env)->GetStringUTFChars(env, myobj, 0);
 
-    		individual = sslog_new_individual(CLASS_THEME);
-    		if(individual == NULL)
-    			return -1;
+		individual = sslog_new_individual(CLASS_THEME);
+		if(individual == NULL)
+			return -1;
 
-    		sslog_set_individual_uuid(individual,
+		sslog_set_individual_uuid(individual,
     				generateUuid(str));
 
-    		sslog_ss_remove_property_all(individual, PROPERTY_THEMEID);
-    		sslog_ss_remove_property_all(individual, PROPERTY_THEMESTATUS);
+		sslog_ss_remove_property_all(individual, PROPERTY_THEMEID);
+		sslog_ss_remove_property_all(individual, PROPERTY_THEMESTATUS);
 
-    		char *token, *last;
+		char *token, *last;
 
     		//id
-    		token = strtok_r(str, " ", &last);
-    		if (token == NULL)
-    			return -1;
-    		if(sslog_ss_add_property(individual, PROPERTY_THEMEID, (void *)token) != 0 )
-    			return -1;
-    		printf ("%s\n", token);
+		token = strtok_r(str, " ", &last);
+		if (token == NULL)
+			return -1;
+    	if(sslog_ss_add_property(individual, PROPERTY_THEMEID, (void *)token) != 0 )
+    		return -1;
+    		//printf ("%s\n", token);
 
     		//status
     		token = strtok_r(NULL, " ", &last);
@@ -262,7 +262,7 @@ JNIEXPORT jint JNICALL Java_BlogService_publishData
     			return -1;
     		if(sslog_ss_add_property(individual, PROPERTY_THEMESTATUS, (void *)token) != 0 )
     			return -1;
-    		printf ("%s\n", token);
+    		//printf ("%s\n", token);
 
     		if(sslog_ss_insert_individual(individual) != 0)
     			return -1;

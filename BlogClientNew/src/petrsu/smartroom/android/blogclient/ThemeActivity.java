@@ -30,7 +30,7 @@ public class ThemeActivity extends Activity {
 	
 	/** ����� ��� ����������� ����� ����������. */
 	private TextView reporterNameTextView;
-
+	
 	/** 
 	* ���������� ��� �������� ���������� ������ � �������� �� ��� �������������. �������� � ����������� Activity ��������� ������� ���� � ����, ���������� ��.
 	* @param savedInstanceState ����������� ��������� Activity
@@ -48,12 +48,14 @@ public class ThemeActivity extends Activity {
 		themeTextTextView = (TextView) findViewById(R.id.theme_text);
 		themeTextTextView.setText(theme.getText());
 		
+		
+		/*
 		speechTimeTextView = (TextView) findViewById(R.id.speech_time);
 		SimpleDateFormat sm = new SimpleDateFormat("hh:mm");
 		speechTimeTextView.setText(sm.format(theme.getTime()));
 		
-		reporterNameTextView = (TextView) findViewById(R.id.reporter_name);
-		//reporterNameTextView.setText(theme.getRepoter());*/
+		reporterNameTextView = (TextView) findViewById(R.id.reporter_name);*/
+		//reporterNameTextView.setText(theme.getRepoter());
 	}
 
 	/** 

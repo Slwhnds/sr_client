@@ -123,7 +123,7 @@ public class CameraActivity extends Activity {
 		
 		if ((borders[0][1] < 0) ||
 				(borders[0][0] < 0) ||
-				(borders[0][1] < borders[0][0]))
+				(borders[0][1] <= borders[0][0]))
 			panBar.setFocusable(false);
 		else {
 			panBar.setMax(borders[0][1] - borders[0][0]);
@@ -132,7 +132,7 @@ public class CameraActivity extends Activity {
 		
 		if ((borders[1][1] < 0) ||
 				(borders[1][0] < 0) ||
-				(borders[1][1] < borders[1][0]))
+				(borders[1][1] <= borders[1][0]))
 			tiltBar.setFocusable(false);
 		else {
 			tiltBar.setMax(borders[1][1] - borders[1][0]);
@@ -141,7 +141,7 @@ public class CameraActivity extends Activity {
 		
 		if ((borders[2][1] < 0) ||
 				(borders[2][0] < 0) ||
-				(borders[2][1] < borders[2][0]))
+				(borders[2][1] <= borders[2][0]))
 			tiltBar.setFocusable(false);
 		else {
 			zoomBar.setMax(borders[2][1] - borders[2][0]);

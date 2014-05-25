@@ -1,8 +1,10 @@
 package petrsu.smartroom.android.blogclient;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,8 +33,8 @@ public class LeavingCommentActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_leaving_comment);
-		
-		//theme = (Theme) getIntent().getExtras().get("theme");
+		commentEditText = (EditText) findViewById(R.id.editTextLeaveComment);
+		theme = (Theme) getIntent().getExtras().get("theme");
 	}
 
 
@@ -54,11 +56,10 @@ public class LeavingCommentActivity extends Activity {
 	* �������� �������: BlogAdapter.postComment(String body, Theme theme) 
 	*/
 	public void onPublish(View v) {
-		commentEditText = (EditText) findViewById(R.id.editTextLeaveComment);
 		commentText = commentEditText.getText().toString();
 		if (commentText == "")
 			BlogErrDialog.emptyComment(getBaseContext());
-		BlogListActivity.blogAdapter.postComment(commentText, theme);
+		new publishCommentTask().execute();
 	}
 
 	/** 
@@ -77,6 +78,17 @@ public class LeavingCommentActivity extends Activity {
 			return super.onOptionsItemSelected(item);
 		}
 		return true;
+	}
+	
+	public class publishCommentTask extends AsyncTask {
+
+		@Override
+		protected Object doInBackground(Object... arg0) {
+			BlogListActivity.blogAdapter.postComment(commentText, theme);
+			return null;
+		}
+
+
 	}
 
 }

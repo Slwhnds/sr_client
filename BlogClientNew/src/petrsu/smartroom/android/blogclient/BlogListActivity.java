@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import petrsu.smartroom.android.blogclient.xmlrpcclient.LJRuntimeException;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
@@ -61,15 +63,31 @@ public class BlogListActivity extends ListActivity implements OnItemClickListene
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		/*themes = KP.getThemes();
+		//KP.getThemes(this);
 		
-		String login = KP.getLogin();
-		String pass = KP.getPass();
+		String login;
+		String pass;
 		
+		try {
+			login = KP.getLog();
+			pass = KP.getPass();
+		}
+		catch (Exception e) {
+			BlogErrDialog.loadLogPass(getBaseContext());
+			return;
+		}
 		
+		blogAdapter = new BlogAdapter();
+		try {
 		blogAdapter.setLogPass(login, pass);
 		blogAdapter.login();
-		blogAdapter.setSRName((String) getIntent().getExtras().get("SRName"));*/
+		}
+		catch (LJRuntimeException e) {
+			BlogErrDialog.loadLogPass(getBaseContext());
+			return;
+		}
+		
+		blogAdapter.setSRName((String) getIntent().getExtras().get("SRName"));
 		
 		blog = new Blog();
 		
@@ -96,13 +114,13 @@ public class BlogListActivity extends ListActivity implements OnItemClickListene
 		
 		String[] testThemes = {"1 planned", "2 canceled"};
 		themes = testThemes;
-		String login = "smartRoomUser";
-		String pass = "Ochen_slojnii_parol";
+		//String login = "smartRoomUser";
+		//String pass = "Ochen_slojnii_parol";
 		
-		blogAdapter = new BlogAdapter();
+		/*blogAdapter = new BlogAdapter();
 		
 		blogAdapter.setLogPass(login, pass);
-		blogAdapter.setSRName((String) getIntent().getExtras().get("SRName"));
+		blogAdapter.setSRName((String) getIntent().getExtras().get("SRName"));*/
 		
 		new getThemesTask().execute();
 		
@@ -240,6 +258,14 @@ public class BlogListActivity extends ListActivity implements OnItemClickListene
 		
 	}
 	
-	
+	public void addThemeItemToList(String id, String status) {
+		try {
+			blog.add(new Theme(Integer.parseInt(id), status,
+					blogAdapter.getBlogEntry(Integer.parseInt(id))));
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 }

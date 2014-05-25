@@ -1,5 +1,6 @@
 #include "AndroidKp.h"
 #include "kp.h"
+#include "SmartRoomOntology.h"
 #include <android/log.h>
 
 
@@ -129,9 +130,6 @@ JNIEXPORT jint JNICALL Java_petrsu_smartroom_android_blogclient_KP_userRegistrat
 				return -1;
 
 			if(personFounded == 0)
-				if(activatePerson(profile) != 0)
-					return -1;
-				else
 					return 0;
 		}
 	}
@@ -148,58 +146,6 @@ JNIEXPORT jint JNICALL Java_petrsu_smartroom_android_blogclient_KP_userRegistrat
 			return -1;
 
 		return 0;
-	}
-
-	return -1;
-}
-
-/**
- * @brief Counts person position in timeslot
- *
- */
-JNIEXPORT jint JNICALL Java_petrsu_smartroom_android_srclient_KP_personTimeslotIndex
-  (JNIEnv *env, jobject obj) {
-
-	int index = 0;
-
-	individual_t *timeslot = firstTimeslot;
-
-	prop_val_t *person = sslog_ss_get_property(personProfile, PROPERTY_PERSONINFORMATION);
-	individual_t *personInfo = (individual_t *) person->prop_value;
-
-
-	while(timeslot != NULL) {
-
-		prop_val_t *timeslotData = sslog_ss_get_property(timeslot, PROPERTY_PERSONLINK);
-
-		// If person is not active
-		if(timeslotData == NULL) {
-			index += 1;
-			prop_val_t *nextTimeslot = sslog_ss_get_property(timeslot, PROPERTY_NEXTTIMESLOT);
-
-			if(nextTimeslot != NULL)
-				timeslot = (individual_t *) nextTimeslot->prop_value;
-
-			else
-				return -1;
-
-			continue;
-		}
-
-		individual_t *personTimeslot = (individual_t *) timeslotData->prop_value;
-
-		if(strcmp(personInfo->uuid, personTimeslot->uuid) == 0) {
-			return index;
-
-		} else
-			index += 1;
-
-		prop_val_t *nextTimeslot = sslog_ss_get_property(timeslot, PROPERTY_NEXTTIMESLOT);
-
-		if(nextTimeslot == NULL)
-			break;
-
-		timeslot = (individual_t *) nextTimeslot->prop_value;
 	}
 
 	return -1;
@@ -344,187 +290,6 @@ int searchPerson(individual_t *profile, const char *userName, const char *passwo
 }
 
 
-/**
- * @fn activatePerson(individual_t *profile)
- *
- * @brief Send `newParticipantCome` notification
- *
- * If searchPerson() function ended successful then this function
- * sends notification to AgendaNotification class
- *
- * @param profile - pointer to profile individual
- *
- * @return Returns 0 in success and -1 if failed
- */
-int activatePerson(individual_t *profile) {
-
-	char *online_status = "online";
-	char *offline_status = "offline";
-
-	prop_val_t *person_prop = sslog_ss_get_property(profile, PROPERTY_PERSONINFORMATION);
-
-	individual_t *person;
-
-	if(person_prop == NULL)
-		return -1;
-
-	person = (individual_t *)person_prop->prop_value;
-
-	sslog_ss_populate_individual(person);
-
-	if(person == NULL)
-		return -1;
-
-	// if property does not exists
-	if(sslog_ss_get_property(person, PROPERTY_STATUS) == NULL) {
-
-		if(sslog_ss_add_property(person, PROPERTY_STATUS, (void *)online_status) != 0) {
-			__android_log_print(ANDROID_LOG_ERROR, "class KP", "%s", get_error_text());
-			return -1;
-		}
-
-	} else {
-		sslog_ss_update_property(person, PROPERTY_STATUS->name, (void *)offline_status,
-				(void *)online_status);
-	}
-
-	individual_t *agendaGui = sslog_new_individual(CLASS_AGENDANOTIFICATION);
-
-	sslog_set_individual_uuid(agendaGui,
-			generateUuid("http://www.cs.karelia.ru/smartroom#Notification"));
-
-	if(sslog_ss_add_property(agendaGui, PROPERTY_NEWPARTICIPANTCOME, profile) != 0 ) {
-		__android_log_print(ANDROID_LOG_ERROR, "class KP", "%s", get_error_text());
-		return -1;
-	}
-
-	if(sslog_ss_insert_individual(agendaGui) != 0) {
-		__android_log_print(ANDROID_LOG_ERROR, "class KP", "insert failed");
-		return -1;
-	}
-
-	return 0;
-}
-
-
-/**
- * @fn Java_petrsu_smartroom_android_srclient_KP_loadTimeslotList(JNIEnv *env, jclass clazz, jobject obj)
- *
- * @brief Gets TimeSlot individuals from Smart Space
- *
- * Gets the list of TimeSlot class individuals from Smart Space
- * processes it and fills Agenda.
- *
- * @param env - pointer to JNI environment
- * @param clazz - class keeping loadTimeSlot() function
- * @param obj - Agenda class object
- *
- * @return Returns 0 in success and -1 if failed
- */
-JNIEXPORT jint JNICALL Java_petrsu_smartroom_android_srclient_KP_loadTimeslotList
-  (JNIEnv *env, jclass clazz, jobject obj) {
-
-	// TODO:
-	// when there will be more than one section, it's enough only to
-	// initialize chosen `section`
-	int counter = 0, attempts = 3;
-
-	if(obj != NULL)
-		agendaClassObject = (jobject *)(*env)->NewGlobalRef(env, obj);
-	else
-		return -1;
-
-	prop_val_t *propTimeslot = sslog_ss_get_property(section, PROPERTY_FIRSTTIMESLOT);
-
-	for(; counter < attempts; counter++) {
-		if(propTimeslot == NULL)
-			propTimeslot = sslog_ss_get_property(section, PROPERTY_FIRSTTIMESLOT);
-		else
-			break;
-	}
-
-	while(propTimeslot != NULL) {
-		individual_t *pTimeslot = (individual_t *) propTimeslot->prop_value;
-
-		addTimeslotToJavaList(env, pTimeslot, obj);
-
-		propTimeslot = sslog_ss_get_property(pTimeslot, PROPERTY_NEXTTIMESLOT);
-	}
-
-	return 0;
-}
-
-
-/**
- * @fn addTimeslotToJavaList(JNIEnv *env, individual_t *timeslot, jobject obj)
- *
- * @brief Fills Agenda by timeslot's properties values
- *
- * Extracts timeslot's properties and stores them into
- * Agenda timeslot list.
- *
- * @param env - pointer to JNI environment
- * @param timeslot - timeslot individual
- * @param obj - Agenda class object
- *
- * @return Returns 0 in success and -1 if failed
- */
-void addTimeslotToJavaList(JNIEnv *env, individual_t *timeslot, jobject obj) {
-
-	jmethodID methodId = (*env)->GetMethodID(env, classAgenda, "addTimeslotItemToList",
-			"(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
-
-	int counter = 0, attempts = 3;
-	prop_val_t *p_val_name = sslog_ss_get_property (timeslot, PROPERTY_SPEAKERNAME);
-	prop_val_t *p_val_pres_title = sslog_ss_get_property (timeslot, PROPERTY_PRESENTATIONTITLE);
-
-	for(; counter < attempts; counter++) {
-
-		if(p_val_name == NULL)
-			p_val_name = sslog_ss_get_property (timeslot, PROPERTY_SPEAKERNAME);
-
-		if(p_val_pres_title == NULL)
-			p_val_pres_title = sslog_ss_get_property (timeslot, PROPERTY_PRESENTATIONTITLE);
-
-		if((p_val_name != NULL)	&& (p_val_pres_title != NULL))
-			break;
-	}
-
-
-	/* Gets person link property */
-	char *imgLink = (char *) malloc (sizeof(char) * 200);
-
-	strcpy(imgLink, "absentImage");
-
-	prop_val_t *p_val_person_link = sslog_ss_get_property (timeslot, PROPERTY_PERSONLINK);
-	if(p_val_person_link != NULL) {
-
-		char *status = "";
-		individual_t *person = (individual_t *)p_val_person_link->prop_value;
-
-		prop_val_t *p_val_status = sslog_ss_get_property (person, PROPERTY_STATUS);
-		if(p_val_status != NULL)
-			status = (char *) p_val_status->prop_value;
-
-		prop_val_t *p_val_img = sslog_ss_get_property (person, PROPERTY_IMG);
-
-		if(p_val_img != NULL) {
-			strcpy(imgLink, (char *)p_val_img->prop_value);
-		} else if(strcmp(status, "online"))
-			strcpy(imgLink, "noImage");
-	}
-
-	/* Calling Agenda's addTimeslotItemToList Java method */
-	if(obj != NULL)
-		(*env)->CallVoidMethod(env, obj, methodId,
-				(*env)->NewStringUTF(env, (char *)(p_val_name->prop_value)),
-				(*env)->NewStringUTF(env, (char *)(p_val_pres_title->prop_value)),
-				(*env)->NewStringUTF(env, imgLink));
-
-	free(imgLink);
-}
-
-
 /***********************
  *
  * Generates unique uuid
@@ -545,42 +310,6 @@ char* generateUuid(char *uuid) {
 
 	return result;
 }
-
-
-/**********************************
- *
- *  Gets list of available services
- *
- **********************************/
-JNIEXPORT jint JNICALL Java_petrsu_smartroom_android_srclient_KP_getServicesInfo
-  (JNIEnv *env, jclass clazz, jobject menu) {
-
-	jclass class = getJClassObject(env, "ServicesMenu");
-	jfieldID agendaStateField = getFieldID(env, class, "agendaServiceState", "I");
-	jfieldID presentationStateField = getFieldID(env, class, "presentationServiceState", "I");
-
-	individual_t *agenda = (individual_t *)
-			sslog_ss_get_individual_by_class_all(CLASS_AGENDA);
-
-	if(agenda == NULL) {
-		__android_log_print(ANDROID_LOG_ERROR, "class KP", "Agenda service not found");
-		(*env)->SetIntField(env, menu, agendaStateField, 0);
-	} else
-		(*env)->SetIntField(env, menu, agendaStateField, 1);
-
-
-	individual_t *presentation = (individual_t *)
-			sslog_ss_get_individual_by_class_all(CLASS_PRESENTATIONSERVICE);
-
-	if(presentation == NULL) {
-		__android_log_print(ANDROID_LOG_ERROR, "class KP", "Projector service not found");
-		(*env)->SetIntField(env, menu, presentationStateField, 0);
-	} else
-		(*env)->SetIntField(env, menu, presentationStateField, 1);
-
-	return 0;
-
-}/* Gets list of available services */
 
 
 /*************************************************
@@ -635,163 +364,6 @@ jfieldID getFieldID(JNIEnv *env, jclass class, char *fieldName, char *signature)
 	return fieldID;
 }
 
-/**
- * @brief Handles agenda changes
- */
-void agendaNotificationHandler(subscription_t *sbcr) {
-
-	/* Gets jni environment pointer (env) */
-	JNIEnv *env = NULL;
-	bool attached = JNI_FALSE;
-
-	switch((*JVM)->GetEnv(JVM, (void **)&env, JNI_VERSION_1_6)) {
-
-		case JNI_OK:
-			break;
-
-		case JNI_EDETACHED:
-			(*JVM)->AttachCurrentThread(JVM, &env, NULL);
-			attached = JNI_TRUE;
-			break;
-
-		case JNI_EVERSION:
-			__android_log_print(ANDROID_LOG_ERROR, "agendaHandler:",
-					"invalid jni version");
-			break;
-	}
-
-	jmethodID updateAgenda = (*env)->GetMethodID(env, classAgenda, "updateAgenda", "()V");
-	jmethodID setCurTimeslot = (*env)->GetMethodID(env, classAgenda, "setCurrentTimeslot", "(I)V");
-
-	jfieldID agendaCreated = (*env)->GetStaticFieldID(env, classAgenda,
-			"agendaCreated", "I");
-	int agendaIsCreated = (*env)->GetStaticIntField(env, classAgenda, agendaCreated);
-
-	subscription_changes_data_t *changes = sslog_sbcr_get_changes_last(sbcr);
-	list_t *list = sslog_sbcr_ch_get_individual_all(changes);
-
-	if(agendaIsCreated != 1) {
-		if(attached)
-			(*JVM)->DetachCurrentThread(JVM);
-
-		return;
-	}
-
-	if(list != NULL) {
-		list_head_t *list_walker = NULL;
-
-		list_for_each(list_walker, &list->links) {
-			list_t *node = list_entry(list_walker, list_t, links);
-			char *uuid = (char *) node->data;
-
-			individual_t *individual = (individual_t *)
-					sslog_repo_get_individual_by_uuid(uuid);
-
-			prop_val_t *p_val_update = sslog_ss_get_property (individual,
-						PROPERTY_UPDATEAGENDA);
-			if(p_val_update != NULL) {
-				if(agendaIsCreated == 1)
-					(*env)->CallVoidMethod(env, agendaClassObject, updateAgenda);
-			}
-
-			prop_val_t *p_val_timeslot = sslog_ss_get_property (individual,
-									PROPERTY_CURRENTTIMESLOT);
-			if(p_val_timeslot != NULL) {
-
-				calculateTimeslotIndex(p_val_timeslot);
-
-				if(agendaIsCreated == 1)
-					(*env)->CallVoidMethod(env, agendaClassObject, updateAgenda);
-				else
-					break;
-			}
-		}
-	}
-
-	list_free_with_nodes(list, NULL);
-
-	if(attached)
-		(*JVM)->DetachCurrentThread(JVM);
-}
-
-
-JNIEXPORT jint JNICALL Java_petrsu_smartroom_android_srclient_KP_getCurrentTimeslotIndex
-  (JNIEnv *env, jclass clazz) {
-	return calculateTimeslotIndex(NULL);
-}
-
-/**
- * @brief Calculates an index number of current timeslot
- */
-int calculateTimeslotIndex(prop_val_t *propTimeslot) {
-
-	individual_t *curTimeslot;
-	individual_t *timeslot = firstTimeslot;
-	currentTimeslotIndex = 1;
-
-	if(propTimeslot != NULL)
-		curTimeslot = (individual_t *) propTimeslot->prop_value;
-
-	else {
-		propTimeslot = sslog_ss_get_property (section,
-				PROPERTY_CURRENTTIMESLOT);
-
-		if(propTimeslot != NULL)
-			curTimeslot = (individual_t *) propTimeslot->prop_value;
-		else
-			return -1;
-	}
-
-	// Get index of current timeslot
-	while(strcmp(curTimeslot->uuid, timeslot->uuid) != 0) {
-		prop_val_t *val = sslog_ss_get_property(timeslot, PROPERTY_NEXTTIMESLOT);
-
-		if(val != NULL) {
-			timeslot = (individual_t *) val->prop_value;
-			++currentTimeslotIndex;
-		} else return -1;
-	}
-
-	return currentTimeslotIndex;
-}
-
-/**
- * @brief Function checks the fact that current
- * participant is a speaker.
- *
- * @return True if participant is a speaker and
- * false otherwise
- */
-JNIEXPORT jboolean JNICALL Java_petrsu_smartroom_android_srclient_KP_checkSpeakerState
-  (JNIEnv *env, jclass clazz) {
-
-	individual_t *timeslot;
-	prop_val_t *curValue = sslog_ss_get_property(section, PROPERTY_CURRENTTIMESLOT);
-
-	if(curValue == NULL)
-		return JNI_FALSE;
-
-	timeslot = (individual_t *) curValue->prop_value;
-
-	prop_val_t *personValue = sslog_ss_get_property(timeslot, PROPERTY_PERSONLINK);
-
-	if(personValue == NULL)
-		return JNI_FALSE;
-
-	individual_t *curPerson = (individual_t *) personValue->prop_value;
-
-	prop_val_t *person = sslog_ss_get_property(personProfile, PROPERTY_PERSONINFORMATION);
-
-	if(person == NULL)
-			return JNI_FALSE;
-
-	individual_t *personInfo = (individual_t *) person->prop_value;
-
-	if(strcmp(personInfo->uuid, curPerson->uuid) == 0)
-		return JNI_TRUE;
-	else
-		return JNI_FALSE;
-}
 
 /********************************************************
  *
@@ -957,209 +529,6 @@ void presentationNotificationHandler(subscription_t *sbcr) {
 		(*JVM)->DetachCurrentThread(JVM);
 }
 
-JNIEXPORT jstring JNICALL Java_petrsu_smartroom_android_srclient_KP_getMicServiceIP
-  (JNIEnv *env, jclass clazz) {
-
-	list_t *list = sslog_ss_get_individual_by_class_all(CLASS_MICROPHONESERVICE);
-	individual_t *individual;
-
-	if(list != NULL) {
-		list_head_t* pos = NULL;
-		list_for_each(pos, &list->links) {
-			list_t* node = list_entry(pos, list_t, links);
-			individual = (individual_t*)(node->data);
-			sslog_ss_populate_individual(individual);
-		}
-	} else
-		return NULL;
-
-	prop_val_t *ip_value = sslog_ss_get_property(individual, PROPERTY_IP);
-
-	if(ip_value == NULL)
-		return NULL;
-
-	return (*env)->NewStringUTF(env, (char *)ip_value->prop_value);
-}
-
-JNIEXPORT jstring JNICALL Java_petrsu_smartroom_android_srclient_KP_getMicServicePort
-  (JNIEnv *env, jclass clazz) {
-
-	list_t *list = sslog_ss_get_individual_by_class_all(CLASS_MICROPHONESERVICE);
-	individual_t *individual;
-
-	if(list != NULL) {
-		list_head_t* pos = NULL;
-		list_for_each(pos, &list->links) {
-			list_t* node = list_entry(pos, list_t, links);
-			individual = (individual_t*)(node->data);
-			sslog_ss_populate_individual(individual);
-		}
-	} else
-		return NULL;
-
-	prop_val_t *port_value = sslog_ss_get_property(individual, PROPERTY_PORT);
-
-	if(port_value == NULL)
-		return NULL;
-
-	return (*env)->NewStringUTF(env, (char *)port_value->prop_value);
-}
-
-/**
- * @brief Returns current speaker name
- */
-JNIEXPORT jstring JNICALL Java_petrsu_smartroom_android_srclient_KP_getSpeakerName
-  (JNIEnv *env, jclass clazz) {
-
-	list_t *sectionList = sslog_ss_get_individual_by_class_all(CLASS_SECTION);
-	individual_t *section1 = NULL;
-
-	if(sectionList != NULL) {
-		list_head_t* pos = NULL;
-		list_for_each(pos, &sectionList->links) {
-			list_t* node = list_entry(pos, list_t, links);
-			section1 = (individual_t *)(node->data);
-			sslog_ss_populate_individual(section);
-			break;
-		}
-	}
-
-	prop_val_t *curTimeslotProp = sslog_ss_get_property(section1, PROPERTY_CURRENTTIMESLOT);
-
-	if(curTimeslotProp == NULL)
-		return "";
-
-	individual_t *curTimeslot = (individual_t *)curTimeslotProp->prop_value;
-
-	prop_val_t *personLinkProp = sslog_ss_get_property(curTimeslot, PROPERTY_PERSONLINK);
-
-	if(personLinkProp == NULL)
-		return "";
-
-	individual_t *person = (individual_t *)personLinkProp->prop_value;
-	prop_val_t *personName = sslog_ss_get_property(person, PROPERTY_NAME);
-
-	if(personName != NULL)
-		return (*env)->NewStringUTF(env, (char *)personName->prop_value);
-
-	else
-		return "";
-}
-
-
-JNIEXPORT jboolean JNICALL Java_petrsu_smartroom_android_srclient_KP_checkConnection
-  (JNIEnv *env, jobject obj) {
-
-	list_t *agendaList = sslog_ss_get_individual_by_class_all(CLASS_AGENDA);
-	list_t *presentationList = sslog_ss_get_individual_by_class_all(CLASS_PRESENTATIONSERVICE);
-
-	if(agendaList != NULL || presentationList != NULL)
-		return JNI_TRUE;
-	else
-		return JNI_FALSE;
-}
-
-
-JNIEXPORT jstring JNICALL Java_petrsu_smartroom_android_srclient_KP_getPresentationLink
-  (JNIEnv *env, jclass clazz, jint index) {
-
-	individual_t *person = NULL;
-	individual_t *presentation = NULL;
-	individual_t *pTimeslot = NULL;
-
-	pTimeslot = getTimeslot(index);
-
-	if(pTimeslot == NULL)
-		return NULL;
-
-	prop_val_t *propPerson = sslog_ss_get_property(pTimeslot, PROPERTY_PERSONLINK);
-	if(propPerson != NULL)
-		person = (individual_t *) propPerson->prop_value;
-	else
-		return NULL;
-
-	prop_val_t *propPresents = sslog_ss_get_property(person, PROPERTY_PRESENTS);
-	if(propPresents != NULL)
-		presentation = (individual_t *) propPresents->prop_value;
-	else
-		return NULL;
-
-	if(presentation != NULL) {
-		prop_val_t *link = sslog_ss_get_property(presentation, PROPERTY_URL);
-
-		if(link != NULL)
-			return (*env)->NewStringUTF(env, (char *)link->prop_value);
-	}
-
-	return NULL;
-}
-
-/**
- * @brief Get timeslot's individual by index
- */
-individual_t* getTimeslot(int index) {
-
-	prop_val_t *propTimeslot = sslog_ss_get_property(section, PROPERTY_FIRSTTIMESLOT);
-	individual_t *pTimeslot = NULL;
-	int i = 0;
-
-	if(propTimeslot == NULL)
-		propTimeslot = sslog_ss_get_property(section, PROPERTY_FIRSTTIMESLOT);
-
-	for(; (i <= index) && (propTimeslot != NULL); i++) {
-		pTimeslot = (individual_t *) propTimeslot->prop_value;
-
-		if(pTimeslot != NULL)
-			propTimeslot = sslog_ss_get_property(pTimeslot, PROPERTY_NEXTTIMESLOT);
-	}
-
-	return pTimeslot;
-}
-
-/**
- * @brief Loads chosen profile from agenda service
- */
-JNIEXPORT jstring JNICALL Java_petrsu_smartroom_android_srclient_KP_loadProfile
-  (JNIEnv *env, jclass clazz, jobject obj, jint index) {
-
-	jclass *classProfile = getJClassObject(env, "Profile");
-	individual_t *timeslot = getTimeslot(index);
-	individual_t *person = NULL;
-
-	if(obj == NULL || timeslot == NULL)
-		return "";
-
-	jmethodID setNameId = (*env)->GetMethodID(env, classProfile,
-			"setName", "(Ljava/lang/String;)V");
-	jmethodID setPhoneId = (*env)->GetMethodID(env, classProfile,
-			"setPhone", "(Ljava/lang/String;)V");
-	jmethodID setImageId = (*env)->GetMethodID(env, classProfile,
-			"setImage", "(Ljava/lang/String;)V");
-
-	prop_val_t *propPerson = sslog_ss_get_property(timeslot, PROPERTY_PERSONLINK);
-	if(propPerson != NULL)
-		person = (individual_t *) propPerson->prop_value;
-	else
-		return NULL;
-
-	prop_val_t *propName = sslog_ss_get_property(person, PROPERTY_NAME);
-	if(propName != NULL)
-		(*env)->CallVoidMethod(env, obj, setNameId,
-				(*env)->NewStringUTF(env, (char *)propName->prop_value));
-
-	prop_val_t *propPhone = sslog_ss_get_property(person, PROPERTY_PHONE);
-	if(propPhone != NULL)
-		(*env)->CallVoidMethod(env, obj, setPhoneId,
-				(*env)->NewStringUTF(env, (char *)propPhone->prop_value));
-
-	prop_val_t *propImage = sslog_ss_get_property(person, PROPERTY_IMG);
-	if(propImage != NULL)
-		(*env)->CallVoidMethod(env, obj, setImageId,
-				(*env)->NewStringUTF(env, (char *)propImage->prop_value));
-
-	return (*env)->NewStringUTF(env, (char *)person->uuid);
-}
-
 /**
  * @brief Saves all profile changes to Smart Space
  */
@@ -1219,60 +588,6 @@ JNIEXPORT jstring JNICALL Java_petrsu_smartroom_android_srclient_KP_getPersonUui
 	return (*env)->NewStringUTF(env, (char *)person->uuid);
 }
 
-/**
-* @fn Java_petrsu_smartroom_android_srclient_KP_getThemes(JNIEnv *env, jobject obj)
-*
-* @brief Gets themes data from SS.
-*
-* @param env - pointer to JNI environment
-* @param obj - Blog class object
-*
-* @return themes list
-*/
-JNIEXPORT jobjectArray JNICALL Java_petrsu_smartroom_android_blogclient_KP_getThemes(JNIEnv *env, jobject *obj)
-{
-	/*list_t *themelist = sslog_ss_get_individual_by_class_all(CLASS_THEME);
-	individual_t *individual;
-	const jint maxTheme = 255;
-    jclass stringObject = (*env)->FindClass(env, "java/lang/String");
-    jobjectArray ThemeArray = (*env)->NewObjectArray(env, maxTheme,
-			stringObject, (*env)->NewStringUTF(env, NULL));
-
-
-	if(themelist != NULL) {
-		list_head_t* pos = NULL;
-		int index = 0;
-		list_for_each(pos, &themelist->links) {
-			list_t* node = list_entry(pos, list_t, links);
-			individual = (individual_t*)(node->data);
-			prop_val_t *id_value = sslog_ss_get_property(individual, PROPERTY_ID);
-			prop_val_t *status_value = sslog_ss_get_property(individual, PROPERTY_STATUS);
-
-			if(index >= maxTheme)
-				break;
-
-			if ((id_value == NULL) || (status_value == NULL))
-					return NULL;
-
-			char *res = (char *) malloc (sizeof(char) * 255);
-			strcat(res, (char *) id_value->prop_value); strcat(res, " ");
-			strcat(res, (char *) status_value->prop_value);
-
-
-
-			(*env)->SetObjectArrayElement(env, ThemeArray, index,
-					(*env)->NewStringUTF(env, res));
-
-			++index;
-		}
-	} else
-		return NULL;
-
-
-	return ThemeArray;*/
-}
-
-
 
 /**
 * @fn Java_petrsu_smartroom_android_srclient_KP_getLog()
@@ -1286,7 +601,7 @@ JNIEXPORT jobjectArray JNICALL Java_petrsu_smartroom_android_blogclient_KP_getTh
 */
 JNIEXPORT jstring JNICALL Java_petrsu_smartroom_android_blogclient_KP_getLog(JNIEnv *env, jobject *obj)
 {
-	/*list_t *list = sslog_ss_get_individual_by_class_all(CLASS_BLOG);
+	list_t *list = sslog_ss_get_individual_by_class_all(CLASS_BLOG);
 	individual_t *individual;
 
 	if(list != NULL) {
@@ -1301,10 +616,10 @@ JNIEXPORT jstring JNICALL Java_petrsu_smartroom_android_blogclient_KP_getLog(JNI
 
 	prop_val_t *login_value = sslog_ss_get_property(individual, PROPERTY_SRLOGIN);
 
-	if(ip_value == NULL)
+	if(login_value == NULL)
 		return NULL;
 
-	return (*env)->NewStringUTF(env, (char *)login_value->prop_value);*/
+	return (*env)->NewStringUTF(env, (char *)login_value->prop_value);
 }
 
 /**
@@ -1319,7 +634,7 @@ JNIEXPORT jstring JNICALL Java_petrsu_smartroom_android_blogclient_KP_getLog(JNI
 */
 JNIEXPORT jstring JNICALL Java_petrsu_smartroom_android_blogclient_KP_getPass(JNIEnv *env, jobject *obj)
 {
-	/*list_t *list = sslog_ss_get_individual_by_class_all(CLASS_BLOG);
+	list_t *list = sslog_ss_get_individual_by_class_all(CLASS_BLOG);
 	individual_t *individual;
 
 	if(list != NULL) {
@@ -1334,11 +649,62 @@ JNIEXPORT jstring JNICALL Java_petrsu_smartroom_android_blogclient_KP_getPass(JN
 
 	prop_val_t *password_value = sslog_ss_get_property(individual, PROPERTY_SRPASSWORD);
 
-	if(ip_value == NULL)
+	if(password_value == NULL)
 		return NULL;
 
-	return (*env)->NewStringUTF(env, (char *)password_value->prop_value);*/
+	return (*env)->NewStringUTF(env, (char *)password_value->prop_value);
 
 
+}
+
+JNIEXPORT jint JNICALL Java_petrsu_smartroom_android_blogclient_KP_getThemes
+  (JNIEnv *env, jclass clazz, jobject obj) {
+
+	if(obj != NULL)
+		classBlogListActivity = (*env)->GetObjectClass(env, obj);
+	else
+		return -1;
+
+	list_t *themelist = sslog_ss_get_individual_by_class_all(CLASS_THEME);
+		individual_t *individual;
+
+		if(themelist != NULL) {
+			list_head_t* pos = NULL;
+			list_for_each(pos, &themelist->links) {
+				list_t* node = list_entry(pos, list_t, links);
+				individual = (individual_t*)(node->data);
+				sslog_ss_populate_individual(individual);
+				if (addThemeToJavaList(env, individual, obj) != 0 )
+								return -1;
+			}
+		}
+
+		return 0;
+}
+
+int addThemeToJavaList(JNIEnv *env, individual_t *theme, jobject obj) {
+
+	//printf("addTimeslotToJavaList\n");
+
+	jmethodID methodId = (*env)->GetMethodID(env, classBlogListActivity, "addThemeItemToList",
+			"(Ljava/lang/String;Ljava/lang/String;)V");
+
+	prop_val_t *id_value = sslog_ss_get_property(theme, PROPERTY_THEMEID);
+	prop_val_t *status_value = sslog_ss_get_property(theme, PROPERTY_THEMESTATUS);
+
+	if((id_value == NULL) || (status_value == NULL))
+		return -1;
+
+	char *id_value_ = (char*) id_value->prop_value;
+	char *status_value_ = (char*) status_value->prop_value;
+
+	if(obj != NULL) {
+		(*env)->CallVoidMethod(env, obj, methodId,
+				(*env)->NewStringUTF(env, id_value_),
+				(*env)->NewStringUTF(env, status_value_));
+		return 0;
+	}
+	else
+		return -1;
 }
 
