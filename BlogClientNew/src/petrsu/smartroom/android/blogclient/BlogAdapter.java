@@ -1,5 +1,6 @@
 package petrsu.smartroom.android.blogclient;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
@@ -8,126 +9,132 @@ import petrsu.smartroom.android.blogclient.arguments.*;
 import petrsu.smartroom.android.blogclient.results.*;
 
 
-public class BlogAdapter {
+public class BlogAdapter implements Serializable{
+	
+	/** Объект класса из Java-LiveJournalAPI, представляющий удобный xmlrpc-client 
+	*
+	* Все подключаемые библиотеки нужны для поддержки данного API.
+	*/
+	private ConvenientClient client;
 
-/** ГЋГЎГєГҐГЄГІ ГЄГ«Г Г±Г±Г  ГЁГ§ Java-LiveJournalAPI, ГЇГ°ГҐГ¤Г±ГІГ ГўГ«ГїГѕГ№ГЁГ© ГіГ¤Г®ГЎГ­Г»Г© xmlrpc-client
-*
-* Г‚Г±ГҐ ГЇГ®Г¤ГЄГ«ГѕГ·Г ГҐГ¬Г»ГҐ ГЎГЁГЎГ«ГЁГ®ГІГҐГЄГЁ Г­ГіГ¦Г­Г» Г¤Г«Гї ГЇГ®Г¤Г¤ГҐГ°Г¦ГЄГЁ Г¤Г Г­Г­Г®ГЈГ® API.
-*/
-private ConvenientClient client;
+	/** Тайм-аут для xmlrpc-вызовов в классе ConvenientClient */
+	private int timeout;
 
-/** Г’Г Г©Г¬-Г ГіГІ Г¤Г«Гї xmlrpc-ГўГ»Г§Г®ГўГ®Гў Гў ГЄГ«Г Г±Г±ГҐ ConvenientClient */
-private int timeout;
+	/** Флаг аутентификации */
+	private boolean loggedIn;
 
-/** Г”Г«Г ГЈ Г ГіГІГҐГ­ГІГЁГґГЁГЄГ Г¶ГЁГЁ */
-private boolean loggedIn;
+	/** Общий логин для внешнего блог сервиса */
+	private String login;
 
-/** ГЋГЎГ№ГЁГ© Г«Г®ГЈГЁГ­ Г¤Г«Гї ГўГ­ГҐГёГ­ГҐГЈГ® ГЎГ«Г®ГЈ Г±ГҐГ°ГўГЁГ±Г  */
-private String login;
+	/** Общий пароль для внешнего блог сервиса */
+	private String pass;
 
-/** ГЋГЎГ№ГЁГ© ГЇГ Г°Г®Г«Гј Г¤Г«Гї ГўГ­ГҐГёГ­ГҐГЈГ® ГЎГ«Г®ГЈ Г±ГҐГ°ГўГЁГ±Г  */
-private String pass;
+	/** Имя пользователя в SR */
+	private String SRName;
 
-/** Г€Г¬Гї ГЇГ®Г«ГјГ§Г®ГўГ ГІГҐГ«Гї Гў SR */
-private String SRName;
+	/** Текущий логин для внешнего блог сервиса */
+	private String curLogin;
 
-/** Г’ГҐГЄГіГ№ГЁГ© Г«Г®ГЈГЁГ­ Г¤Г«Гї ГўГ­ГҐГёГ­ГҐГЈГ® ГЎГ«Г®ГЈ Г±ГҐГ°ГўГЁГ±Г  */
-private String curLogin;
+	/** Текущий пароль для внешнего блог сервиса */
+	private String curPass;
 
-/** Г’ГҐГЄГіГ№ГЁГ© ГЇГ Г°Г®Г«Гј Г¤Г«Гї ГўГ­ГҐГёГ­ГҐГЈГ® ГЎГ«Г®ГЈ Г±ГҐГ°ГўГЁГ±Г  */
-private String curPass;
+	public BlogAdapter(){
+		client = new ConvenientClient(new XMLRPCClientImpl());
+		timeout = 0; // пока что отключен
+		
+		
+	}
+	
+	/**  Проверяет правильность пары логин-пароль, если они подходят, сохраняет в свойства curLogin, curPass 
+	*
+	* @param login - логин для внешнего блог-сервиса
+	* @param password - пароль для внешнего блог-сервиса
+	* @return - объект класса UserData, описанного в 4.2 Обмен данными с внешним блог-сервисом
+	* @throws LJRuntimeException в случае, если возникли проблемы с сетью на стороне клиента или сервера
+	* Вызывает метод login() в ConvenientClient.
+	*/
+	public UserData login(String login, String password){
+		if(login == null || login == "" || password == null || password == "")
+			return null;
+		else
+			return client.login(login, password, timeout);
+		
+	}
+	
+	/** Логинится под общими логином и паролем от SR.
+	* @throws LJRuntimeException в случае, если возникли проблемы с сетью на стороне клиента или сервера
+	* Вызывает метод login() в ConvenientClient.
+	*/
+	public UserData login(){
+		return client.login(login, pass, timeout);
+	}
 
-public BlogAdapter(){
-client = new ConvenientClient(new XMLRPCClientImpl());
-timeout = 0; // ГЇГ®ГЄГ  Г·ГІГ® Г®ГІГЄГ«ГѕГ·ГҐГ­
+	/**  Возвращает запрошенный у внешнего блог-сервиса пост 
+	* @param itemid - идентификатор поста
+	* @return - объект класса BlogEntry, описанного в 4.2 Обмен данными с внешним блог-сервисом
+	* @throws LJRuntimeException в случае, если возникли проблемы с сетью на стороне клиента или сервера
+	* Вызывает метод getBlogEntry() в ConvenientClient.
+	*/
+	public BlogEntry getBlogEntry(int itemid){
+		return client.getBlogEntry(itemid, timeout);
+	}
 
+	/**  Возвращает запрошенные у внешнего блог-сервиса комментарии 
+	* @param theme - объект класса Theme, для которого нужно получить комментарии
+	* @return - массив объектов класса Comment, описанного в 4.2 Обмен данными с внешним блог-сервисом
+	* @throws LJRuntimeException в случае, если возникли проблемы с сетью на стороне клиента или сервера
+	* Calls for: ConvenientClient.getComments(), Theme.getID().
+	*/
+	public ThemeComment[] getComments(Theme theme){
+		Comment[] c = client.getComments(theme.getID(), theme.getAnum(), timeout);
+		ThemeComment[] c1 = new ThemeComment[c.length];
+		for (int i = 0; i < c.length; i++)
+			c1[i] = new ThemeComment(c[i]);
+		//return client.getComments(theme.getID(), theme.getAnum(), timeout);
+		return c1;
+	}
 
-}
+	/**  Публикует комментарий к посту в блог-сервисе
+	* @param body - текст комментария
+	* @param theme - объект класса Theme, представляющий тему, к которой добавляется комментарий
+	* @return объект класса CommentPostResult, описанного в 4.2 Обмен данными с внешним блог-сервисом
+	* @throws LJRuntimeException в случае, если возникли проблемы с сетью на стороне клиента или сервера
+	* Вызывает метод addComment() в ConvenientClient.
+	*/
+	public CommentPostResult postComment(String body, Theme theme){
+		if(body == null || body == "" || theme == null)
+			return null;
+		else
+			return client.addComment(body, theme.getID(), theme.getAnum(), timeout);
+	}
 
-/** ГЏГ°Г®ГўГҐГ°ГїГҐГІ ГЇГ°Г ГўГЁГ«ГјГ­Г®Г±ГІГј ГЇГ Г°Г» Г«Г®ГЈГЁГ­-ГЇГ Г°Г®Г«Гј, ГҐГ±Г«ГЁ Г®Г­ГЁ ГЇГ®Г¤ГµГ®Г¤ГїГІ, Г±Г®ГµГ°Г Г­ГїГҐГІ Гў Г±ГўГ®Г©Г±ГІГўГ  curLogin, curPass
-*
-* @param login - Г«Г®ГЈГЁГ­ Г¤Г«Гї ГўГ­ГҐГёГ­ГҐГЈГ® ГЎГ«Г®ГЈ-Г±ГҐГ°ГўГЁГ±Г 
-* @param password - ГЇГ Г°Г®Г«Гј Г¤Г«Гї ГўГ­ГҐГёГ­ГҐГЈГ® ГЎГ«Г®ГЈ-Г±ГҐГ°ГўГЁГ±Г 
-* @return - Г®ГЎГєГҐГЄГІ ГЄГ«Г Г±Г±Г  UserData, Г®ГЇГЁГ±Г Г­Г­Г®ГЈГ® Гў 4.2 ГЋГЎГ¬ГҐГ­ Г¤Г Г­Г­Г»Г¬ГЁ Г± ГўГ­ГҐГёГ­ГЁГ¬ ГЎГ«Г®ГЈ-Г±ГҐГ°ГўГЁГ±Г®Г¬
-* @throws LJRuntimeException Гў Г±Г«ГіГ·Г ГҐ, ГҐГ±Г«ГЁ ГўГ®Г§Г­ГЁГЄГ«ГЁ ГЇГ°Г®ГЎГ«ГҐГ¬Г» Г± Г±ГҐГІГјГѕ Г­Г  Г±ГІГ®Г°Г®Г­ГҐ ГЄГ«ГЁГҐГ­ГІГ  ГЁГ«ГЁ Г±ГҐГ°ГўГҐГ°Г 
-* Г‚Г»Г§Г»ГўГ ГҐГІ Г¬ГҐГІГ®Г¤ login() Гў ConvenientClient.
-*/
-public UserData login(String login, String password){
-return client.login(login, password, timeout);
+	/** Устанавливает общие логин и пароль
+	* @param login - общий логин на внешнем блог-сервисе (в формате srLogin)
+	* @param pass - общий пароль на внешнем блог-сервисе (в формате srPassword)
+	* @throws IllegalArgumentException в случае, если хотя бы один из аргументов не соответствует формату
+	*/
+	public void setLogPass(String login, String pass){
+		this.login = login;
+		this.pass = pass;
+	}
 
-}
+	/** Устанавливает имя пользователя в SR
+	* @param name - имя
+	*/
+	public void setSRName(String name){
+		if(name != null && name != "")
+			SRName = name;
+	}
 
-/** Г‹Г®ГЈГЁГ­ГЁГІГ±Гї ГЇГ®Г¤ Г®ГЎГ№ГЁГ¬ГЁ Г«Г®ГЈГЁГ­Г®Г¬ ГЁ ГЇГ Г°Г®Г«ГҐГ¬ Г®ГІ SR.
-* @throws LJRuntimeException Гў Г±Г«ГіГ·Г ГҐ, ГҐГ±Г«ГЁ ГўГ®Г§Г­ГЁГЄГ«ГЁ ГЇГ°Г®ГЎГ«ГҐГ¬Г» Г± Г±ГҐГІГјГѕ Г­Г  Г±ГІГ®Г°Г®Г­ГҐ ГЄГ«ГЁГҐГ­ГІГ  ГЁГ«ГЁ Г±ГҐГ°ГўГҐГ°Г 
-* Г‚Г»Г§Г»ГўГ ГҐГІ Г¬ГҐГІГ®Г¤ login() Гў ConvenientClient.
-*/
-public UserData login(){
-return client.login(login, pass, timeout);
-}
-
-/** Г‚Г®Г§ГўГ°Г Г№Г ГҐГІ Г§Г ГЇГ°Г®ГёГҐГ­Г­Г»Г© Гі ГўГ­ГҐГёГ­ГҐГЈГ® ГЎГ«Г®ГЈ-Г±ГҐГ°ГўГЁГ±Г  ГЇГ®Г±ГІ
-* @param itemid - ГЁГ¤ГҐГ­ГІГЁГґГЁГЄГ ГІГ®Г° ГЇГ®Г±ГІГ 
-* @return - Г®ГЎГєГҐГЄГІ ГЄГ«Г Г±Г±Г  BlogEntry, Г®ГЇГЁГ±Г Г­Г­Г®ГЈГ® Гў 4.2 ГЋГЎГ¬ГҐГ­ Г¤Г Г­Г­Г»Г¬ГЁ Г± ГўГ­ГҐГёГ­ГЁГ¬ ГЎГ«Г®ГЈ-Г±ГҐГ°ГўГЁГ±Г®Г¬
-* @throws LJRuntimeException Гў Г±Г«ГіГ·Г ГҐ, ГҐГ±Г«ГЁ ГўГ®Г§Г­ГЁГЄГ«ГЁ ГЇГ°Г®ГЎГ«ГҐГ¬Г» Г± Г±ГҐГІГјГѕ Г­Г  Г±ГІГ®Г°Г®Г­ГҐ ГЄГ«ГЁГҐГ­ГІГ  ГЁГ«ГЁ Г±ГҐГ°ГўГҐГ°Г 
-* Г‚Г»Г§Г»ГўГ ГҐГІ Г¬ГҐГІГ®Г¤ getBlogEntry() Гў ConvenientClient.
-*/
-public BlogEntry getBlogEntry(int itemid){
-return client.getBlogEntry(itemid, timeout);
-}
-
-/** Г‚Г®Г§ГўГ°Г Г№Г ГҐГІ Г§Г ГЇГ°Г®ГёГҐГ­Г­Г»ГҐ Гі ГўГ­ГҐГёГ­ГҐГЈГ® ГЎГ«Г®ГЈ-Г±ГҐГ°ГўГЁГ±Г  ГЄГ®Г¬Г¬ГҐГ­ГІГ Г°ГЁГЁ
-* @param theme - Г®ГЎГєГҐГЄГІ ГЄГ«Г Г±Г±Г  Theme, Г¤Г«Гї ГЄГ®ГІГ®Г°Г®ГЈГ® Г­ГіГ¦Г­Г® ГЇГ®Г«ГіГ·ГЁГІГј ГЄГ®Г¬Г¬ГҐГ­ГІГ Г°ГЁГЁ
-* @return - Г¬Г Г±Г±ГЁГў Г®ГЎГєГҐГЄГІГ®Гў ГЄГ«Г Г±Г±Г  Comment, Г®ГЇГЁГ±Г Г­Г­Г®ГЈГ® Гў 4.2 ГЋГЎГ¬ГҐГ­ Г¤Г Г­Г­Г»Г¬ГЁ Г± ГўГ­ГҐГёГ­ГЁГ¬ ГЎГ«Г®ГЈ-Г±ГҐГ°ГўГЁГ±Г®Г¬
-* @throws LJRuntimeException Гў Г±Г«ГіГ·Г ГҐ, ГҐГ±Г«ГЁ ГўГ®Г§Г­ГЁГЄГ«ГЁ ГЇГ°Г®ГЎГ«ГҐГ¬Г» Г± Г±ГҐГІГјГѕ Г­Г  Г±ГІГ®Г°Г®Г­ГҐ ГЄГ«ГЁГҐГ­ГІГ  ГЁГ«ГЁ Г±ГҐГ°ГўГҐГ°Г 
-* Calls for: ConvenientClient.getComments(), Theme.getID().
-*/
-public ThemeComment[] getComments(Theme theme){
-Comment[] c = client.getComments(theme.getID(), theme.getAnum(), timeout);
-ThemeComment[] c1 = new ThemeComment[c.length];
-for (int i = 0; i < c.length; i++)
-c1[i] = new ThemeComment(c[i]);
-//return client.getComments(theme.getID(), theme.getAnum(), timeout);
-return c1;
-}
-
-/** ГЏГіГЎГ«ГЁГЄГіГҐГІ ГЄГ®Г¬Г¬ГҐГ­ГІГ Г°ГЁГ© ГЄ ГЇГ®Г±ГІГі Гў ГЎГ«Г®ГЈ-Г±ГҐГ°ГўГЁГ±ГҐ
-* @param body - ГІГҐГЄГ±ГІ ГЄГ®Г¬Г¬ГҐГ­ГІГ Г°ГЁГї
-* @param theme - Г®ГЎГєГҐГЄГІ ГЄГ«Г Г±Г±Г  Theme, ГЇГ°ГҐГ¤Г±ГІГ ГўГ«ГїГѕГ№ГЁГ© ГІГҐГ¬Гі, ГЄ ГЄГ®ГІГ®Г°Г®Г© Г¤Г®ГЎГ ГўГ«ГїГҐГІГ±Гї ГЄГ®Г¬Г¬ГҐГ­ГІГ Г°ГЁГ©
-* @return Г®ГЎГєГҐГЄГІ ГЄГ«Г Г±Г±Г  CommentPostResult, Г®ГЇГЁГ±Г Г­Г­Г®ГЈГ® Гў 4.2 ГЋГЎГ¬ГҐГ­ Г¤Г Г­Г­Г»Г¬ГЁ Г± ГўГ­ГҐГёГ­ГЁГ¬ ГЎГ«Г®ГЈ-Г±ГҐГ°ГўГЁГ±Г®Г¬
-* @throws LJRuntimeException Гў Г±Г«ГіГ·Г ГҐ, ГҐГ±Г«ГЁ ГўГ®Г§Г­ГЁГЄГ«ГЁ ГЇГ°Г®ГЎГ«ГҐГ¬Г» Г± Г±ГҐГІГјГѕ Г­Г  Г±ГІГ®Г°Г®Г­ГҐ ГЄГ«ГЁГҐГ­ГІГ  ГЁГ«ГЁ Г±ГҐГ°ГўГҐГ°Г 
-* Г‚Г»Г§Г»ГўГ ГҐГІ Г¬ГҐГІГ®Г¤ addComment() Гў ConvenientClient.
-*/
-public CommentPostResult postComment(String body, Theme theme){
-return client.addComment(body, theme.getID(), theme.getAnum(), timeout);
-}
-
-/** Г“Г±ГІГ Г­Г ГўГ«ГЁГўГ ГҐГІ Г®ГЎГ№ГЁГҐ Г«Г®ГЈГЁГ­ ГЁ ГЇГ Г°Г®Г«Гј
-* @param login - Г®ГЎГ№ГЁГ© Г«Г®ГЈГЁГ­ Г­Г  ГўГ­ГҐГёГ­ГҐГ¬ ГЎГ«Г®ГЈ-Г±ГҐГ°ГўГЁГ±ГҐ (Гў ГґГ®Г°Г¬Г ГІГҐ srLogin)
-* @param pass - Г®ГЎГ№ГЁГ© ГЇГ Г°Г®Г«Гј Г­Г  ГўГ­ГҐГёГ­ГҐГ¬ ГЎГ«Г®ГЈ-Г±ГҐГ°ГўГЁГ±ГҐ (Гў ГґГ®Г°Г¬Г ГІГҐ srPassword)
-* @throws IllegalArgumentException Гў Г±Г«ГіГ·Г ГҐ, ГҐГ±Г«ГЁ ГµГ®ГІГї ГЎГ» Г®Г¤ГЁГ­ ГЁГ§ Г Г°ГЈГіГ¬ГҐГ­ГІГ®Гў Г­ГҐ Г±Г®Г®ГІГўГҐГІГ±ГІГўГіГҐГІ ГґГ®Г°Г¬Г ГІГі
-*/
-public void setLogPass(String login, String pass){
-this.login = login;
-this.pass = pass;
-}
-
-/** Г“Г±ГІГ Г­Г ГўГ«ГЁГўГ ГҐГІ ГЁГ¬Гї ГЇГ®Г«ГјГ§Г®ГўГ ГІГҐГ«Гї Гў SR
-* @param name - ГЁГ¬Гї
-*/
-public void setSRName(String name){
-if(name != null && name != "")
-SRName = name;
-}
-
-/**
-* Г‚Г®Г§ГўГ°Г Г№Г ГҐГІ ГІГҐГЄГіГ№ГЁГ© Г«Г®ГЈГЁГ­ Г­Г  ГўГ­ГҐГёГ­ГҐГ¬ ГЎГ«Г®ГЈ-Г±ГҐГ°ГўГЁГ±ГҐ. Г…Г±Г«ГЁ ГЇГ®Г«ГјГ§Г®ГўГ ГІГҐГ«Гј ГЇГ®Г«ГјГ§ГіГҐГІГ±Гї Г®ГЎГ№ГЁГ¬ Г ГЄГЄГ ГіГ­ГІГ®Г¬ SR, ГўГ®Г§ГўГ°Г Г№Г ГҐГІ ГЇГіГ±ГІГіГѕ Г±ГІГ°Г®ГЄГі.
-* @return Г«Г®ГЈГЁГ­
-*/
-public String getCurLogin(){
-if(login.compareTo(curLogin) == 0)
-return "";
-else
-return curLogin;
-}
+	/** 
+	* Возвращает текущий логин на внешнем блог-сервисе. Если пользователь пользуется общим аккаунтом SR, возвращает пустую строку.
+	* @return логин
+	*/
+	public String getCurLogin(){
+		if(login.compareTo(curLogin) == 0)
+			return "";
+		else
+			return curLogin;
+	}
 
 }

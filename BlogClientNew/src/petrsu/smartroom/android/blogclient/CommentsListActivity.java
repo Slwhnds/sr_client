@@ -6,10 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,8 +34,11 @@ public class CommentsListActivity extends ListActivity {
 	/** ������� ������ ������������. */
 	private SimpleAdapter adapter;
 	
+	private ThemeComment[] items;
+	
 	/** ������ ������������, �������������� � ��������� � �������. */
 	public List<Map<String, ?>> list;
+	
 	
 	//for test
 		private ArrayList<ThemeComment> comms = new ArrayList<ThemeComment>();
@@ -74,10 +79,11 @@ public class CommentsListActivity extends ListActivity {
 	*/
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState);			
+		theme = (Theme) getIntent().getExtras().get("theme");
 		
-		//theme = (Theme) getIntent().getExtras().get("theme");
-		setUpList();
+		new getCommentsTask().execute();
+		//setUpList();
 	}
 
 	/** 
@@ -99,11 +105,14 @@ public class CommentsListActivity extends ListActivity {
 	* Calls for: BlogAdapter.getComments(Theme theme)
 	*/
 	public void setUpList() {
-		//ThemeComment[] items = BlogListActivity.blogAdapter.getComments(theme);
-		ThemeComment[] items = getTestComments();
+		//ThemeComment[] items = BlogListActivity.blogAdapter.getComments(theme); // is now global var
+		//ThemeComment[] items = getTestComments(); 
 		
-		if (items == null)
+		
+		if (items == null){
 			System.out.println("");
+			return;
+		}
 		
 		list = new ArrayList<Map<String, ?>>(items.length);
         
@@ -121,9 +130,9 @@ public class CommentsListActivity extends ListActivity {
         //������ ID View-�����������, � ������� ����� ����������� ������
         int[] to = { R.id.comment_author, R.id.comment_time, R.id.comment_text };
         
-        //adapter = new SimpleAdapter(this, list, R.layout.comment_item,
-                //from, to);
-        //setListAdapter(adapter);
+        adapter = new SimpleAdapter(this, list, R.layout.comment_item,
+                from, to);
+        setListAdapter(adapter);
 	}
 
 	/** 
@@ -151,5 +160,23 @@ public class CommentsListActivity extends ListActivity {
 			return super.onOptionsItemSelected(item);
 		}
 		return true;
+	}
+	
+	public class getCommentsTask extends AsyncTask {
+
+		@Override
+		protected Object doInBackground(Object... arg0) {
+			items = BlogListActivity.blogAdapter.getComments(theme);
+			if(items == null){
+				Log.e("getComments returned null","getComments returned null");
+			}
+			return null;
+		}
+
+		protected void onPostExecute(Object result) {
+			super.onPostExecute(result);
+			setUpList();
+		}
+
 	}
 }

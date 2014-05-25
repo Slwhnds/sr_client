@@ -10,7 +10,12 @@ import petrsu.smartroom.android.blogclient.results.BlogEntry;
 public class Blog {
 		
 	/** Список тем */
-	private ArrayList<Theme> themes = new ArrayList<Theme>();
+	private ArrayList<Theme> themes;
+	
+	
+	public Blog(){
+		themes = new ArrayList<Theme>();
+	}
 	
 	//for test
 	public String[] getTestThemes() {

@@ -54,6 +54,10 @@ public class AuthorizationActivity extends Activity implements OnTouchListener {
         editIP = (EditText) findViewById (R.id.editIP);
         editPort = (EditText) findViewById (R.id.editPort);
         
+        /** pls :D */
+        editIP.setText("194.85.173.9");
+        editPort.setText("10011");
+        
         isChairman = false;
         isRegistered = false;
         

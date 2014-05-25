@@ -80,7 +80,8 @@
     	     android:text="@string/publish_comment"
     	     android:textColor="@color/white"
     	     android:textSize="20sp"
-    	     android:textStyle="bold" />
+    	     android:textStyle="bold"
+    	     android:onClick="onPublish" />
 
 </RelativeLayout>
 

@@ -75,7 +75,6 @@ public class Theme implements Serializable {
 	public Theme(int itemid, String status, BlogEntry post){
 		this.itemid = itemid;
 		this.status = status;
-		this.time = time;
 		
 		this.anum = post.getAnum();
 		this.body = post.getBody();

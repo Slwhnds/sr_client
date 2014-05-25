@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.ListActivity;
@@ -17,9 +18,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
-public class BlogListActivity extends ListActivity {
+public class BlogListActivity extends ListActivity implements OnItemClickListener{
 	
 	//����� ��������� ��� Map
 	public final String THEME_SUBJECT = "name";
@@ -71,6 +73,7 @@ public class BlogListActivity extends ListActivity {
 		
 		blog = new Blog();
 		
+		
 		/*for (int i = 0; i < themes.length; i++) {
 			String[] s = themes[i].split(" ");
 			Theme t = null;
@@ -88,6 +91,22 @@ public class BlogListActivity extends ListActivity {
 		}*/
 		
 		//setUpList();
+		
+		/* INTEGRATION TEST BLOCK START */
+		
+		String[] testThemes = {"1 planned", "2 canceled"};
+		themes = testThemes;
+		String login = "smartRoomUser";
+		String pass = "Ochen_slojnii_parol";
+		
+		blogAdapter = new BlogAdapter();
+		
+		blogAdapter.setLogPass(login, pass);
+		blogAdapter.setSRName((String) getIntent().getExtras().get("SRName"));
+		
+		new getThemesTask().execute();
+		
+		/* INTEGRATION TEST BLOCK END */
 		
 		itemListener = new OnItemClickListener() {
 
@@ -107,6 +126,9 @@ public class BlogListActivity extends ListActivity {
 			}
 			
 		};
+		ListView lv = this.getListView();
+		lv.setOnItemClickListener(itemListener);
+		
 	}
 
 	/** 
@@ -183,5 +205,41 @@ public class BlogListActivity extends ListActivity {
                 from, to);
         setListAdapter(adapter);
 	}
+	
+	public class getThemesTask extends AsyncTask {
+
+		@Override
+		protected Object doInBackground(Object... arg0) {
+			blogAdapter.login();
+			for (int i = 0; i < themes.length; i++) {
+				String[] s = themes[i].split(" ");
+				Theme t = null;
+				try {
+					t = new Theme(Integer.parseInt(s[0]), s[1],
+							blogAdapter.getBlogEntry(Integer.parseInt(s[0])));
+				} catch (NumberFormatException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				blog.add(t);
+			}
+			return null;
+		}
+
+		protected void onPostExecute(Object result) {
+			super.onPostExecute(result);
+			setUpList();
+		}
+
+	}
+
+	//isnt actually used :3
+	@Override
+	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
 
 }
