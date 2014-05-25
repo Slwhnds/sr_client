@@ -18,6 +18,8 @@ public class Config {
 	    prop.setProperty("ip", "194.85.173.9");
 	    prop.setProperty("port", "10011");
 	    prop.setProperty("name", "X");
+	    prop.setProperty("login", "SmartRoomUser");
+	    prop.setProperty("password", "Ochen_slojnii_parol");
 	
 	    prop.store(new FileOutputStream(file), null);
     

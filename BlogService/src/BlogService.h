@@ -23,8 +23,13 @@ JNIEXPORT jint JNICALL Java_BlogService_connectSmartSpace
 JNIEXPORT jint JNICALL Java_BlogService_publishStartData
   (JNIEnv *, jclass, jstring, jstring);
 
+/*
+ * Class:     BlogService
+ * Method:    publishData
+ * Signature: (Ljava/lang/String;Ljava/lang/String;I)I
+ */
 JNIEXPORT jint JNICALL Java_BlogService_publishData
-  (JNIEnv *, jclass, jstring, jstring);
+  (JNIEnv *, jclass, jobjectArray);
 
 /*
  * Class:     BlogService

@@ -27,15 +27,15 @@ public class BlogService {
 	
 	int connectionState = 0;
 	
-	/** Масив строк, представляющий список тем (в формате "заголовок статус время докладчик"). */
+	/** Масив строк, представляющий список тем (в формате "заголовок докладчик"). */
 	private String[] themesFromSS;
 	
-	private List<Integer> themeIds;
-	private List<String> themeStatuses;
 	private String login;
 	private String password;
 	private Date today;
 	private int timeout = 0;
+	
+	private String[] themes;
 	
 	// Native methods
 	public static native int connectSmartSpace(
@@ -48,7 +48,7 @@ public class BlogService {
 	*/
 	public static native int publishStartData(String login, String pass);
 	
-	public static native int publishData(String status, String id);
+	public static native int publishData(String[] themes);
 
 	/**
 	* Deletes camera data from Smart Space
@@ -72,8 +72,10 @@ public class BlogService {
 
 	public static void main(String[] args) {
 		startExitThread();
+		
+		BlogService h = new BlogService();
 		      
-		if(!loadConfiguration())
+		if(!h.loadConfiguration())
 		    System.exit(-1);
 		    
 		System.out.println(BlogService.SS_NAME + " " + BlogService.SS_IP + " " + 
@@ -85,25 +87,30 @@ public class BlogService {
 		    System.exit(-1);
 		}
 		
-		BlogService h = new BlogService();
 		String[] g = h.getThemesFromSS();
 		
 		//initializing api client
-		/*h.client = new ConvenientClient(new XMLRPCClientImpl());
-		// account for tests
-		h.login = "SmartRoomUser";
-		h.password = "Ochen_slojnii_parol";
+		h.client = new ConvenientClient(new XMLRPCClientImpl());
 		h.client.login(h.login, h.password, h.timeout);
 		h.today = new Date();
 		
-		if (h.publishStartData("login", "pass") != 0) {
+		if (h.publishStartData(h.login, h.password) != 0) {
 			System.out.println("Faild to publish start data.");
 		    System.exit(-1);
-		}*/
+		}
 		
-		System.out.println (g.length);
-		for (int i = 0; i < g.length; i++) {
-			System.out.println (g[i]);
+		try {
+			h.publishThemes(g);
+		}
+		catch (Exception e) {
+			System.out.println("Faild to publish themes in LJ, maybe no network.");
+		    System.exit(-1);
+		}
+		
+		if (publishData(h.themes) == -1) {
+			//deletePublishedData();
+			System.out.println("Faild to publish themes data in SS");
+		    System.exit(-1);
 		}
 	}
 	
@@ -113,33 +120,41 @@ public class BlogService {
 	
 	// blue comments encoding is broken mb //Roman
 	public void publishThemes(String[] themes) {
-		//assuming themes contains at 0 person name, at 1 report name, and so on...
+		if (list == null) {
+			System.out.println("No themes to publish");
+			return;
+		}
+			
+		List<String> themeslist = new ArrayList<String>();
 		String themeName;
 		String personName;
 		String themeText;
 		String themeTitle;
 		int res; // result of posting theme
-		/*int count = themes.length;
-		if(count % 2 != 0){
-				System.out.println("Themes length isnt even, continuing anyway...");
-		}*/
 		for(int i = 0; i < list.size(); i++){
-			/*if(themes[i+1] == null){ // report name exists
-					i++; // next person
-					continue;
-			}*/
+			if (list.get(i) == null) {
+				System.out.println("Bad theme number " + i);
+				this.themes = new String[themeslist.size()];
+				this.themes = themeslist.toArray(themes);
+				return;
+			}
 			personName = list.get(i).getAuthor();
+			//System.out.println(personName);
 			themeName = list.get(i).getText();
+			//System.out.println(themeName);
 			themeTitle = generateThemeTitle(personName, themeName);
 			themeText = generateThemeText(personName, themeName);
 			if((res = publishTheme(themeTitle, themeText)) != -1){
-				themeIds.add(res);
-				themeStatuses.add("planed");
+				themeslist.add(Integer.toString(res) + " planed");
+				System.out.println("Published:");
+				System.out.println(personName);
+				System.out.println(themeName);
 			}else{
 				System.out.println("Failed to post a theme" + i + ", continuing...");
 			}
 		}
-
+		this.themes = new String[themeslist.size()];
+		this.themes = themeslist.toArray(themes);
 	}
 
 // version working with timeslots
@@ -170,7 +185,7 @@ System.out.println("Failed to post a theme" + [i] + ", continuing...");
 //It would be good to receive this text template from some sort of Config // Roman
 public String generateThemeText(String personName, String themeName){
 String text;
-text = "Today at IT-part PetrSU " +
+text = "Today at IT-park PetrSU " +
 personName + " will speak on theme: " + themeName +
 "\nAuthors: " + personName + "\nFeel free to comment and ask questions!"+
 "\n\n This text if generated :)";	
@@ -193,7 +208,7 @@ return -1;
 
 }
 	
-public static boolean loadConfiguration() {
+public boolean loadConfiguration() {
 	    
 	    Properties prop = new Properties();
 	    String configPath = "/.config/SR-blogservice/blogserv.ini";
@@ -206,7 +221,9 @@ public static boolean loadConfiguration() {
 		BlogService.SS_IP = prop.getProperty("ip");
 		BlogService.SS_NAME = prop.getProperty("name");
 		BlogService.SS_PORT = Integer.parseInt(prop.getProperty("port"));
-	    
+		login = prop.getProperty("login");
+		password = prop.getProperty("password");
+		
 	    } catch(IOException e) {
 		e.printStackTrace();
 		return false;
@@ -215,7 +232,7 @@ public static boolean loadConfiguration() {
 	    return true;
 	}
 	
-	public void setThemesInSS(String[] themes) {
+	/*public void setThemesInSS(String[] themes) {
 		for (int i = 0; i < themes.length; i++) {
 			String[] s1 = themes[i].split(" ");
 			if (this.publishData(s1[0], s1[1]) != 0) {
@@ -224,7 +241,7 @@ public static boolean loadConfiguration() {
 			}
 				
 		}
-	}
+	}*/
 	
 	public String[] getThemesFromSS() {
 		list = new ArrayList<ThemeInfo>();

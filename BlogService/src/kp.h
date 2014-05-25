@@ -13,6 +13,6 @@ jclass *classBlogService;
 individual_t *section;
 
 char* generateUuid(char*);
-void addTimeslotToJavaList(JNIEnv *, individual_t *, jobject);
+int addTimeslotToJavaList(JNIEnv *, individual_t *, jobject);
 
 #endif

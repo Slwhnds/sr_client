@@ -28,7 +28,7 @@ JNIEXPORT jint JNICALL Java_BlogService_connectSmartSpace
  *
  * @param env - pointer to JNI environment
  * @param clazz - class keeping loadTimeSlot() function
- * @param obj - Agenda class object
+ * @param obj - BlogService class object
  *
  * @return Returns 0 in success and -1 if failed
  */
@@ -38,16 +38,18 @@ JNIEXPORT jint JNICALL Java_BlogService_loadTimeslotList
 	// TODO:
 	// when there will be more than one section, it's enough only to
 	// initialize chosen `section`
-	int counter = 0, attempts = 1000;
+	//int counter = 0, attempts = 1000;
 	//printf("100\n");
 
 	if(obj != NULL)
-		blogServiceClassObject = (jobject *)(*env)->NewGlobalRef(env, obj);
+	classBlogService = (*env)->GetObjectClass(env, obj);
+		//classBlogService = (jobject *)(*env)->NewGlobalRef(env, blogServiceClassObject);
 	else
 		return -1;
 
-	/* Get section */
-		list_t *sectionList = sslog_ss_get_individual_by_class_all(CLASS_SECTION);
+	//blogServiceClassObject = getJClassObject(env, "BlogService");
+
+		/*list_t *sectionList = sslog_ss_get_individual_by_class_all(CLASS_SECTION);
 
 		if(sectionList != NULL) {
 			printf("sectionList != NULL\n");
@@ -58,19 +60,22 @@ JNIEXPORT jint JNICALL Java_BlogService_loadTimeslotList
 				sslog_ss_populate_individual(section);
 				break;
 			}
-		}/* Get section */
+		}
 
 
-	prop_val_t *propTimeslot = sslog_ss_get_property(section, PROPERTY_FIRSTTIMESLOT);
+	prop_val_t *propTimeslot = sslog_ss_get_property_all(section, PROPERTY_FIRSTTIMESLOT);
+
+	if(propTimeslot == NULL)
+			printf("propTimeslot == NULL\n");
 
 	for(; counter < attempts; counter++) {
 		if(propTimeslot == NULL)
 			propTimeslot = sslog_ss_get_property(section, PROPERTY_FIRSTTIMESLOT);
 		else
 			break;
-	}
+	}*/
 
-	while(propTimeslot != NULL) {
+	/*while(propTimeslot != NULL) {
 		printf("propTimeslot != NULL\n");
 
 		individual_t *pTimeslot = (individual_t *) propTimeslot->prop_value;
@@ -78,6 +83,29 @@ JNIEXPORT jint JNICALL Java_BlogService_loadTimeslotList
 		addTimeslotToJavaList(env, pTimeslot, obj);
 
 		propTimeslot = sslog_ss_get_property(pTimeslot, PROPERTY_NEXTTIMESLOT);
+	}*/
+
+	list_t* timeslotList = sslog_ss_get_individual_by_class_all(CLASS_TIMESLOT);
+	//if(timeslotList != NULL) {
+		//printf("!= NULL\n");
+	//}
+
+	//timeslotList = sslog_ss_get_individual_by_class_all(CLASS_PRESENTATION);
+
+	individual_t* timeslot;
+
+	if(timeslotList != NULL) {
+		//printf("!= NULL\n");
+		list_head_t* pos = NULL;
+		list_for_each(pos, &timeslotList->links) {
+			//printf("1\n");
+			list_t* node = list_entry(pos, list_t, links);
+			timeslot = (individual_t *)(node->data);
+			sslog_ss_populate_individual(timeslot);
+			if (addTimeslotToJavaList(env, timeslot, obj) !=0 )
+				return -1;
+			//break;
+		}
 	}
 
 	return 0;
@@ -97,21 +125,21 @@ JNIEXPORT jint JNICALL Java_BlogService_loadTimeslotList
  *
  * @return Returns 0 in success and -1 if failed
  */
-void addTimeslotToJavaList(JNIEnv *env, individual_t *timeslot, jobject obj) {
+int addTimeslotToJavaList(JNIEnv *env, individual_t *timeslot, jobject obj) {
 
-	printf("addTimeslotToJavaList\n");
+	//printf("addTimeslotToJavaList\n");
 
 	jmethodID methodId = (*env)->GetMethodID(env, classBlogService, "addTimeslotItemToList",
 			"(Ljava/lang/String;Ljava/lang/String;)V");
 
 	int counter = 0, attempts = 3;
-	prop_val_t *p_val_name = sslog_ss_get_property (timeslot, PROPERTY_SPEAKERNAME);
+	prop_val_t *p_val_name = sslog_ss_get_property (timeslot, PROPERTY_TIMESLOTSPEAKERNAME);
 	prop_val_t *p_val_pres_title = sslog_ss_get_property (timeslot, PROPERTY_PRESENTATIONTITLE);
 
 	for(; counter < attempts; counter++) {
 
 		if(p_val_name == NULL)
-			p_val_name = sslog_ss_get_property (timeslot, PROPERTY_SPEAKERNAME);
+			p_val_name = sslog_ss_get_property (timeslot, PROPERTY_TIMESLOTSPEAKERNAME);
 
 		if(p_val_pres_title == NULL)
 			p_val_pres_title = sslog_ss_get_property (timeslot, PROPERTY_PRESENTATIONTITLE);
@@ -120,11 +148,20 @@ void addTimeslotToJavaList(JNIEnv *env, individual_t *timeslot, jobject obj) {
 			break;
 	}
 
+	if((p_val_name == NULL)	|| (p_val_pres_title == NULL))
+		return -1;
+
+	//prop_val_t *p_val_pres_title = sslog_ss_get_property (timeslot, PROPERTY_PRESENTATIONTITLE);
+
 	/* Calling Agenda's addTimeslotItemToList Java method */
-	if(obj != NULL)
+	if(obj != NULL) {
 		(*env)->CallVoidMethod(env, obj, methodId,
-				(*env)->NewStringUTF(env, (char *)(p_val_name->prop_value)),
-				(*env)->NewStringUTF(env, (char *)(p_val_pres_title->prop_value)));
+				(*env)->NewStringUTF(env, (char *)(p_val_pres_title->prop_value)),
+				(*env)->NewStringUTF(env, (char *)(p_val_name->prop_value)));
+		return 0;
+	}
+	else
+		return -1;
 }
 
 
@@ -146,11 +183,14 @@ char* generateUuid(char *uuid) {
 
 JNIEXPORT jint JNICALL Java_BlogService_publishStartData
   (JNIEnv *env, jclass clazz, jstring login, jstring pass) {
+
+	if ((login == NULL) || (pass == NULL))
+		return -1;
     
     const char *login_ = (*env) -> GetStringUTFChars(env, login, NULL);
     const char *pass_ = (*env) -> GetStringUTFChars(env, pass, NULL);
     
-   /* individual_t *individual = sslog_new_individual(CLASS_BLOG);
+    individual_t *individual = sslog_new_individual(CLASS_BLOG);
     if(individual == NULL)
 	return -1;
 
@@ -167,56 +207,99 @@ JNIEXPORT jint JNICALL Java_BlogService_publishStartData
 	return -1;
 
     if(sslog_ss_insert_individual(individual) != 0)
-	return -1;*/
+	return -1;
 
     return 0;
 }
 
 JNIEXPORT jint JNICALL Java_BlogService_publishData
-  (JNIEnv *env, jclass clazz, jstring status, jstring id) {
+(JNIEnv *env, jclass clazz, jobjectArray themes) {
 
-    const char *status_ = (*env) -> GetStringUTFChars(env, status, NULL);
-    const char *id_ = (*env) -> GetStringUTFChars(env, id, NULL);
+	if (themes == NULL)
+		return -1;
 
-    /*individual_t *individual = sslog_new_individual(CLASS_THEME);
-    if(individual == NULL)
-	return -1;
+	int i;
+	jsize len;
+	jobject myobj;
+	char *str;
+	individual_t *individual;
 
-    sslog_set_individual_uuid(individual,
-    		generateUuid("newTheme"));
+	//printf("This is what C gets from Java\n");
+	len = (*env)->GetArrayLength(env, themes);
+	printf("The length of the array is : %d%\n", len);
 
-    sslog_ss_remove_property_all(individual, PROPERTY_STATUS);
-    sslog_ss_remove_property_all(individual, PROPERTY_ID);
+	printf("Elements in the array:\n");
+	for(i = 0; i < len; i++) {
 
-    if(sslog_ss_add_property(individual, PROPERTY_STATUS, (void *)status_) != 0 )
-	return -1;
+		myobj = (*env)->GetObjectArrayElement(env, themes, i);
+		if (myobj == NULL)
+			return -1;
+    		str = (*env)->GetStringUTFChars(env, myobj, 0);
 
-    if(sslog_ss_add_property(individual, PROPERTY_ID, (void *)id_) != 0 )
-	return -1;
+    		individual = sslog_new_individual(CLASS_THEME);
+    		if(individual == NULL)
+    			return -1;
 
-    if(sslog_ss_insert_individual(individual) != 0)
-	return -1;*/
+    		sslog_set_individual_uuid(individual,
+    				generateUuid(str));
 
-    return 0;
+    		sslog_ss_remove_property_all(individual, PROPERTY_THEMEID);
+    		sslog_ss_remove_property_all(individual, PROPERTY_THEMESTATUS);
+
+    		char *token, *last;
+
+    		//id
+    		token = strtok_r(str, " ", &last);
+    		if (token == NULL)
+    			return -1;
+    		if(sslog_ss_add_property(individual, PROPERTY_THEMEID, (void *)token) != 0 )
+    			return -1;
+    		printf ("%s\n", token);
+
+    		//status
+    		token = strtok_r(NULL, " ", &last);
+    		if (token == NULL)
+    			return -1;
+    		if(sslog_ss_add_property(individual, PROPERTY_THEMESTATUS, (void *)token) != 0 )
+    			return -1;
+    		printf ("%s\n", token);
+
+    		if(sslog_ss_insert_individual(individual) != 0)
+    			return -1;
+    	}
+
+	return 0;
 }
 
 JNIEXPORT void JNICALL Java_BlogService_deletePublishedData
   (JNIEnv *env, jclass clazz) {
-    
-    list_t *list = sslog_ss_get_individual_by_class_all(CLASS_MICROPHONESERVICE);
-    individual_t *individual;
+	list_t *list = sslog_ss_get_individual_by_class_all(CLASS_THEME);
+	individual_t *individual;
 
-    if(list != NULL) {
-	list_head_t* pos = NULL;
-	list_for_each(pos, &list->links) {
-		list_t* node = list_entry(pos, list_t, links);
-		individual = (individual_t*)(node->data);
-		sslog_ss_populate_individual(individual);
+	if(list != NULL) {
+		list_head_t* pos = NULL;
+		list_for_each(pos, &list->links) {
+			list_t* node = list_entry(pos, list_t, links);
+			individual = (individual_t*)(node->data);
+			sslog_ss_populate_individual(individual);
+			sslog_ss_remove_property_all(individual, PROPERTY_THEMEID);
+			sslog_ss_remove_property_all(individual, PROPERTY_THEMESTATUS);
+			sslog_ss_remove_individual(individual);
+		}
 	}
-	
-    } else
+
+	list = sslog_ss_get_individual_by_class_all(CLASS_BLOG);
+
+		if(list != NULL) {
+			list_head_t* pos = NULL;
+			list_for_each(pos, &list->links) {
+				list_t* node = list_entry(pos, list_t, links);
+				individual = (individual_t*)(node->data);
+				sslog_ss_populate_individual(individual);
+				sslog_ss_remove_property_all(individual, PROPERTY_SRLOGIN);
+				sslog_ss_remove_property_all(individual, PROPERTY_SRPASSWORD);
+				sslog_ss_remove_individual(individual);
+			}
+		}
 	return;
-    
-    sslog_ss_remove_property_all(individual, PROPERTY_IP);
-    sslog_ss_remove_property_all(individual, PROPERTY_PORT);
 }
