@@ -57,9 +57,16 @@ public class LeavingCommentActivity extends Activity {
 	*/
 	public void onPublish(View v) {
 		commentText = commentEditText.getText().toString();
-		if (commentText == "")
+		if (commentText.compareTo("") == 0) {
 			BlogErrDialog.emptyComment(getBaseContext());
-		new publishCommentTask().execute();
+			return;
+		}
+		try {
+			new publishCommentTask().execute();
+		}
+		catch (Exception e) {
+			BlogErrDialog.errComment(getBaseContext());
+		}
 	}
 
 	/** 

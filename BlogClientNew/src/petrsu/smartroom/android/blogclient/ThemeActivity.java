@@ -40,22 +40,16 @@ public class ThemeActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_theme);
 		
-		//theme = (Theme) getIntent().getExtras().get("theme");
+		themeNameTextView = (TextView) findViewById(R.id.theme_name);
+		themeTextTextView = (TextView) findViewById(R.id.theme_text);
 		
-		/*themeNameTextView = (TextView) findViewById(R.id.title_theme_name);
+		theme = (Theme) getIntent().getExtras().get("theme");
+		
+		themeNameTextView = (TextView) findViewById(R.id.title_theme_name);
 		themeNameTextView.setText(theme.getSubject());
 		
 		themeTextTextView = (TextView) findViewById(R.id.theme_text);
 		themeTextTextView.setText(theme.getText());
-		
-		
-		/*
-		speechTimeTextView = (TextView) findViewById(R.id.speech_time);
-		SimpleDateFormat sm = new SimpleDateFormat("hh:mm");
-		speechTimeTextView.setText(sm.format(theme.getTime()));
-		
-		reporterNameTextView = (TextView) findViewById(R.id.reporter_name);*/
-		//reporterNameTextView.setText(theme.getRepoter());
 	}
 
 	/** 

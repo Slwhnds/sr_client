@@ -50,7 +50,7 @@ public class LoginActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		curLoginEditText = (EditText) findViewById(R.id.logged_as_edit);
-		if (KP.blogAdapter.getCurLogin() == "")
+		if (KP.blogAdapter.getCurLogin().compareTo("") == 0)
 			curLogin = "smartroomuser";
 		else
 			curLogin = KP.blogAdapter.getCurLogin();

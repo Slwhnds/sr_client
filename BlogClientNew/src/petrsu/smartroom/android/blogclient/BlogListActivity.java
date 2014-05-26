@@ -28,6 +28,8 @@ public class BlogListActivity extends ListActivity implements OnItemClickListene
 	//����� ��������� ��� Map
 	public final String THEME_SUBJECT = "name";
 	
+	public static BlogListActivity act;
+	
 	/** KP, ���������� �� ��������� ������ ���. */
 	private KP KP;
 
@@ -65,6 +67,8 @@ public class BlogListActivity extends ListActivity implements OnItemClickListene
 
 		//KP.getThemes(this);
 		
+		act = this;
+		
 		String login;
 		String pass;
 		
@@ -79,15 +83,13 @@ public class BlogListActivity extends ListActivity implements OnItemClickListene
 		
 		blogAdapter = new BlogAdapter();
 		try {
-		blogAdapter.setLogPass(login, pass);
-		blogAdapter.login();
+			blogAdapter.setLogPass(login, pass);
+			blogAdapter.setSRName((String) getIntent().getExtras().get("SRName"));
 		}
-		catch (LJRuntimeException e) {
+		catch (Exception e) {
 			BlogErrDialog.loadLogPass(getBaseContext());
 			return;
 		}
-		
-		blogAdapter.setSRName((String) getIntent().getExtras().get("SRName"));
 		
 		blog = new Blog();
 		
@@ -110,10 +112,8 @@ public class BlogListActivity extends ListActivity implements OnItemClickListene
 		
 		//setUpList();
 		
-		/* INTEGRATION TEST BLOCK START */
-		
-		String[] testThemes = {"1 planned", "2 canceled"};
-		themes = testThemes;
+		//String[] testThemes = {"1 planned", "2 canceled"};
+		//themes = testThemes;
 		//String login = "smartRoomUser";
 		//String pass = "Ochen_slojnii_parol";
 		
@@ -122,9 +122,13 @@ public class BlogListActivity extends ListActivity implements OnItemClickListene
 		blogAdapter.setLogPass(login, pass);
 		blogAdapter.setSRName((String) getIntent().getExtras().get("SRName"));*/
 		
-		new getThemesTask().execute();
-		
-		/* INTEGRATION TEST BLOCK END */
+		try {
+			new getThemesTask().execute();
+		}
+		catch (Exception e) {
+			BlogErrDialog.loadThemesErr(getBaseContext());
+			return;
+		}
 		
 		itemListener = new OnItemClickListener() {
 
@@ -233,7 +237,8 @@ public class BlogListActivity extends ListActivity implements OnItemClickListene
 		@Override
 		protected Object doInBackground(Object... arg0) {
 			blogAdapter.login();
-			for (int i = 0; i < themes.length; i++) {
+			KP.getThemes(act);
+			/*for (int i = 0; i < themes.length; i++) {
 				String[] s = themes[i].split(" ");
 				Theme t = null;
 				try {
@@ -244,7 +249,7 @@ public class BlogListActivity extends ListActivity implements OnItemClickListene
 					e.printStackTrace();
 				}
 				blog.add(t);
-			}
+			}*/
 			return null;
 		}
 
