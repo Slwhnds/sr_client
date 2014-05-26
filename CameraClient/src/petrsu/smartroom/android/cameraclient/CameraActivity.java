@@ -60,6 +60,7 @@ public class CameraActivity extends Activity {
 		
 		cameraView = new VideoView(getBaseContext());
 		cameraView.setVideoURI(camera.getURI());
+		cameraView.start();
 		
 		seekBarListener = 
 			    new SeekBar.OnSeekBarChangeListener() {
