@@ -2,6 +2,7 @@ package petrsu.smartroom.android.cameraclient;
 
 import java.io.IOException;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -58,9 +59,10 @@ public class CameraActivity extends Activity {
 		setSeekBarBorders(camera.getBorders());
 		setSeekBarValues(camera.getCurrentPTZ());
 		
-		cameraView = new VideoView(getBaseContext());
+		cameraView = (VideoView) findViewById(R.id.videoView);
 		cameraView.setVideoURI(camera.getURI());
-		cameraView.start();
+		//cameraView.setVideoURI(Uri.parse("http://youtu.be/RAu9v8Dv1d0"));
+		cameraView.start(); 
 		
 		seekBarListener = 
 			    new SeekBar.OnSeekBarChangeListener() {

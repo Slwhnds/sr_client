@@ -54,6 +54,8 @@ public class CameraListActivity extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
+		//CameraErrDialog.loadCameraErr(getBaseContext());
+		
 		KP = new KP();
 		if (KP.connectSmartSpace("X", "194.85.173.9", (int) 10010) != 0) {
 			CameraErrDialog.connectionErr(getBaseContext());
@@ -113,6 +115,9 @@ public class CameraListActivity extends ListActivity {
 	*/
 	private void setUpList()
     {        
+		if (cameras == null)
+			return;
+		
         List<Map<String, ?>> list = new ArrayList<Map<String, ?>>(cameras.size());
         
         for(int i = 0; i < cameras.size(); i++)

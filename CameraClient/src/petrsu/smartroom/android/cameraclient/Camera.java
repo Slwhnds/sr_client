@@ -77,7 +77,7 @@ public class Camera implements Parcelable {
 	    final String API_PATTERN = 
 	    		"^[a-zA-Z0-9]{1,20}$";
 	    final String LOGPASS_PATTERN = 
-	    		"^[a-zA-Z0-9]{6,12}$";
+	    		"^[a-zA-Z0-9]{1,12}$";
 	    pattern = Pattern.compile(IPADDRESS_PATTERN);
 	    matcher = pattern.matcher(IP);
 	    if (matcher.matches())
