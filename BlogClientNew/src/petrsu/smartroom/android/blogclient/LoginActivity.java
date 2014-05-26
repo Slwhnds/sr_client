@@ -88,8 +88,15 @@ public class LoginActivity extends Activity {
 		switch (item.getItemId()) {
 		case R.id.back_to_sr_account:
 			try {
-				KP.blogAdapter.login();
-				KP.blogAdapter.curLogin = "noauthorized";
+				try {
+					login = "";
+					pass = "";
+					new loginTask().execute();
+				}
+				catch (Exception e) {
+					BlogErrDialog.loginErr(getBaseContext());
+				}
+
 				after = false;
 				recreate();
 			}
@@ -133,8 +140,14 @@ public class LoginActivity extends Activity {
 
 		@Override
 		protected Object doInBackground(Object... arg0) {
+			if ((login.compareTo("") == 0) && (pass.compareTo("") == 0)) {
+				KP.blogAdapter.login();
+				KP.blogAdapter.curLogin = "noauthorized";
+			}
+			else {
 				KP.blogAdapter.login(login, pass);
 				KP.blogAdapter.curLogin = "authorized";
+			}
 				after = true;
 			return null;
 		}

@@ -206,6 +206,9 @@ public class BlogListActivity extends ListActivity implements OnItemClickListene
 		String[] items = blog.getThemeSubjects();
 		//String[] items = blog.getTestThemes();
 		
+		if (items == null)
+			return;
+		
 		list = new ArrayList<Map<String, ?>>(items.length);
         
         for(int i = 0; i < items.length; i++)
