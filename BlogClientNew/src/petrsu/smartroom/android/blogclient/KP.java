@@ -30,6 +30,12 @@ public class KP {
 	public static native void disconnectSmartSpace();
 	
 	/**
+	* Deletes themes data from Smart Space
+	* @return Returns 0 in success and -1 if failed
+	*/
+	public static native int deletePublishedData();
+	
+	/**
 	 * User registration.
 	 *
 	 * @param userName the user name

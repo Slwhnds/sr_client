@@ -188,7 +188,8 @@ public class BlogListActivity extends ListActivity implements OnItemClickListene
 			this.recreate();
 			break;
 		case R.id.delete_blog:
-			//add smth
+			KP.deletePublishedData();
+			recreate();
 			break;
 		default:
 			return super.onOptionsItemSelected(item);

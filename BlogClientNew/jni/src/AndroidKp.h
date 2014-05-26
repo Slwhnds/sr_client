@@ -220,6 +220,14 @@ JNIEXPORT jstring JNICALL Java_petrsu_smartroom_android_blogclient_KP_getLog(JNI
 */
 JNIEXPORT jstring JNICALL Java_petrsu_smartroom_android_blogclient_KP_getPass(JNIEnv *env, jobject *obj);
 
+/*
+ * Class:     BlogService
+ * Method:    publishData
+ * Signature: (Ljava/lang/String;Ljava/lang/String;I)I
+ */
+JNIEXPORT void JNICALL Java_petrsu_smartroom_android_blogclient_KP_deletePublishedData
+  (JNIEnv *, jclass);
+
 #ifdef __cplusplus
 }
 #endif

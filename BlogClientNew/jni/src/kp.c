@@ -712,3 +712,35 @@ int addThemeToJavaList(JNIEnv *env, individual_t *theme, jobject obj) {
 		return -1;
 }
 
+JNIEXPORT void JNICALL Java_petrsu_smartroom_android_blogclient_KP_deletePublishedData
+  (JNIEnv *env, jclass clazz) {
+	list_t *list = sslog_ss_get_individual_by_class_all(CLASS_THEME);
+	individual_t *individual;
+
+	if(list != NULL) {
+		list_head_t* pos = NULL;
+		list_for_each(pos, &list->links) {
+			list_t* node = list_entry(pos, list_t, links);
+			individual = (individual_t*)(node->data);
+			sslog_ss_populate_individual(individual);
+			sslog_ss_remove_property_all(individual, PROPERTY_THEMEID);
+			sslog_ss_remove_property_all(individual, PROPERTY_THEMESTATUS);
+			sslog_ss_remove_individual(individual);
+		}
+	}
+
+	list = sslog_ss_get_individual_by_class_all(CLASS_BLOG);
+
+		if(list != NULL) {
+			list_head_t* pos = NULL;
+			list_for_each(pos, &list->links) {
+				list_t* node = list_entry(pos, list_t, links);
+				individual = (individual_t*)(node->data);
+				sslog_ss_populate_individual(individual);
+				sslog_ss_remove_property_all(individual, PROPERTY_SRLOGIN);
+				sslog_ss_remove_property_all(individual, PROPERTY_SRPASSWORD);
+				sslog_ss_remove_individual(individual);
+			}
+		}
+	return;
+}
