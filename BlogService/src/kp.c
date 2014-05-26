@@ -195,7 +195,7 @@ JNIEXPORT jint JNICALL Java_BlogService_publishStartData
 	return -1;
 
     sslog_set_individual_uuid(individual, 
-			      "http://www.cs.karelia.ru/smartroom#blog");
+			      denerateUuid("http://www.cs.karelia.ru/smartroom#blog"));
     
     sslog_ss_remove_property_all(individual, PROPERTY_SRLOGIN);
     sslog_ss_remove_property_all(individual, PROPERTY_SRPASSWORD);
