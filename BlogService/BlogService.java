@@ -51,7 +51,7 @@ public class BlogService {
 	public static native int publishData(String[] themes);
 
 	/**
-	* Deletes camera data from Smart Space
+	* Deletes themes data from Smart Space
 	* @return Returns 0 in success and -1 if failed
 	*/
 	public static native int deletePublishedData();
@@ -301,12 +301,13 @@ public boolean loadConfiguration() {
 			System.out.println("Press 'd' to delete blog.\n");
 			while(true) {
 			    try {
-				if(reader.readLine().equals("q") ||
-				    reader.readLine().equals("Q")) {
+			    	String r = reader.readLine();
+				if(r.equals("q") ||
+				    r.equals("Q")) {
 				    System.exit(0);
 				}
-				if(reader.readLine().equals("d") ||
-					    reader.readLine().equals("D")) {
+				if(r.equals("d") ||
+					    r.equals("D")) {
 					    deletePublishedData();
 					    System.exit(0);
 					}
