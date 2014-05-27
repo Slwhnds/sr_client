@@ -71,6 +71,8 @@ public class CameraListActivity extends ListActivity {
 		
 		setUpList();
 		
+		CameraErrDialog.loadCameraErr(getBaseContext());
+		
 		itemListener = new OnItemClickListener() {
 
 			/** 
