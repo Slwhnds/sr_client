@@ -1,25 +1,29 @@
 package petrsu.smartroom.android.cameraclient;
 
 import java.io.IOException;
-import java.io.Serializable;
-import java.net.URI;
+import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.ParseException;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Base64;
+import android.util.Log;
 
 public class Camera implements Parcelable {
 
+	private static final String TAG = "fla";
 	/** IP àäðåñ êàìåðû â ôîðìàòå IP (ñì. âíóòðåííèå ñòðóêòóðû äàííûõ), óñòàíàâëèâàåòñÿ êîíñòðóêòîðîì.*/
 	private String ip;
 	
@@ -45,14 +49,16 @@ public class Camera implements Parcelable {
 
 	/** Ìàññèâ òåêóùèõ êîîðäèíàòû ïîâîðîòà, íàêëîíà, çóìà â ôîðìàòå P-T-Z (ñì. âíóòðåííèå ñòðóêòóðû äàííûõ), óñòàíàâëèâàåòñÿ ìåòîäîì currentPTZ().*/
 	private int PTZ[];
+	private int PTZX[];
 
 	/** Ìàññèâ ãðàíè÷íûõ çíà÷åíèé êîîðäèíàò ïîâîðîòà, íàêëîíà, çóìà â ôîðìàòå borders(ñì. âíóòðåííèå ñòðóêòóðû äàííûõ), óñòàíàâëèâàåòñÿ ìåòîäîì borders().*/
 	private int borders[][];
+	private int bordersX[][];
 
 	/** Ìàññèâ ñòðîê-øàáëîíîâ URI, òðåáóåìûõ äëÿ ôîðìèðîâàíèÿ GET HTTP çàïðîñîâ (ñì. îáìåí äàííûìè ñ êàìåðîé). Êîñòûëü. Ïîëÿ áóäóò çàïîëíåíû èçíà÷àëüíî è íè÷åì íå èçìåíÿþòñÿ. 
 	* Êàæäàÿ ñòðîêà ñîäåðæèò íàçâàíèå API è ñòðîêè äëÿ îñíîâíûõ êîìàíä: ïîëó÷åíèå òåêóùåé ïîçèöèè, èçìåíåíèå ïîçèöèè, ïîëó÷åíèå êðàéíèõ çíà÷åíèé.
 	*/
-	private String stringAPI[] = {"/config/ptz_info.cgi","/config/ptz_pos.cgi","/config/ptz_move.cgi?p=value1&t=value2&z=value3"};
+	private String stringAPI[] = {"/config/ptz_pos.cgi","/config/ptz_info.cgi","/config/ptz_move.cgi?p=value1&t=value2&z=value3"};
 
 	
 	/**
@@ -114,9 +120,36 @@ public class Camera implements Parcelable {
 	    } else {
 	    	throw new IllegalArgumentException(pass);
 	    }
-	    
+	    try {
+			borders();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			
+		}
+		try {
+			currentPTZ();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (ExecutionException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		this.name = name;
 		this.uri = Uri.parse(uri);
+		Log.d("fla","Name ="+this.name);
 		
 	};
 
@@ -124,80 +157,86 @@ public class Camera implements Parcelable {
 	* Âûçûâàåò ìåòîäû èç âíåøíåé áèáëèîòåêè Apache HttpClient 4.3.3 äëÿ îòïðàâêè çàïðîñà íà êàìåðó è ïîëó÷åíèÿ îòâåòà îò íåå. 
 	* Ðàçáèðàåò ïîëó÷åííûé îòâåò è èçìåíÿåò çíà÷åíèÿ ìàññèâà PTZ.
 	* @throws IOException Îøèáêà òðàíñïîðòèðîâêè èëè ïðîòîêîëà.
+	 * @throws ExecutionException 
+	 * @throws InterruptedException 
 	*/
-	public void currentPTZ() throws IOException
+	public void currentPTZ() throws IOException, InterruptedException, ExecutionException
 	{
 		Pattern p;
 		Matcher m;
 		PTZ = new int[3];
+		PTZX = new int[3];
 		String url = "http://"+ip+":"+port+stringAPI[0];
-		CloseableHttpClient httpclient = HttpClients.createDefault();
-		HttpGet request = new HttpGet(url);
 		String authString = login + ":" + pass;
-		String authEncString = Base64.encodeToString(authString.getBytes(), Base64.DEFAULT);
-		request.addHeader("Authorization", "Basic " + authEncString);
-		HttpResponse response = httpclient.execute(request);
-		HttpEntity entity = response.getEntity();
-		String responseString = EntityUtils.toString(entity, "UTF-8");
-		p = Pattern.compile("p=([0-9]+)");
+		String authEncString = Base64.encodeToString(authString.getBytes(), Base64.NO_WRAP);
+		CameraReq cr = new CameraReq();
+		cr.execute(url,authEncString);
+		String responseString =  cr.get();
+		p = Pattern.compile("p=([-]?[0-9]+)");
 		m = p.matcher(responseString);
-		if (m.matches())
-			PTZ[0] = Integer.parseInt(m.group(0).substring(2));
-		p = Pattern.compile("t=([0-9]+))");
+		if (m.find())
+			PTZ[0] = Integer.parseInt(m.group(0).substring(3));
+		p = Pattern.compile("t=([-]?[0-9]+)");
 		m = p.matcher(responseString); 
-		if (m.matches())
-			PTZ[1] = Integer.parseInt(m.group(0).substring(2));
-		p = Pattern.compile("z=([0-9]+))");
+		if (m.find())
+			PTZ[1] = Integer.parseInt(m.group(0).substring(3));
+		p = Pattern.compile("z=([-]?[0-9]+)");
 		m = p.matcher(responseString);
-		if (m.matches())
-			PTZ[2] = Integer.parseInt(m.group(0).substring(2));
-				
-		
-	};
+		if (m.find())
+			PTZ[2] = Integer.parseInt(m.group(0).substring(3));
+		PTZX[0] = PTZ[0] - borders[0][0];
+		PTZX[1] = PTZ[1] - borders[1][0];
+		PTZX[2] = PTZ[2] - borders[2][0];
+};
 	/** 
 	* Âûçûâàåò ìåòîäû èç âíåøíåé áèáëèîòåêè Apache HttpClient 4.3.3 äëÿ îòïðàâêè çàïðîñà íà êàìåðó è ïîëó÷åíèÿ îòâåòà îò íåå. 
 	* Ðàçáèðàåò ïîëó÷åííûé îòâåò è èçìåíÿåò çíà÷åíèÿ ìàññèâà borders. 
 	* @throws IOException Îøèáêà òðàíñïîðòèðîâêè èëè ïðîòîêîëà.
+	 * @throws ExecutionException 
+	 * @throws InterruptedException 
 	*/
-	public void borders() throws IOException
+	public void borders() throws IOException, InterruptedException, ExecutionException
 	{
-		borders = new int[2][3];
+		borders = new int[3][2];
+		bordersX = new int[3][2];
 		Pattern p;
 		Matcher m;
 		String url = "http://"+ip+":"+port+stringAPI[1];
-		CloseableHttpClient httpclient = HttpClients.createDefault();
-		HttpGet request = new HttpGet(url);
 		String authString = login + ":" + pass;
-		String authEncString = Base64.encodeToString(authString.getBytes(), Base64.DEFAULT);
-		request.addHeader("Authorization", "Basic " + authEncString);
-		HttpResponse response = httpclient.execute(request);
-		HttpEntity entity = response.getEntity();
-		String responseString = EntityUtils.toString(entity, "UTF-8");
+		String authEncString = Base64.encodeToString(authString.getBytes(), Base64.NO_WRAP);
+		CameraReq cr = new CameraReq();
+		cr.execute(url,authEncString);
+		String responseString =  cr.get();
 		p = Pattern.compile("pmax=([0-9]+)");
 		m = p.matcher(responseString);
-		if (m.matches())
-			borders[0][0] = Integer.parseInt(m.group(0).substring(4));
-		p = Pattern.compile("pmin=([0-9]+)");
+		if (m.find())
+			borders[0][1] = Integer.parseInt(m.group(0).substring(5));
+		p = Pattern.compile("pmin=([-]?[0-9]+)");
 		m = p.matcher(responseString);
-		if (m.matches())
-			borders[0][1] = Integer.parseInt(m.group(0).substring(4));
+		if (m.find())
+			borders[0][0] = Integer.parseInt(m.group(0).substring(5));
 		p = Pattern.compile("tmax=([0-9]+)");
 		m = p.matcher(responseString);
-		if (m.matches())
-			borders[1][0] = Integer.parseInt(m.group(0).substring(4));
-		p = Pattern.compile("tmin=([0-9]+)");
+		if (m.find())
+			borders[1][1] = Integer.parseInt(m.group(0).substring(5));
+		p = Pattern.compile("tmin=([-]?[0-9]+)");
 		m = p.matcher(responseString);
-		if (m.matches())
-			borders[1][1] = Integer.parseInt(m.group(0).substring(4));
+		if (m.find())
+			borders[1][0] = Integer.parseInt(m.group(0).substring(5));
 		p = Pattern.compile("zmax=([0-9]+)");
 		m = p.matcher(responseString);
-		if (m.matches())
-			borders[2][0] = Integer.parseInt(m.group(0).substring(4));
-		p = Pattern.compile("zmin=([0-9]+)");
+		if (m.find())
+			borders[2][1] = Integer.parseInt(m.group(0).substring(5));
+		p = Pattern.compile("zmin=([-]?[0-9]+)");
 		m = p.matcher(responseString);
-		if (m.matches())
-			borders[2][1] = Integer.parseInt(m.group(0).substring(4));
-		
+		if (m.find())
+			borders[2][0] = Integer.parseInt(m.group(0).substring(5));
+		bordersX[0][0] = borders[0][0]-borders[0][0];
+		bordersX[0][1] = borders[0][1]-borders[0][0];
+		bordersX[1][0] = borders[1][0]-borders[1][0];
+		bordersX[1][1] = borders[1][1]-borders[1][0];
+		bordersX[2][0] = borders[2][0]-borders[2][0];
+		bordersX[2][1] = borders[2][1]-borders[2][0];
 	};
 
 	/** 
@@ -207,36 +246,44 @@ public class Camera implements Parcelable {
 	* @param T - íàêëîí
 	* @param Z - çóì
 	* @throws IOException Îøèáêà òðàíñïîðòèðîâêè èëè ïðîòîêîëà.
+	 * @throws ExecutionException 
+	 * @throws InterruptedException 
 	*/
 	public void setPTZ(int P, int T, int Z) throws IOException
 	{
 		Pattern p;
 		Matcher m;
 		String values = stringAPI[2];
-		values = values.replace("value1", String.valueOf(P));
-		values = values.replace("value2", String.valueOf(T));
-		values = values.replace("value3", String.valueOf(Z));
+		values = values.replace("value1", String.valueOf(P+borders[0][0]));
+		values = values.replace("value2", String.valueOf(T+borders[1][0]));
+		values = values.replace("value3", String.valueOf(Z+borders[2][0]));
 		String url = "http://"+ip+":"+port+values;
-		CloseableHttpClient httpclient = HttpClients.createDefault();
-		HttpGet request = new HttpGet(url);
 		String authString = login + ":" + pass;
-		String authEncString = Base64.encodeToString(authString.getBytes(), Base64.DEFAULT);
-		request.addHeader("Authorization", "Basic " + authEncString);
-		HttpResponse response = httpclient.execute(request);
-		HttpEntity entity = response.getEntity();
-		String responseString = EntityUtils.toString(entity, "UTF-8");
-		p = Pattern.compile("p=([0-9]+)");
+		String authEncString = Base64.encodeToString(authString.getBytes(), Base64.NO_WRAP);
+		CameraReq cr = new CameraReq();
+		cr.execute(url,authEncString);
+		String responseString = null;
+		try {
+			responseString = cr.get();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		p = Pattern.compile("p=([-]?[0-9]+)");
 		m = p.matcher(responseString);
-		if (m.matches())
-			PTZ[0] = Integer.parseInt(m.group(0).substring(2));
-		p = Pattern.compile("t=([0-9]+)");
+		if (m.find())
+			PTZX[0] = Integer.parseInt(m.group(0).substring(3))-borders[0][0];
+		p = Pattern.compile("t=([-]?[0-9]+)");
 		m = p.matcher(responseString);
-		if (m.matches())
-			PTZ[1] = Integer.parseInt(m.group(0).substring(2));
-		p = Pattern.compile("z=([0-9]+)");
+		if (m.find())
+			PTZX[1] = Integer.parseInt(m.group(0).substring(3))-borders[1][0];
+		p = Pattern.compile("z=([-]?[0-9]+)");
 		m = p.matcher(responseString);
-		if (m.matches())
-			PTZ[2] = Integer.parseInt(m.group(0).substring(2));
+		if (m.find())
+			PTZX[2] = Integer.parseInt(m.group(0).substring(3))-borders[2][0];
 		
 	}
 
@@ -247,7 +294,7 @@ public class Camera implements Parcelable {
 	*/
 	public int[] getCurrentPTZ()
 	{ 
-		return PTZ;
+		return PTZX;
 	};
 
 	/**
@@ -257,7 +304,8 @@ public class Camera implements Parcelable {
 	*/
 	public int[][] getBorders()
 	{
-		return borders;
+		
+		return bordersX;
 	}
 
 	public Uri getURI() {
@@ -295,4 +343,47 @@ public class Camera implements Parcelable {
 				return new Camera[size];
 			}
 		};
+
+	
+}
+
+class CameraReq extends AsyncTask<String, Void, String> {
+	
+	String responseString=null;
+
+	@Override
+    protected void onPreExecute() {
+    }
+
+	@Override
+	protected String doInBackground(String... params) {
+		// TODO Auto-generated method stub
+		HttpClient httpclient = new DefaultHttpClient();
+		HttpGet request = new HttpGet(params[0]);
+		request.setHeader("Authorization", "Basic " + params[1]);
+		//request.addHeader("Accept", "*/*");
+				
+		HttpResponse response = null;
+		try {
+			response = httpclient.execute(request);
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		HttpEntity entity = response.getEntity();
+        try {
+			responseString = EntityUtils.toString(entity, "UTF-8");
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return responseString;
+	}
+ 
 }
