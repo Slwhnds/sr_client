@@ -41,9 +41,6 @@ public class BlogListActivity extends ListActivity implements OnItemClickListene
 
 	/** ���� ��� �����������. */
 	public static Blog blog;
-
-	/** ����-������� ��� ��������� ��� �� �������� ����-�������. */
-	public static BlogAdapter blogAdapter;
 	
 	/** ������ ���, �������������� � ���������� � �������. */
 	public List<Map<String, ?>> list;
@@ -68,6 +65,7 @@ public class BlogListActivity extends ListActivity implements OnItemClickListene
 		//KP.getThemes(this);
 		
 		act = this;
+		intent = getIntent();
 		
 		String login;
 		String pass;
@@ -80,11 +78,10 @@ public class BlogListActivity extends ListActivity implements OnItemClickListene
 			BlogErrDialog.loadLogPass(getBaseContext());
 			return;
 		}
-		
-		blogAdapter = new BlogAdapter();
+
 		try {
-			blogAdapter.setLogPass(login, pass);
-			blogAdapter.setSRName((String) getIntent().getExtras().get("SRName"));
+			KP.blogAdapter.setLogPass(login, pass);
+			KP.blogAdapter.setSRName((String) getIntent().getExtras().get("SRName"));
 		}
 		catch (Exception e) {
 			BlogErrDialog.loadLogPass(getBaseContext());
@@ -92,7 +89,7 @@ public class BlogListActivity extends ListActivity implements OnItemClickListene
 		}
 		
 		blog = new Blog();
-		
+		KP.blogAdapter.curLogin = "notauthorized";
 		
 		/*for (int i = 0; i < themes.length; i++) {
 			String[] s = themes[i].split(" ");
@@ -121,14 +118,8 @@ public class BlogListActivity extends ListActivity implements OnItemClickListene
 		
 		blogAdapter.setLogPass(login, pass);
 		blogAdapter.setSRName((String) getIntent().getExtras().get("SRName"));*/
-		
-		try {
-			new getThemesTask().execute();
-		}
-		catch (Exception e) {
-			BlogErrDialog.loadThemesErr(getBaseContext());
-			return;
-		}
+
+		new getThemesTask().execute();
 		
 		itemListener = new OnItemClickListener() {
 
@@ -189,11 +180,13 @@ public class BlogListActivity extends ListActivity implements OnItemClickListene
 			this.finish();
 			break;
 		case R.id.action_refresh:
-			this.recreate();
+			act.startActivity(intent);
+			act.finish();
 			break;
 		case R.id.delete_blog:
 			KP.deletePublishedData();
-			recreate();
+			act.startActivity(intent);
+			act.finish();
 			break;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -236,26 +229,23 @@ public class BlogListActivity extends ListActivity implements OnItemClickListene
 
 		@Override
 		protected Object doInBackground(Object... arg0) {
-			blogAdapter.login();
-			KP.getThemes(act);
-			/*for (int i = 0; i < themes.length; i++) {
-				String[] s = themes[i].split(" ");
-				Theme t = null;
-				try {
-					t = new Theme(Integer.parseInt(s[0]), s[1],
-							blogAdapter.getBlogEntry(Integer.parseInt(s[0])));
-				} catch (NumberFormatException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				blog.add(t);
-			}*/
-			return null;
+			try {
+				if (!KP.blogAdapter.isLoggedIn())
+					KP.blogAdapter.login();
+				KP.getThemes(act);
+			}
+			catch (Exception e) {
+				return null;
+			}
+			return new Object();
 		}
 
 		protected void onPostExecute(Object result) {
 			super.onPostExecute(result);
-			setUpList();
+			if (result == null)
+				BlogErrDialog.loadThemesErr(getApplicationContext());
+			else
+				setUpList();
 		}
 
 	}
@@ -270,7 +260,7 @@ public class BlogListActivity extends ListActivity implements OnItemClickListene
 	public void addThemeItemToList(String id, String status) {
 		try {
 			blog.add(new Theme(Integer.parseInt(id), status,
-					blogAdapter.getBlogEntry(Integer.parseInt(id))));
+					KP.blogAdapter.getBlogEntry(Integer.parseInt(id))));
 		}
 		catch (Exception e) {
 			e.printStackTrace();

@@ -27,6 +27,8 @@ public class CommentsListActivity extends ListActivity {
 	
 	/** ���������, ������������ ��� �������� � ������ Activity. */
 	Intent intent;
+	
+	CommentsListActivity act;
 
 	/** ����, ����������� � ������� ������������. */
 	private Theme theme;
@@ -81,14 +83,8 @@ public class CommentsListActivity extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);			
 		theme = (Theme) getIntent().getExtras().get("theme");
-		
-		try {
-			new getCommentsTask().execute();
-		}
-		catch (Exception e) {
-			BlogErrDialog.errLoadComments(getBaseContext());
-		}
-		//setUpList();
+		intent = getIntent();
+		new getCommentsTask().execute();
 	}
 
 	/** 
@@ -110,10 +106,6 @@ public class CommentsListActivity extends ListActivity {
 	* Calls for: BlogAdapter.getComments(Theme theme)
 	*/
 	public void setUpList() {
-		//ThemeComment[] items = BlogListActivity.blogAdapter.getComments(theme); // is now global var
-		//ThemeComment[] items = getTestComments(); 
-		
-		
 		if (items == null){
 			System.out.println("");
 			return;
@@ -158,6 +150,10 @@ public class CommentsListActivity extends ListActivity {
 			intent.putExtra("theme", theme);
 		    startActivity(intent);
 			break;
+		case R.id.action_refresh:
+			act.startActivity(intent);
+			act.finish();
+			break;
 		case R.id.log_out:
 			intent = new Intent(getBaseContext(), AuthorizationActivity.class);
 			this.startActivity(intent);
@@ -172,16 +168,23 @@ public class CommentsListActivity extends ListActivity {
 
 		@Override
 		protected Object doInBackground(Object... arg0) {
+			try {
+				//KP.blogAdapter.login();
 				items = KP.blogAdapter.getComments(theme);
-			if(items == null){
-				Log.e("getComments returned null","getComments returned null");
 			}
-			return null;
+			catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+			return new Object();
 		}
 
 		protected void onPostExecute(Object result) {
 			super.onPostExecute(result);
-			setUpList();
+			if (result == null)
+				BlogErrDialog.errLoadComments(getApplicationContext());
+			else
+				setUpList();
 		}
 
 	}

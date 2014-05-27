@@ -159,6 +159,7 @@ public class XMLRPCClientImpl implements XMLRPCClient {
         } catch (Throwable e) {
             logger.error(e.toString());
             throw new LJRuntimeException(e.getMessage() == null || e.getMessage().length() == 0 ? e.toString() : e.getMessage(), e);
+            //throw new LJRuntimeException("login error");
         }
     }
 

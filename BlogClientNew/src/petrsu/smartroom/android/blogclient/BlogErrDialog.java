@@ -51,4 +51,10 @@ public class BlogErrDialog {
 				Toast.LENGTH_SHORT);
 		toast.show();
 	}
+	
+	public static void loginYes(Context context) {
+		Toast toast = Toast.makeText(context, R.string.loginYes,
+				Toast.LENGTH_SHORT);
+		toast.show();
+	}
 }

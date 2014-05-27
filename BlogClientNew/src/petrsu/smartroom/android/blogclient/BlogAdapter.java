@@ -21,19 +21,25 @@ public class BlogAdapter implements Serializable{
 	private int timeout;
 
 	/** ���� �������������� */
-	private boolean loggedIn;
+	private boolean loggedIn = false;
 
 	/** ����� ����� ��� �������� ���� ������� */
 	private String login;
 
 	/** ����� ������ ��� �������� ���� ������� */
 	private String pass;
+	
+	/** ����� ����� ��� �������� ���� ������� */
+	private String login1;
+
+	/** ����� ������ ��� �������� ���� ������� */
+	private String pass1;
 
 	/** ��� ������������ � SR */
 	private String SRName;
 
 	/** ������� ����� ��� �������� ���� ������� */
-	String curLogin;
+	String curLogin = "notauthorized";
 
 	/** ������� ������ ��� �������� ���� ������� */
 	private String curPass;
@@ -54,11 +60,15 @@ public class BlogAdapter implements Serializable{
 	* �������� ����� login() � ConvenientClient.
 	*/
 	public UserData login(String login, String password){
+		UserData d;
 		if(login == null || login == "" || password == null || password == "")
-			return null;
+			d = null;
 		else
-			return client.login(login, password, timeout);
-		
+			d =  client.login(login, password, timeout);
+		curLogin = login;
+		pass1 = password;
+		loggedIn = true;
+		return d;
 	}
 	
 	/** ��������� ��� ������ ������� � ������� �� SR.
@@ -66,7 +76,9 @@ public class BlogAdapter implements Serializable{
 	* �������� ����� login() � ConvenientClient.
 	*/
 	public UserData login(){
-		return client.login(login, pass, timeout);
+		UserData d = client.login(login, pass, timeout);
+		loggedIn = false;
+		return d;
 	}
 
 	/**  ���������� ����������� � �������� ����-������� ���� 
@@ -105,7 +117,7 @@ public class BlogAdapter implements Serializable{
 		if(body == null || body == "" || theme == null)
 			return null;
 		else {
-			if(curLogin.compareTo("authorized") != 0)
+			if(loggedIn)
 				body += ("\nPosted by: " + SRName);
 			return client.addComment(body, theme.getID(), theme.getAnum(), timeout);
 		}
@@ -134,10 +146,14 @@ public class BlogAdapter implements Serializable{
 	* @return �����
 	*/
 	public String getCurLogin(){
-		if(curLogin.compareTo("authorized") == 0)
-			return login;
+		if(loggedIn)
+			return curLogin;
 		else
 			return "";
+	}
+	
+	public boolean isLoggedIn() {
+		return loggedIn;
 	}
 
 	public CharSequence getSRName() {

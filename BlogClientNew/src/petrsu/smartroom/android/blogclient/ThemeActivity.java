@@ -93,7 +93,8 @@ public class ThemeActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.log_out:
-			this.finish();
+			intent = new Intent(getBaseContext(), AuthorizationActivity.class);
+			this.startActivity(intent);
 			break;
 		default:
 			return super.onOptionsItemSelected(item);

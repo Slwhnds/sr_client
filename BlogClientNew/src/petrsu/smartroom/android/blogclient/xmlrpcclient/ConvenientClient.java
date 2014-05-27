@@ -185,6 +185,7 @@ public class ConvenientClient {
 
         GetEventsArgument argument = new GetEventsArgument();
         argument.setUsername(login);
+        argument.setUsejournal("smartroomuser");
         argument.setHpassword(password);
         argument.setSelecttype(GetEventsArgument.Type.ONE);
         argument.setItemid(itemId);
@@ -254,6 +255,7 @@ public class ConvenientClient {
     	GetCommentsArgument argument = new GetCommentsArgument();
     	argument.setUsername(login);
     	argument.setHpassword(password);
+    	argument.setJournal("smartroomuser");
     	argument.setDItemId(itemid, anum);
     	List<Comment> comms = client.getcomments(argument, timeout);
     	Comment[] coms =comms.toArray(new Comment[comms.size()]);
@@ -272,6 +274,7 @@ public class ConvenientClient {
     	argument.setHpassword(password);
     	argument.setDItemId(itemid, anum);
     	argument.setBody(body);
+    	
     	return client.addComment(argument, timeout);
     }
     

@@ -15,6 +15,8 @@ public class LoginActivity extends Activity {
 	
 	/** ���������, ������������ ��� �������� � AutorizationActivity */
 	Intent intent;
+	
+	LoginActivity act;
 
 	/** ��������� �����. */
 	private String login;
@@ -50,13 +52,16 @@ public class LoginActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		curLoginEditText = (EditText) findViewById(R.id.logged_as_edit);
-		if (KP.blogAdapter.getCurLogin().compareTo("") == 0)
-			curLogin = "smartroomuser";
-		else
+		//if (KP.blogAdapter.curLogin.compareTo("authorized") != 0)
+			//curLogin = "smartroomuser";
+		//else
 			curLogin = KP.blogAdapter.getCurLogin();
 		//curLogin = BlogListActivity.blogAdapter.getCurLogin();
 		curLoginEditText = (EditText) findViewById(R.id.logged_as_edit);
 		curLoginEditText.setText(curLogin);
+		
+		intent = getIntent();
+		act = this;
 	}
 
 	/** 
@@ -67,7 +72,7 @@ public class LoginActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		if (after)
+		if (KP.blogAdapter.isLoggedIn())
 			getMenuInflater().inflate(R.menu.login_menu_after, menu);
 		else
 			getMenuInflater().inflate(R.menu.login_menu, menu);
@@ -87,25 +92,15 @@ public class LoginActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.back_to_sr_account:
-			try {
-				try {
-					login = "";
-					pass = "";
-					new loginTask().execute();
-				}
-				catch (Exception e) {
-					BlogErrDialog.loginErr(getBaseContext());
-				}
-
-				after = false;
-				recreate();
-			}
-			catch (Exception e) {
-				BlogErrDialog.loginErr(getBaseContext());
-			}
+			login = "";
+			pass = "";
+			new loginTask().execute();
+			after = false;
+			startActivity(intent);
+			finish();
 			break;
 		case R.id.log_out:
-			Intent intent = new Intent(getBaseContext(), AuthorizationActivity.class);
+			intent = new Intent(getBaseContext(), AuthorizationActivity.class);
 			this.startActivity(intent);
 			break;
 		default:
@@ -128,33 +123,39 @@ public class LoginActivity extends Activity {
 			BlogErrDialog.fillLogPass(getBaseContext());
 			return;
 		}
-		try {
-			new loginTask().execute();
-		}
-		catch (Exception e) {
-			BlogErrDialog.loginErr(getBaseContext());
-		}
+		new loginTask().execute();
 	}
 	
 	public class loginTask extends AsyncTask {
 
 		@Override
 		protected Object doInBackground(Object... arg0) {
-			if ((login.compareTo("") == 0) && (pass.compareTo("") == 0)) {
-				KP.blogAdapter.login();
-				KP.blogAdapter.curLogin = "noauthorized";
+			try {
+				if ((login.compareTo("") == 0) && (pass.compareTo("") == 0)) {
+					KP.blogAdapter.login();
+					//KP.blogAdapter.curLogin = "notauthorized";
+				}
+				else {
+					KP.blogAdapter.login(login, pass);
+					//KP.blogAdapter.curLogin = "authorized";
+				}
+					after = true;
 			}
-			else {
-				KP.blogAdapter.login(login, pass);
-				KP.blogAdapter.curLogin = "authorized";
+			catch (Exception e) {
+				return null;
 			}
-				after = true;
-			return null;
+			return new Object();
 		}
 		
 		protected void onPostExecute(Object result) {
 			super.onPostExecute(result);
-			recreate();
+			if (result == null)
+				BlogErrDialog.loginErr(getApplicationContext());
+			else {
+				BlogErrDialog.loginYes(getApplicationContext());
+				act.startActivity(intent);
+				act.finish();
+			}
 		}
 
 
